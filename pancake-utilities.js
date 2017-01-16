@@ -14,12 +14,17 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const CFonts = require(`cfonts`);
 const Chalk = require('chalk');
+const Fs = require(`fs`);
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Debugging prettiness
+// Objects / functions to export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+/**
+ * Debugging prettiness
+ *
+ * @type {Object}
+ */
 const Log = {
 	output: false, //have we outputted something yet?
 
@@ -73,7 +78,8 @@ const Log = {
 	/**
 	 * Log a verbose message
 	 *
-	 * @param  {string}  text - The text you want to log
+	 * @param  {string}  text    - The text you want to log
+	 * @param  {boolean} verbose - Verbose flag either undefined or true
 	 */
 	verbose: ( text, verbose ) => {
 		if( verbose ) {
@@ -104,9 +110,12 @@ const Log = {
 };
 
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Handle exiting of program
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Handle exiting of program
+ *
+ * @param {null}   exiting - null for bind
+ * @param {object} error   - Object to distinguish between closing events
+ */
 function ExitHandler( exiting, error ) {
 	if( error ) {
 		try { //try using our pretty output
@@ -129,6 +138,30 @@ function ExitHandler( exiting, error ) {
 }
 
 
+/**
+ * Get all folders within a given path
+ *
+ * @param  {string}  thisPath - The path that contains the desired folders
+ * @param  {boolean} verbose  - Verbose flag either undefined or true
+ *
+ * @return {array}            - An array of names of each folder
+ */
+const getFolders = ( thisPath, verbose ) => {
+	Log.verbose(`Running getFolders on ${ Chalk.yellow( thisPath ) }`, verbose);
+
+	try {
+		return Fs.readdirSync( thisPath ).filter(
+			( thisFile ) => Fs.statSync(`${ thisPath }/${ thisFile }`).isDirectory()
+		);
+	}
+	catch( error ) {
+		Log.verbose(`${ Chalk.yellow( thisPath ) } not found`, verbose);
+		return [];
+	}
+};
+
+
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Exporting all
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -143,5 +176,6 @@ module.exports = ( verbose ) => {
 			space: Log.space,
 		},
 		ExitHandler: ExitHandler,
+		getFolders: ( thisPath ) => getFolders( thisPath, verbose ), //we need to pass verbose mode here
 	}
 };

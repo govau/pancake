@@ -39,8 +39,10 @@ const Package = JSON.parse( Fs.readFileSync( `${ __dirname }/package.json`, `utf
 const Version = Package.version;
 
 Program
-	.description( `🍪🍰  Pancake is an utility for the UI-Kit of the Gov.au team.` +
-		`It let's you check your peerDependencies, write include files for all your uikit modules and lists all available modules for you to select and install` )
+	.description(
+		`🍪🍰  Pancake is an utility for the UI-Kit of the Gov.au team. ` +
+		`It let's you check your peerDependencies, write include files for all your uikit modules and lists all available modules for you to select and install.`
+	)
 	.version( `v${ Version }` )
 	.usage( `[command] <input1>` )
 	.command('cream',  '👀  Discover gov.au UI-Kit modules and install them')

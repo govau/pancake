@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake",
-	"version": "0.0.1",
+	"version": "0.0.4",
 	"description": "testing",
 	"homepage": "https://github.com/AusDTO/uikit-pancake",
 	"repository": {
@@ -17,6 +17,16 @@
 	"bin": {
 		"pancake": "./pancake.js"
 	},
+	"scripts": {
+		"pancake": "./pancake.js"
+	},
+	"files": [
+		"pancake.js",
+		"pancake-batter.js",
+		"pancake-cream.js",
+		"pancake-syrup.js",
+		"pancake-utilities.js"
+	],
 	"dependencies": {
 		"cfonts": "^1.0.2",
 		"chalk": "^1.1.3",

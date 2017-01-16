@@ -30,7 +30,7 @@ const Fs = require(`fs`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-let pkgPath = Path.normalize(`${ process.cwd() }/../../`); //default value of the pkgPath path
+let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
 
 Program
 	.arguments('<pkgPath>')
@@ -48,33 +48,8 @@ Program
 const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
 const Log = pancakes.Log;
 
-const npmOrg = '@gov.au';
-const controlKeyword = 'uikit-module';
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// GLOBALS
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-/**
- * Get all folders within a given path
- *
- * @param  {string}  thisPath - The path that contains the desired folders
- *
- * @return {array}            - An array of names of each folder
- */
-const getFolders = ( thisPath ) => {
-	Log.verbose(`Running getFolders on ${ Chalk.yellow( thisPath ) }`);
-
-	try {
-		return Fs.readdirSync( thisPath ).filter(
-			( thisFile ) => Fs.statSync(`${ thisPath }/${ thisFile }`).isDirectory()
-		);
-	}
-	catch( error ) {
-		Log.verbose(`${ Chalk.yellow( thisPath ) } not found`);
-		return [];
-	}
-};
+const npmOrg = '@gov.au';              //npm organization for scoped packages, this is what we are looking into when searching for dependency issues
+const controlKeyword = 'uikit-module'; //this keyword will signal to us that the package we found is a legitimate uikit module
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +72,7 @@ if( npmVersion < 3 ) { //npm 3 and higher is required as below will install depe
 pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org to the path
 
 Log.verbose(`Looking for dependency conflicts in: ${ Chalk.yellow( pkgPath ) }`);
-let allModules = getFolders( pkgPath ); //all folders inside the selected path
+let allModules = pancakes.getFolders( pkgPath ); //all folders inside the selected path
 
 //iterating over all modules inside node_module
 if( allModules !== undefined && allModules.length > 0 ) {
@@ -149,7 +124,7 @@ for( let [ module, moduleDependencies ] of dependencies ) {
 	}
 }
 
-Log.ok( `All modules are ok!` );
+Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

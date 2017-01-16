@@ -96,6 +96,7 @@ pandcake batter /Path/to/folder/of/your/package.json
 ## Release History
 
 * v0.1.0 - First pancake
+* v0.0.X - Pre-releases of unstable, undercooked pancakes
 
 
 **[⬆ back to top](#content)**
