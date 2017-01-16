@@ -109,7 +109,7 @@ if( allModules !== undefined && allModules.length > 0 ) {
 		try {
 			let modulePackage = JSON.parse( Fs.readFileSync( `${ pkgPath }/${ module }/package.json`, `utf8` ) ); //reading the package.json of the current module
 
-			if( modulePackage.keywords.indexOf( controlKeyword ) ) { //is this a uikit module?
+			if( modulePackage.keywords.indexOf( controlKeyword ) !== -1 ) { //is this a uikit module?
 				Log.verbose(`${ Chalk.green('✔') } Identified ${ Chalk.yellow( module ) } as ui-kit module`);
 
 				modules.set( modulePackage.name, modulePackage.version ); //saving all modules with version for later comparison
