@@ -46,7 +46,7 @@ if( process.argv.indexOf( '-x' ) !== -1 || process.argv.indexOf( '--surround-sou
 
 	process.argv.splice( position, 1 ); //don't want the option to be in help
 
-	Player.play('pancake2.mp3', ( error ) => {
+	Player.play('pancake.mp3', ( error ) => {
 		if( error ) {
 			// throw err; //we are not erroring out as this is not important functionality
 		}
