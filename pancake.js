@@ -28,6 +28,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+const Player = require('play-sound')();
 const Program = require('commander');
 const Fs = require(`fs`);
 
@@ -38,6 +39,21 @@ const Fs = require(`fs`);
 const Package = JSON.parse( Fs.readFileSync( `${ __dirname }/package.json`, `utf8` ) ); //for displaying help and version
 const Version = Package.version;
 
+
+//Adding the all important business logic
+if( process.argv.indexOf( '-x' ) !== -1 || process.argv.indexOf( '--surround-sound' ) !== -1 ) {
+	const position = process.argv.indexOf( '-x' ) !== -1 ? process.argv.indexOf( '-x' ) : process.argv.indexOf( '--surround-sound' );
+
+	process.argv.splice( position, 1 ); //don't want the option to be in help
+
+	Player.play('pancake2.mp3', ( error ) => {
+		if( error ) {
+			// throw err; //we are not erroring out as this is not important functionality
+		}
+	});
+}
+
+
 Program
 	.description(
 		`🍪🍰  Pancake is an utility for the UI-Kit of the Gov.au team. ` +
@@ -45,7 +61,7 @@ Program
 	)
 	.version( `v${ Version }` )
 	.usage( `[command] <input1>` )
-	.command('cream',  '👀  Discover gov.au UI-Kit modules and install them')
-	.command('batter', '✅  Check dependencies for conflicts.')
-	.command('syrup',  '🍦  Write compiled files into location specified in your package.json')
+	.command('cream',  '👀  Discover gov.au UI-Kit modules and install them')                   //-> pancake-cream.js
+	.command('batter', '✅  Check dependencies for conflicts.')                                 //-> pancake-batter.js
+	.command('syrup',  '🍦  Write compiled files into location specified in your package.json') //-> pancake-syrup.js
 	.parse( process.argv );
