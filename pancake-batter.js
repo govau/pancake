@@ -116,9 +116,48 @@ for( let [ module, moduleDependencies ] of dependencies ) {
 				`the module ${ Chalk.bold( dependency ) } but it's missing.` :
 				`${ Chalk.bold( dependency ) } version ${ Chalk.bold( version ) }, however version ${ Chalk.bold( existing ) } was installed.`;
 
+			Log.error( `Found conflicting dependenc(ies)` );
 			Log.error( `The module ${ Chalk.bold( module ) } requires ${ message }` );
-			Log.space(); //adding some space to the bottom
 
+			//let's look who else depends on this conflicting module
+			const otherModules = {};
+			for( let [ subModule, subModuleDependencies ] of dependencies ) {
+				if( subModuleDependencies[ dependency ] !== undefined ) {
+					if( otherModules[ subModuleDependencies[ dependency ] ] === undefined ) {
+						otherModules[ subModuleDependencies[ dependency ] ] = [];
+					}
+
+					otherModules[ subModuleDependencies[ dependency ] ].push( subModule ); //sort by version
+				}
+			}
+
+			//sort versions
+			const otherModulesOrdered = {};
+			Object.keys( otherModules ).sort().forEach( ( key ) => {
+				otherModulesOrdered[ key ] = otherModules[ key ];
+			});
+
+			//generate tree
+			message = `\n\n${ Chalk.bold( dependency ) } is required by the following modules:`;
+			for( const key of Object.keys( otherModulesOrdered ) ) {
+				message += Chalk.bold(`\n\n. ${ key }`);
+
+				for( let i = 0; i < otherModulesOrdered[ key ].length; i++ ) {
+					message += `\n${ ( i + 1 ) == otherModulesOrdered[ key ].length ? '└' : '├' }── ${ otherModulesOrdered[ key ][ i ] }`;
+				};
+
+			}
+
+			console.log( Chalk.red( `${ message }\n` ) ); //print tree
+
+			Log.error( `To fix this issue make sure all your modules require the same version.` );
+
+			//suggestion...
+			if( Object.keys( otherModules ).length == 1 ) {
+				Log.error( `Maybe upgrade the ${ Chalk.bold( dependency ) } module.` );
+			}
+
+			Log.space(); //adding some space to the bottom
 			process.exit( 1 ); //error out so npm knows things went wrong
 		}
 	}

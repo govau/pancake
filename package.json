@@ -1,18 +1,19 @@
 {
 	"name": "@gov.au/pancake",
 	"version": "0.0.4",
-	"description": "testing",
-	"homepage": "https://github.com/AusDTO/uikit-pancake",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/AusDTO/uikit-pancake.git"
-	},
-	"bugs": {
-		"url": "https://github.com/AusDTO/uikit-pancake/issues"
-	},
-	"engines": {
-		"node": ">=6.0.0"
-	},
+	"description": "A tool to help the gov.au UI-KIT installation through the npm ecosystem. Checking peerDependencies, writing compiled files and discovering new modules",
+	"keywords": [
+		"uikit",
+		"scss",
+		"css",
+		"gov.au",
+		"Commonwealth of Australia",
+		"design guide",
+		"design system",
+		"npm",
+		"peerdependencies",
+		"cli"
+	],
 	"main": "./pancake.js",
 	"bin": {
 		"pancake": "./pancake.js"
@@ -34,17 +35,30 @@
 		"play-sound": "^1.1.1",
 		"semver": "^5.3.0"
 	},
-	"author": {
-		"name": "Dominik Wilkowski",
-		"email": "Hi@Dominik-Wilkowski.com",
-		"url": "http://dominik-wilkowski.com/"
+	"engines" : {
+		"node" : ">=6.0.0",
+		"npm" : "^3.0.0"
 	},
-	"keywords": [
-		"gov.au",
-		"uikit",
-		"npm",
-		"peerdependencies",
-		"cli"
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/govau/pancake.git"
+	},
+	"homepage": "https://github.com/govau/pancake",
+	"bugs": {
+		"url": "https://github.com/govau/pancake/issues",
+		"email": "guides@digital.gov.au"
+	},
+	"author": {
+		"name": "Commonwealth of Australia, DTA",
+		"email": "guides@digital.gov.au",
+		"url": "https://www.dta.gov.au/"
+	},
+	"contributors": [
+		{
+			"name" : "Dominik Wilkowski",
+			"email" : "hi@dominik-wilkowski.com",
+			"url" : "https://dominik-wilkowski.com/"
+		}
 	],
 	"license": "MIT"
 }

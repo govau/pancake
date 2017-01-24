@@ -26,7 +26,8 @@ const Fs = require(`fs`);
  * @type {Object}
  */
 const Log = {
-	output: false, //have we outputted something yet?
+	output: false,   //have we outputted something yet?
+	hasError: false, //let's assume the best
 
 	/**
 	 * Log an error
@@ -38,13 +39,29 @@ const Log = {
 			Log.space();      //only then we add an empty line on the top
 		}
 
-		CFonts.say(`Error`, { //we need something big to help npms error system
-			colors: ['red', 'red'],
-		});
+		if( !Log.hasError ) {
+			CFonts.say(`CONFLICT`, { //we need something big to help npms error system
+				colors: ['red', 'red'],
+				space: false,
+			});
+
+			const messages = [ //because errors don't have to be boring!
+				'Uh oh!',
+				'Sorry!',
+				'Doh!',
+				'Oh my!',
+				'Ouch!',
+				'Ups!',
+			];
+
+			console.error( Chalk.red( messages.sort( () => 0.5 - Math.random() )[0] ) );
+			console.log('\n');
+		}
 
 		console.error(`🔥  ${ Chalk.red( `ERROR:   ${ text }` ) } `);
 
 		Log.output = true; //now we have written something out
+		Log.hasError = true;
 	},
 
 	/**
