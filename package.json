@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "A tool to help the gov.au UI-KIT installation through the npm ecosystem. Checking peerDependencies, writing compiled files and discovering new modules",
 	"keywords": [
 		"uikit",
