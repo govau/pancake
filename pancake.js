@@ -30,6 +30,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const Player = require('play-sound')();
 const Program = require('commander');
+const Size = require('window-size');
+const Chalk = require('chalk');
 const Fs = require(`fs`);
 
 
@@ -53,14 +55,47 @@ if( process.argv.indexOf( '-x' ) !== -1 || process.argv.indexOf( '--surround-sou
 	});
 }
 
+//the all important banner
+if( process.argv.length <= 2 ) {
+	if( Size.width > 110 ) { //only show if we have enough space
+		console.log( Chalk.yellow(`
+                                                 ${ Chalk.white(`.,;+@@@@@@@@@#+;,
+                                              #+':               .+@@;
+                                            @\`                       \`##
+                                           @+   \`;@@#+'      ,+@@@@@@@@@`) }
+                                 \`,;''+#@@++${ Chalk.white(`@     .,;@;    @@@@@@@@@@@@@`) } #@@@@+:\`
+                          \`,'@@+,\`   :;:;+'  ${ Chalk.white(`\`:@@;.       \`@@@@@@@@@@+.`) } .@@@@@@@@@@@#;\`
+                       +@#,        \`\`.,.  @@.+@${ Chalk.white(`@@':. \`;@#  ;.,+@@@@@`) }@@@@@@@@@@@@@@@@@@@@@@'
+                   ,#@,     \`.\`        #@.#@@@@@@@@@ \`: ;#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@   ;@'
+               .@@@;:,\`  .;++;,      #@#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        \`   \`@:
+             @@,   ,;::;;,.        @@@@@@@@@@@@#':'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    \`  \`,\`  \`  .#+\`
+           '@.   ..   ,'+':\`      @@@@@@@@'\`        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'      .,  .\`     ,@'
+        ,@+       '.               @@@@,           ,@@@@@@:    .#@@@@@@@@@@@@@@@@@@@@@+                  ;@
+      ;@,                                           #@+\`          .@@@@@+     .+@@@#+@;                    @
+      @+      .@'++                                                 :@@@                                  @#
+         +#@,          :;:':':                     - pancake -        @@@                         \`:'':  \`@'
+       '@@@@@@@@@@,                                                    @@:      '\`  ,'+##@@@@@@@@@.    \`\`
+   \`@@\`   \`::,';:;#@@@@@@#;.  \`,;++',                               .' @@@  ,@@@,@@@@@@@#+':,\`             ,+#
+  :@\`                    .#@@@@@@+#@@@@@@@@@@@@@@#+''+++@@@@@@@+#+++   @@@@;,,;,\`                             @
+  \`@:                                   \`:;+#@@##@@@+;,\`              #@';@@                                 #,
+    ;#+;            \`\`\`                                               @@+@@#                             .+'.
+         '@@@@@@@@@@@@@@@@#.                             \`\`           #@@@#     \`\`         \`#@@@@@@:'@@@@@@,
+                   \`\`...,,+@@@@@@@@'.\`.,;''#@@@;    \`'@@@@@@@@@@@@@@#:     @@@#'\` \`###@@#'.        ,;;,::
+                                     ,@@@@@@@@#@@@:@@@@#;.`));
+	}
+
+	console.log( Chalk.yellow(`\n  ( ^-^)_旦`) );
+}
+console.log(Size.width);
+
 
 Program
 	.description(
-		`🥞  Pancake is a utility for the UI-Kit of the gov.au team. ` +
+		`( ^-^)_旦 🥞  Pancake is a utility for the UI-Kit of the gov.au team. ` +
 		`It lets you check your peerDependencies, write include files for all your UI-Kit modules and lists all available modules for you to select and install.`
 	)
 	.version( `v${ Version }` )
-	.usage( `[command] <input1>` )
+	.usage( `[command] <input>` )
 	.command('cream',  '👀  Discover gov.au UI-Kit modules and install them')                   //-> pancake-cream.js
 	.command('batter', '✅  Check dependencies for conflicts.')                                 //-> pancake-batter.js
 	.command('syrup',  '🍯  Write compiled files into location specified in your package.json') //-> pancake-syrup.js
