@@ -72,7 +72,7 @@ if( npmVersion < 3 ) { //npm 3 and higher is required as below will install depe
 pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org to the path
 
 Log.verbose(`Looking for dependency conflicts in: ${ Chalk.yellow( pkgPath ) }`);
-let allModules = pancakes.getFolders( pkgPath ); //all folders inside the selected path
+let allModules = pancakes.GetFolders( pkgPath ); //all folders inside the selected path
 
 //iterating over all modules inside node_module
 if( allModules !== undefined && allModules.length > 0 ) {

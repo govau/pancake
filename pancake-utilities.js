@@ -163,8 +163,8 @@ function ExitHandler( exiting, error ) {
  *
  * @return {array}            - An array of names of each folder
  */
-const getFolders = ( thisPath, verbose ) => {
-	Log.verbose(`Running getFolders on ${ Chalk.yellow( thisPath ) }`, verbose);
+const GetFolders = ( thisPath, verbose ) => {
+	Log.verbose(`Running GetFolders on ${ Chalk.yellow( thisPath ) }`, verbose);
 
 	try {
 		return Fs.readdirSync( thisPath ).filter(
@@ -193,6 +193,6 @@ module.exports = ( verbose ) => {
 			space: Log.space,
 		},
 		ExitHandler: ExitHandler,
-		getFolders: ( thisPath ) => getFolders( thisPath, verbose ), //we need to pass verbose mode here
+		GetFolders: ( thisPath ) => GetFolders( thisPath, verbose ), //we need to pass verbose mode here
 	}
 };
