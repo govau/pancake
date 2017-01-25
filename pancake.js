@@ -86,7 +86,6 @@ if( process.argv.length <= 2 ) {
 
 	console.log( Chalk.yellow(`\n  ( ^-^)_旦`) );
 }
-console.log(Size.width);
 
 
 Program
