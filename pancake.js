@@ -95,7 +95,7 @@ Program
 	)
 	.version( `v${ Version }` )
 	.usage( `[command] <input>` )
-	.command('cream',  '👀  Discover gov.au UI-Kit modules and install them')                   //-> pancake-cream.js
 	.command('batter', '✅  Check dependencies for conflicts.')                                 //-> pancake-batter.js
 	.command('syrup',  '🍯  Write compiled files into location specified in your package.json') //-> pancake-syrup.js
+	.command('cream',  '👀  Discover gov.au UI-Kit modules and install them')                   //-> pancake-cream.js
 	.parse( process.argv );
