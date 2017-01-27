@@ -215,6 +215,7 @@ let SettingsJS = {
 
 //merging default settings with local package.json
 Object.assign( SettingsCSS, PKG.uikit.css );
+Object.assign( SettingsSASS, PKG.uikit.sass );
 Object.assign( SettingsJS, PKG.uikit.js );
 
 Log.verbose(`Merged local settings with defaults: ${
