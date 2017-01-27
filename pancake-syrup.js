@@ -80,7 +80,7 @@ const GenerateSass = ( location, dependencies ) => {
 
 
 /**
- * Promisfied writing a file
+ * Promisified writing a file
  *
  * @param  {string} location - The location the file should be written to
  * @param  {string} content  - The content of the file
@@ -143,7 +143,13 @@ const Sassify = ( location, sass ) => {
 					});
 					Log.verbose(`Successfully autoprefixed CSS for ${ Chalk.yellow( location ) }`);
 
-					return WriteFile( location, prefixed.css ); //write the generated content to file and return its promise
+					WriteFile( location, prefixed.css ) //write the generated content to file and return its promise
+						.catch( error => {
+							Log.error( error );
+						})
+						.then( () => {
+							resolve( true );
+					});
 			});
 		});
 	});
@@ -252,6 +258,12 @@ allPackages
 				compiledAll.push( WriteFile( location, sass ) ); //generate css and write file
 			}
 
+			//check if there is js
+			const jsPath = Path.normalize(`${ modulePackage.path }/dist/js/module.js`);
+
+			if( Fs.existsSync( jsPath ) ) {
+				console.log('compile js!');
+			}
 		}
 
 		//write the SettingsCSS.name file
@@ -268,6 +280,8 @@ allPackages
 		}
 
 
+		//js
+		//js modules?
 
 
 		//after all Sass files have been compiled
@@ -276,7 +290,6 @@ allPackages
 				Log.error(`Compiling Sass ran into an error: ${ error }`);
 			})
 			.then( ( css ) => {
-
 				Log.ok( `The Sass has been compiled 💥` );
 		});
 });

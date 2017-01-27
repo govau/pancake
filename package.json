@@ -37,6 +37,7 @@
 		"play-sound": "^1.1.1",
 		"postcss": "^5.2.11",
 		"semver": "^5.3.0",
+		"uglify-js": "^2.7.5",
 		"window-size": "^0.3.0"
 	},
 	"engines": {
