@@ -17,6 +17,7 @@
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const Autoprefixer = require('autoprefixer');
+const UglifyJS = require("uglify-js");
 const Program = require('commander');
 const Postcss = require('postcss');
 const Sass = require('node-sass');
@@ -79,20 +80,48 @@ const GenerateSass = ( location, dependencies ) => {
 
 
 /**
- * Compile Sass, autoprefix it and save it to disk (depending on [ SettingsCSS.modules ]) and return it
+ * Promisfied writing a file
+ *
+ * @param  {string} location - The location the file should be written to
+ * @param  {string} content  - The content of the file
+ *
+ * @return {promise object}  - Boolean true for 👍 || string error for 👎
+ */
+const WriteFile = ( location, content ) => {
+	pancakes.CreateDir( Path.dirname( location ) );
+
+	return new Promise( ( resolve, reject ) => {
+		Fs.writeFile( location, content, `utf8`, ( error ) => {
+			if( error ) {
+				Log.error(`Writing file failed for ${ Chalk.yellow( location ) }`);
+				Log.error( JSON.stringify( error ) );
+
+				reject( error );
+			}
+			else {
+				Log.verbose(`Successfully written ${ Chalk.yellow( location ) }`);
+
+				resolve( true );
+			}
+		});
+	});
+};
+
+
+/**
+ * Compile Sass, autoprefix it and save it to disk
  *
  * @param  {string} location - The path we want to save the compiled css to
  * @param  {string} sass     - The Sass to be compiled
  *
- * @return {string}          - The compiled css
+ * @return {promise object}  - Boolean true for 👍 || string error for 👎
  */
 const Sassify = ( location, sass ) => {
-	pancakes.CreateDir( Path.dirname( location ) );
-
 	return new Promise( ( resolve, reject ) => {
 		const compiled = Sass.render({
 			data: sass,
-			outputStyle: 'compressed',
+			indentType: 'tab', //this is how real developers indent!
+			outputStyle: SettingsCSS.minified ? 'compressed' : 'expanded',
 		}, ( error, renered ) => {
 			if( error ) {
 				Log.error(`:( Sass compile failed for ${ Chalk.yellow( location ) }`);
@@ -114,27 +143,30 @@ const Sassify = ( location, sass ) => {
 					});
 					Log.verbose(`Successfully autoprefixed CSS for ${ Chalk.yellow( location ) }`);
 
-					if( SettingsCSS.modules ) {
-						Fs.writeFile( location, prefixed.css, `utf8`, ( error ) => {
-							if( error ) {
-								Log.error(`Writing file failed for ${ Chalk.yellow( location ) }`);
-								Log.error( JSON.stringify( error ) );
-
-								reject( error );
-							}
-							else {
-								Log.verbose(`Successfully written ${ Chalk.yellow( location ) }`);
-
-								resolve( prefixed.css );
-							}
-						});
-					}
-					else {
-						resolve( prefixed.css );
-					}
+					return WriteFile( location, prefixed.css ); //write the generated content to file and return its promise
 			});
 		});
 	});
+};
+
+
+/**
+ * Remove duplicated lines
+ *
+ * @param  {string} content - A bunch of lines that COULD have duplicates
+ *
+ * @return {string}         - Removed duplicate lines
+ */
+const StripDuplicateLines = content => {
+	let lines = content.split(`\n`); //split into each line
+
+	if( lines[ lines.length - 1 ] === '' ) { //remove empty line at the end
+		lines.pop();
+	}
+
+	let sortedLines = [ ...new Set( lines ) ]; //make each line unique
+
+	return sortedLines.join(`\n`);
 };
 
 
@@ -154,15 +186,23 @@ if( PKG.uikit === undefined ) { //let's make merging easy
 //default settings
 let SettingsCSS = {
 	'minified': true,
-	'sass': true,
 	'modules': false,
 	'location': 'uikit/css/',
+	'name': 'uikit.min.css',
+};
+
+let SettingsSASS = {
+	'generate': true,
+	'modules': false,
+	'location': 'uikit/sass/',
+	'name': 'uikit.scss',
 };
 
 let SettingsJS = {
 	'minified': true,
 	'modules': false,
 	'location': 'uikit/js/',
+	'name': 'uikit.min.js',
 }
 
 //merging default settings with local package.json
@@ -183,38 +223,61 @@ allPackages
 	.catch( error => {
 		Log.error(`Reading all package.json files bumped into an error: ${ error }`);
 	})
-	.then( allModules => { //once we got all the content from all package.json files
-		let compiledSass = []; //for collect all promises
+	.then( allModules => {  //once we got all the content from all package.json files
+		let compiledAll = []; //for collect all promises
+		let allSass = '';     //all modules to be collected for SettingsCSS.name file
+		let allJS = [];       //all js files from all uikit modules
 
 		//iterate over each module
 		for( const modulePackage of allModules ) {
 			Log.verbose(`Bulding ${ Chalk.yellow( modulePackage.name ) }`);
 
-			const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.css`);
-			const sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies ); //generate the import statements depending on dependencies
+			//generate the import statements depending on dependencies
+			let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );
+			allSass += sass; //for SettingsCSS.name file
 
-			compiledSass.push( Sassify( location, sass ) ); //generate file or sass
+			//write css file
+			if( SettingsCSS.modules ) {
+				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.css`);
+
+				compiledAll.push( Sassify( location, sass ) ); //generate css and write file
+			}
+
+			//write scss file
+			if( SettingsSASS.generate ) {
+				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.scss`);
+
+				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }`;
+
+				compiledAll.push( WriteFile( location, sass ) ); //generate css and write file
+			}
+
 		}
 
-		Promise.all( compiledSass ) //after all Sass files have been compiled
+		//write the SettingsCSS.name file
+		const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
+		allSass = `/*! UI-Kit 2.0 */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
+
+		compiledAll.push( Sassify( location, allSass ) ); //generate SettingsCSS.name file
+
+		//write SettingsSASS.name file
+		if( SettingsSASS.generate ) {
+			const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
+
+			compiledAll.push( WriteFile( location, allSass ) ); //generate file or sass
+		}
+
+
+
+
+		//after all Sass files have been compiled
+		Promise.all( compiledAll )
 			.catch( error => {
 				Log.error(`Compiling Sass ran into an error: ${ error }`);
 			})
 			.then( ( css ) => {
 
-				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/uikit.min.css`);
-
-				Fs.writeFile( location, css, `utf8`, ( error ) => {
-					if( error ) {
-						Log.error(`Writing file failed for ${ Chalk.yellow( location ) }`);
-						Log.error( JSON.stringify( error ) );
-					}
-					else {
-						Log.verbose(`Successfully written ${ Chalk.yellow( location ) }`);
-
-						console.log('all done');
-					}
-				});
+				Log.ok( `The Sass has been compiled 💥` );
 		});
 });
 

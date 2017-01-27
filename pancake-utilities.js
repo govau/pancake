@@ -240,7 +240,7 @@ const GetFolders = ( thisPath, verbose ) => {
  * @param  {string}  pkgPath - The path to the folder the package.json is in (omitting package.json)
  * @param  {boolean} verbose - Verbose flag either undefined or true
  *
- * @return {promise}         - Returns a promise and some of the data of the package.json
+ * @return {promise object}  - Returns a promise and some of the data of the package.json
  */
 const ReadPackage = ( pkgPath, verbose ) => {
 	const thisPath = Path.normalize(`${ pkgPath }/package.json`);
@@ -287,7 +287,7 @@ const ReadPackage = ( pkgPath, verbose ) => {
  * @param  {string}  pkgPath - The path that includes your node_module folder
  * @param  {boolean} verbose - Verbose flag either undefined or true
  *
- * @return {promise}         - A promise.all that resolves when all package.jsons have been read
+ * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
  */
 const GetPackages = ( pkgPath, verbose ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
