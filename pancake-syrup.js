@@ -146,6 +146,8 @@ const Sassify = ( location, sass ) => {
 					WriteFile( location, prefixed.css ) //write the generated content to file and return its promise
 						.catch( error => {
 							Log.error( error );
+
+							reject( error );
 						})
 						.then( () => {
 							resolve( true );
