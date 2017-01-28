@@ -218,9 +218,13 @@ Object.assign( SettingsCSS, PKG.uikit.css );
 Object.assign( SettingsSASS, PKG.uikit.sass );
 Object.assign( SettingsJS, PKG.uikit.js );
 
-Log.verbose(`Merged local settings with defaults: ${
-	Chalk.yellow(`\nSettingsCSS: ${ JSON.stringify( SettingsCSS ) }\nSettingsJS:  ${ JSON.stringify( SettingsJS ) }`)
-}`);
+Log.verbose(`Merged local settings with defaults: ` +
+	Chalk.yellow(
+		`\nSettingsCSS: ${ JSON.stringify( SettingsCSS ) }\n` +
+		`SettingsSASS:  ${ JSON.stringify( SettingsSASS ) }\n` +
+		`SettingsJS:  ${ JSON.stringify( SettingsJS ) }`
+	)
+);
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -235,7 +239,11 @@ allPackages
 	.then( allModules => {  //once we got all the content from all package.json files
 		let compiledAll = []; //for collect all promises
 		let allSass = '';     //all modules to be collected for SettingsCSS.name file
-		let allJS = [];       //all js files from all uikit modules
+		let allJS = [];       //all js file paths from all uikit modules
+		let jsCode = {        //all js code if we don't minify
+			allCode: '',
+			code: '',
+		};
 
 		//iterate over each module
 		for( const modulePackage of allModules ) {
@@ -258,42 +266,69 @@ allPackages
 
 				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }`;
 
-				compiledAll.push( WriteFile( location, sass ) ); //generate css and write file
+				compiledAll.push( WriteFile( location, sass ) ); //write file
 			}
 
 			//check if there is js
-			const jsPath = Path.normalize(`${ modulePackage.path }/dist/js/module.js`);
+			const jsModulePath = Path.normalize(`${ modulePackage.path }/dist/js/module.js`);
 
-			if( Fs.existsSync( jsPath ) ) {
-				console.log('compile js!');
+			if( Fs.existsSync( jsModulePath ) ) {
+
+				if( SettingsJS.modules ) { //only if we have modules enabled
+					if( SettingsJS.minified ) { //minification = uglify code
+						allJS.push( jsModulePath ); //we save this module for the SettingsJS.name file
+						jsCode = UglifyJS.minify( jsModulePath, {});
+
+						Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( jsModulePath ) }`);
+					}
+					else { //no minification = just copy and rename
+						jsCode.allCode += jsCode.code = Fs.readFileSync( jsModulePath, `utf8` ); //should be async
+						jsCode.allCode += `\n\n`; //add some space between modules
+
+						Log.verbose(`Successfully got JS for ${ Chalk.yellow( jsModulePath ) }`);
+					}
+
+					const location = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.js`);
+
+					compiledAll.push( WriteFile( location, jsCode.code ) ); //write file
+				}
 			}
 		}
 
 		//write the SettingsCSS.name file
-		const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
+		const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
 		allSass = `/*! UI-Kit 2.0 */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
 
-		compiledAll.push( Sassify( location, allSass ) ); //generate SettingsCSS.name file
+		compiledAll.push( Sassify( locationCSS, allSass ) ); //generate SettingsCSS.name file
 
 		//write SettingsSASS.name file
 		if( SettingsSASS.generate ) {
-			const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
+			const locationSASS = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
 
-			compiledAll.push( WriteFile( location, allSass ) ); //generate file or sass
+			compiledAll.push( WriteFile( locationSASS, allSass ) ); //write file
 		}
 
+		//write SettingsJS.name file
+		const locationJS = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ SettingsJS.name }`);
+		if( SettingsJS.minified ) {
+			jsCode = UglifyJS.minify( allJS, {});
 
-		//js
-		//js modules?
+			Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( locationJS ) }`);
+		}
+		else {
+			jsCode.code = jsCode.allCode; //move chunks
+		}
+
+		compiledAll.push( WriteFile( locationJS, jsCode.code ) ); //write file
 
 
-		//after all Sass files have been compiled
+		//after all files have been compiled and written
 		Promise.all( compiledAll )
 			.catch( error => {
 				Log.error(`Compiling Sass ran into an error: ${ error }`);
 			})
 			.then( ( css ) => {
-				Log.ok( `The Sass has been compiled 💥` );
+				Log.ok( `You UI-Kit has been compiled 💥` );
 		});
 });
 
