@@ -8,3 +8,4 @@ node_modules
 .idea
 validation-report.json
 validation-status.json
+npm-debug.log
