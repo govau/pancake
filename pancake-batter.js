@@ -155,6 +155,28 @@ allPackages
 		else {
 			Log.info( `No modules found 😬` );
 		}
+
+		//checking settings
+		const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
+		let PKG = {
+			uikit: {},
+		};
+
+		try {
+			PKG = JSON.parse( Fs.readFileSync( PackagePath, `utf8` ) );
+
+			Log.verbose(`Read settings at ${ Chalk.yellow( PackagePath ) }`);
+		}
+		catch( error ) {
+			Log.verbose(`No package.json found at ${ Chalk.yellow( PackagePath ) }`);
+		}
+
+		//we only fire up syrup if the settings allow
+		if( PKG.uikit['auto-syrup'] !== false ) {
+			Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' }` ) }`);
+
+			Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : ''], { shell: true, stdio: 'inherit' });
+		}
 	}
 );
 
