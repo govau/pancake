@@ -38,6 +38,7 @@ Program
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
 	.option( `-n, --no-save`, `Don't save my compile ettings into my package.json` )
+	.option( `-b, --batter`,  `Running syrup directly from batter` )
 	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.parse( process.argv );
 
@@ -331,6 +332,13 @@ catch( error ) {
 
 if( PKG.uikit === undefined ) { //let's make merging easy
 	PKG.uikit = {};
+}
+
+//check local settings if syrup should run at all
+if( PKG.uikit['auto-syrup'] === false && Program.batter ) {
+	Log.verbose(`Syrup is disabled via local settings. Stopping here!`);
+
+	process.exit( 0 );
 }
 
 //default settings
