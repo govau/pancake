@@ -53,33 +53,6 @@ const Log = pancakes.Log;
 // Reusable functions
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Generate Sass code for a module and it's dependencies
- *
- * @param  {string} location     - The location of the module to be compiled
- * @param  {object} dependencies - The dependencies of this module
- *
- * @return {string}              - Sass code to tie dependencies and module together
- */
-const GenerateSass = ( location, dependencies ) => {
-	let sass = ``; //the code goes here
-
-	if( Object.keys( dependencies ).length ) {
-		const baseLocation = Path.normalize(`${ location }/../`);
-
-		for( const dependency of Object.keys( dependencies ) ) {
-			const modulePath = dependency.substring( pancakes.npmOrg.length, dependency.length );
-
-			sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/dist/sass/module.scss`) }";\n`;
-		}
-	}
-
-	sass += `@import "${ Path.normalize(`${ location }/dist/sass/module.scss`) }";\n`;
-
-	return sass;
-};
-
-
-/**
  * Promisified writing a file
  *
  * @param  {string} location - The location the file should be written to
@@ -109,19 +82,73 @@ const WriteFile = ( location, content ) => {
 
 
 /**
+ * Promisified reading a file
+ *
+ * @param  {string} location - The location of the file to be read
+ *
+ * @return {promise object}  - The content of the file
+ */
+const ReadFile = location => {
+	return new Promise( ( resolve, reject ) => {
+		Fs.readFile( location, `utf8`, ( error, content ) => {
+			if( error ) {
+				Log.error(`Reading file failed for ${ Chalk.yellow( location ) }`);
+				Log.error( JSON.stringify( error ) );
+
+				reject( error );
+			}
+			else {
+				Log.verbose(`Successfully read ${ Chalk.yellow( location ) }`);
+
+				resolve( content );
+			}
+		});
+	});
+};
+
+
+/**
+ * Generate Sass code for a module and it's dependencies
+ *
+ * @param  {string} location     - The location of the module to be compiled
+ * @param  {object} dependencies - The dependencies of this module
+ *
+ * @return {string}              - Sass code to tie dependencies and module together
+ */
+const GenerateSass = ( location, dependencies ) => {
+	let sass = ``; //the code goes here
+
+	if( Object.keys( dependencies ).length ) {
+		const baseLocation = Path.normalize(`${ location }/../`);
+
+		for( const dependency of Object.keys( dependencies ) ) {
+			const modulePath = dependency.substring( pancakes.npmOrg.length, dependency.length );
+
+			sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/dist/sass/module.scss`) }";\n`;
+		}
+	}
+
+	sass += `@import "${ Path.normalize(`${ location }/dist/sass/module.scss`) }";\n`;
+
+	return sass;
+};
+
+
+/**
  * Compile Sass, autoprefix it and save it to disk
  *
  * @param  {string} location - The path we want to save the compiled css to
+ * @param  {object} settings - The SettingsCSS object
  * @param  {string} sass     - The Sass to be compiled
  *
  * @return {promise object}  - Boolean true for 👍 || string error for 👎
  */
-const Sassify = ( location, sass ) => {
+const Sassify = ( location, settings, sass ) => {
 	return new Promise( ( resolve, reject ) => {
 		const compiled = Sass.render({
 			data: sass,
 			indentType: 'tab', //this is how real developers indent!
-			outputStyle: SettingsCSS.minified ? 'compressed' : 'expanded',
+			outputStyle: settings.minified ? 'compressed' : 'expanded',
 		}, ( error, renered ) => {
 			if( error ) {
 				Log.error(`:( Sass compile failed for ${ Chalk.yellow( location ) }`);
@@ -131,7 +158,7 @@ const Sassify = ( location, sass ) => {
 			}
 			Log.verbose(`Successfully compiled Sass for ${ Chalk.yellow( location ) }`);
 
-			Postcss([ Autoprefixer({ browsers: ['last 2 versions', 'ie 8', 'ie 9', 'ie 10'] }) ])
+			Postcss([ Autoprefixer({ browsers: settings.browsers }) ])
 				.process( renered.css )
 				.then( ( prefixed ) => {
 					prefixed
@@ -178,6 +205,112 @@ const StripDuplicateLines = content => {
 };
 
 
+/**
+ * Minify JS so we have one function not several
+ *
+ * @param  {string} js - The JS code to be minified
+ *
+ * @return {string}    - The minified js code
+ */
+const MinifyJS = ( js ) => {
+	const jsCode = UglifyJS.minify( js, {
+		fromString: true,
+	});
+
+	return jsCode.code;
+};
+
+
+/**
+ * Get js from module, minify depending on settings and write to disk
+ *
+ * @param  {string} from     - Where is the module so we can read from there
+ * @param  {object} settings - The SettingsJS object
+ * @param  {string} to       - Where shall we write the module to if settings allow?
+ *
+ * @return {promise object}  - The js code either minified or bare bone
+ */
+const HandelJS = ( from, settings, to ) => {
+	return new Promise( ( resolve, reject ) => {
+		ReadFile( from ) //read the module
+			.catch( error => {
+				Log.error( error );
+
+				reject( error );
+			})
+			.then( ( content ) => {
+
+				let code = '';
+
+				if( settings.minified ) { //minification = uglify code
+					code = MinifyJS( content );
+
+					Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( jsModulePath ) }`);
+				}
+				else { //no minification = just copy and rename
+					code = content;
+				}
+
+				if( settings.modules ) { //are we saving modules?
+					WriteFile( to, code ) //write the generated content to file and return its promise
+						.catch( error => {
+							Log.error( error );
+
+							reject( error );
+						})
+						.then( () => {
+							resolve( content );
+					});
+				}
+				else {
+					resolve( content ); //just return the promise
+				}
+		});
+	});
+};
+
+
+/**
+ * Minify all js modules together once their promises have resolved
+ *
+ * @param  {array}  allJS    - An array of promise object for all js modules which will return their code
+ * @param  {object} settings - The SettingsJS object
+ *
+ * @return {promise object}  - Returns true once the promise is resolved
+ */
+const MinifyAllJS = ( allJS, settings ) => {
+	return new Promise( ( resolve, reject ) => {
+		Promise.all( allJS )
+			.catch( error => {
+				Log.error(`Compiling JS ran into an error: ${ error }`);
+			})
+			.then( ( js ) => {
+				const locationJS = Path.normalize(`${ pkgPath }/${ settings.location }/${ settings.name }`);
+				let code = '';
+
+				if( settings.minified ) {
+					code = MinifyJS( js.join(`\n\n`) );
+
+					Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( locationJS ) }`);
+				}
+				else {
+					code = js.join(`\n\n`);
+				}
+
+				WriteFile( locationJS, code ) //write file
+					.catch( error => {
+						Log.error( error );
+
+						reject( error );
+					})
+					.then( () => {
+						resolve( true );
+				});
+		});
+	});
+};
+
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Reading settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -185,7 +318,16 @@ Log.info(`PANCAKE COMPILING MODULES`);
 
 //reading local settings
 const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
-let PKG = JSON.parse( Fs.readFileSync( PackagePath, `utf8` ) );
+let PKG = {};
+
+try {
+	PKG = JSON.parse( Fs.readFileSync( PackagePath, `utf8` ) );
+
+	Log.verbose(`Read settings at ${ Chalk.yellow( PackagePath ) }`);
+}
+catch( error ) {
+	Log.verbose(`No package.json found at ${ Chalk.yellow( PackagePath ) }`);
+}
 
 if( PKG.uikit === undefined ) { //let's make merging easy
 	PKG.uikit = {};
@@ -195,6 +337,7 @@ if( PKG.uikit === undefined ) { //let's make merging easy
 let SettingsCSS = {
 	'minified': true,
 	'modules': false,
+	'browsers': [ 'last 2 versions', 'ie 8', 'ie 9', 'ie 10' ],
 	'location': 'uikit/css/',
 	'name': 'uikit.min.css',
 };
@@ -218,11 +361,11 @@ Object.assign( SettingsCSS, PKG.uikit.css );
 Object.assign( SettingsSASS, PKG.uikit.sass );
 Object.assign( SettingsJS, PKG.uikit.js );
 
-Log.verbose(`Merged local settings with defaults: ` +
+Log.verbose(`Merged local settings with defaults:\n` +
 	Chalk.yellow(
-		`\nSettingsCSS: ${ JSON.stringify( SettingsCSS ) }\n` +
-		`SettingsSASS:  ${ JSON.stringify( SettingsSASS ) }\n` +
-		`SettingsJS:  ${ JSON.stringify( SettingsJS ) }`
+		`SettingsCSS:  ${ JSON.stringify( SettingsCSS ) }\n` +
+		`SettingsSASS: ${ JSON.stringify( SettingsSASS ) }\n` +
+		`SettingsJS:   ${ JSON.stringify( SettingsJS ) }`
 	)
 );
 
@@ -240,10 +383,6 @@ allPackages
 		let compiledAll = []; //for collect all promises
 		let allSass = '';     //all modules to be collected for SettingsCSS.name file
 		let allJS = [];       //all js file paths from all uikit modules
-		let jsCode = {        //all js code if we don't minify
-			allCode: '',
-			code: '',
-		};
 
 		//iterate over each module
 		for( const modulePackage of allModules ) {
@@ -257,7 +396,7 @@ allPackages
 			if( SettingsCSS.modules ) {
 				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.css`);
 
-				compiledAll.push( Sassify( location, sass ) ); //generate css and write file
+				compiledAll.push( Sassify( location, SettingsCSS, sass ) ); //generate css and write file
 			}
 
 			//write scss file
@@ -269,67 +408,51 @@ allPackages
 				compiledAll.push( WriteFile( location, sass ) ); //write file
 			}
 
-			//check if there is js
+			//check if there is JS
 			const jsModulePath = Path.normalize(`${ modulePackage.path }/dist/js/module.js`);
 
 			if( Fs.existsSync( jsModulePath ) ) {
+				Log.verbose(`${ Chalk.green('⌘') } Found JS code in ${ Chalk.yellow( modulePackage.name ) }`);
 
-				if( SettingsJS.modules ) { //only if we have modules enabled
-					if( SettingsJS.minified ) { //minification = uglify code
-						allJS.push( jsModulePath ); //we save this module for the SettingsJS.name file
-						jsCode = UglifyJS.minify( jsModulePath, {});
+				const jsModuleToPath = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.js`);
 
-						Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( jsModulePath ) }`);
-					}
-					else { //no minification = just copy and rename
-						jsCode.allCode += jsCode.code = Fs.readFileSync( jsModulePath, `utf8` ); //should be async
-						jsCode.allCode += `\n\n`; //add some space between modules
-
-						Log.verbose(`Successfully got JS for ${ Chalk.yellow( jsModulePath ) }`);
-					}
-
-					const location = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.js`);
-
-					compiledAll.push( WriteFile( location, jsCode.code ) ); //write file
-				}
+				const jsPromise = HandelJS( jsModulePath, SettingsJS, jsModuleToPath ); //compile js and write to file depending on settings
+				allJS.push( jsPromise );       //collect all js only promises so we can save the SettingsJS.name file later
+				compiledAll.push( jsPromise ); //add them also to the big queue so we don't run into race conditions
 			}
 		}
 
-		//write the SettingsCSS.name file
-		const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
-		allSass = `/*! UI-Kit 2.0 */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
+		if( allModules.length > 0 ) {
 
-		compiledAll.push( Sassify( locationCSS, allSass ) ); //generate SettingsCSS.name file
+			//write the SettingsCSS.name file
+			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
+			allSass = `/*! UI-Kit 2.0 */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
 
-		//write SettingsSASS.name file
-		if( SettingsSASS.generate ) {
-			const locationSASS = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
+			compiledAll.push( Sassify( locationCSS, SettingsCSS, allSass ) ); //generate SettingsCSS.name file
 
-			compiledAll.push( WriteFile( locationSASS, allSass ) ); //write file
-		}
+			//write SettingsSASS.name file
+			if( SettingsSASS.generate ) {
+				const locationSASS = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
 
-		//write SettingsJS.name file
-		const locationJS = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ SettingsJS.name }`);
-		if( SettingsJS.minified ) {
-			jsCode = UglifyJS.minify( allJS, {});
+				compiledAll.push( WriteFile( locationSASS, allSass ) ); //write file
+			}
 
-			Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( locationJS ) }`);
-		}
-		else {
-			jsCode.code = jsCode.allCode; //move chunks
-		}
-
-		compiledAll.push( WriteFile( locationJS, jsCode.code ) ); //write file
+			//write SettingsJS.name file
+			compiledAll.push( MinifyAllJS( allJS, SettingsJS ) );
 
 
-		//after all files have been compiled and written
-		Promise.all( compiledAll )
-			.catch( error => {
-				Log.error(`Compiling Sass ran into an error: ${ error }`);
-			})
-			.then( ( css ) => {
-				Log.ok( `You UI-Kit has been compiled 💥` );
-		});
+			//after all files have been compiled and written
+			Promise.all( compiledAll )
+				.catch( error => {
+					Log.error(`Compiling Sass ran into an error: ${ error }`);
+				})
+				.then( () => {
+					Log.ok( `Your UI-Kit has been compiled 💥` );
+			});
+	}
+	else {
+		Log.info( `No UI-Kit modules found 😬` );
+	}
 });
 
 
