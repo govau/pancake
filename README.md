@@ -28,9 +28,15 @@ This tool comes with three commands:
 **Batter** will check the peerDependencies of all installed modules that have the tag `uikit-module` and error out with a meaningful error message if it
 encounters a conflict.
 
+> Pancakes needs batter first.
+
 **Syrup** will generate Sass import files that include each module you have installed to a path you can specify in your own `package.json`.
 
+> Can’t eat no pancake without Syrup.
+
 **Cream** will return a radio list of all modules that can be selected and installed automatically.
+
+> And if you don’t want to deal with any of it: Use the cream on top straight up.
 
 
 **[⬆ back to top](#content)**
