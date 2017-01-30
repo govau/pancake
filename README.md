@@ -21,9 +21,9 @@ Pancake
 ## What’s inside?
 
 This tool comes with three commands:
-* [Batter](#batter) `pancake batter`
-* [Syrup](#syrup) `pancake syrup`
-* [Cream](#Cream) `pancake cream`
+* [Batter](#batter)
+* [Syrup](#syrup)
+* [Cream](#Cream)
 
 **Batter** will check the peerDependencies of all installed modules that have the tag `uikit-module` and error out with a meaningful error message if it
 encounters a conflict.
@@ -41,9 +41,10 @@ encounters a conflict.
 
 ## Batter
 
-### batter
+### command
+**`batter`**  
 Type: `[command]`  
-Option: `<path>` _(optional)_
+Option: `<path>` _(optional)_  
 Default value: `path to one level below cwd`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
@@ -63,6 +64,19 @@ pandcake batter /Path/to/folder/of/your/package.json
 Batter will also run [Syrup](#syrup) after a successful run.
 You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json.
 
+### command
+**`-v`, `--verbose`**  
+Type: `[command]`  
+Option: `<path>` _(optional)_  
+Default value: `no flag`
+
+Run pancake in verbose silly mode.
+
+```shell
+pancake batter --verbose
+```
+
+
 
 **[⬆ back to top](#content)**
 
@@ -71,12 +85,19 @@ You can change that behavior by adding `"uikit": { "auto-syrup": false }` into y
 
 
 ## Syrup
+
+### command
+**`syrup`**  
 Type: `[command]`  
-Option: `<path>` _(optional)_
+Option: `<path>` _(optional)_  
 Default value: `path to one level below cwd`
 
 Syrup compiles your UI-Kit assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `uikit` object into your
 `package.json`.
+
+```shell
+pancake syrup
+```
 
 Below are all possible settings with default values.
 
@@ -111,6 +132,30 @@ Below are all possible settings with default values.
 		}
 	}
 }
+```
+
+### command
+**`-s`, `--save`**  
+Type: `[flag]`  
+Option: `<path>` _(optional)_  
+Default value: `no flag`
+
+The command will merge your local settings, complete them with the defaults and save them into your `package.json`
+This will sort-of shrink-wrap all settings in so you are completely reproducible.
+
+```shell
+pancake syrup --save
+```
+
+**`-v`, `--verbose`**  
+Type: `[command]`  
+Option: `<path>` _(optional)_  
+Default value: `no flag`
+
+Run pancake in verbose silly mode.
+
+```shell
+pancake syrup --verbose
 ```
 
 
