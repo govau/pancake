@@ -91,6 +91,8 @@ const GetRemoteJson = url => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Log.info(`PANCAKE PUTTING THE CREAM ON TOP`);
 
+pancakes.Loading.start(); //start loading animation
+
 let allPromises = []; //collect both promises
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,9 +129,13 @@ allPromises.push( allPackages ); //keep track of all promises
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Promise.all( allPromises )
 	.catch( error => {
+		pancakes.Loading.stop(); //stop loading animation
+
 		Log.error(`An error occurred getting the basics: ${ error }`);
 	})
 	.then( () => {
+		pancakes.Loading.stop(); //stop loading animation
+
 		let choices = [];          //to be filled with all choices we have
 		let installed = new Map(); //to be filled with installed modules
 

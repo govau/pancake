@@ -317,6 +317,8 @@ const MinifyAllJS = ( allJS, settings ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Log.info(`PANCAKE ADDING SYRUP`);
 
+pancakes.Loading.start(); //start loading animation
+
 //reading local settings
 const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
 let PKGsource = {};
@@ -481,9 +483,13 @@ allPackages
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
+					pancakes.Loading.stop(); //stop loading animation
+
 					Log.error(`Compiling Sass ran into an error: ${ error }`);
 				})
 				.then( () => {
+					pancakes.Loading.stop(); //stop loading animation
+
 					Log.ok( `Your UI-Kit has been compiled 💥` );
 			});
 	}

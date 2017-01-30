@@ -54,6 +54,8 @@ const Log = pancakes.Log;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Log.info(`PANCAKE BAKING THE BATTER`);
 
+pancakes.Loading.start(); //start loading animation
+
 const dependencies = new Map();                             //a map we populate with the dependencies of our modules we found
 const modules = new Map();                                  //a map for all installed modules and their versions
 
@@ -72,9 +74,12 @@ const allPackages = pancakes.GetPackages( pkgPath ); //read all packages and ret
 
 allPackages
 	.catch( error => {
+		pancakes.Loading.stop(); //stop loading animation
+
 		Log.error(`Reading all package.json files bumped into an error: ${ error }`, verbose);
 	})
 	.then( allModules => { //once we got all the content from all package.json files
+		pancakes.Loading.stop(); //stop loading animation
 
 		//add all packages into our maps
 		for( const modulePackage of allModules ) {
@@ -151,15 +156,15 @@ allPackages
 
 		if( allModules.length > 0 ) {
 			Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
+
+			//Shooting off to syrup
+			Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
+
+			Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
 		}
 		else {
 			Log.info( `No modules found 😬` );
 		}
-
-		//Shooting off to syrup
-		Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
-
-		Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
 	}
 );
 
