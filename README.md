@@ -34,7 +34,7 @@ encounters a conflict.
 
 > Can’t eat no pancake without Syrup.
 
-**Cream** will return a radio list of all modules that can be selected and installed automatically.
+**Cream** will return a checkbox list of all modules that can be selected and installed automatically.
 
 > And if you don’t want to deal with any of it: Use the cream on top straight up.
 

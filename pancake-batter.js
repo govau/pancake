@@ -33,8 +33,8 @@ const Fs = require(`fs`);
 let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
 
 Program
-	.arguments('<pkgPath>')
 	.usage( `[command] <input> <option>` )
+	.arguments('<pkgPath>')
 	.action( pkgPathArgument => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
@@ -52,7 +52,7 @@ const Log = pancakes.Log;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // PREPARE, Check for dependencies conflicts
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Log.info(`PANCAKE CHECKING DEPENDENCIES`);
+Log.info(`PANCAKE BAKING THE BATTER`);
 
 const dependencies = new Map();                             //a map we populate with the dependencies of our modules we found
 const modules = new Map();                                  //a map for all installed modules and their versions

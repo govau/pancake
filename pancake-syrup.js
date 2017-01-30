@@ -32,8 +32,8 @@ const Fs = require(`fs`);
 let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
 
 Program
-	.description('syrup')
 	.usage( `[command] <input> <option>` )
+	.arguments('<pkgPath>')
 	.action( pkgPathArgument => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
@@ -315,7 +315,7 @@ const MinifyAllJS = ( allJS, settings ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Reading and merging settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Log.info(`PANCAKE COMPILING MODULES`);
+Log.info(`PANCAKE ADDING SYRUP`);
 
 //reading local settings
 const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
