@@ -37,7 +37,7 @@ Program
 	.action( pkgPathArgument => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
-	.option( `-n, --no-save`, `Don't save my compile ettings into my package.json` )
+	.option( `-s, --save`,    `Save my compile settings into my package.json` )
 	.option( `-b, --batter`,  `Running syrup directly from batter` )
 	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.parse( process.argv );
@@ -313,16 +313,18 @@ const MinifyAllJS = ( allJS, settings ) => {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Reading settings
+// Reading and merging settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Log.info(`PANCAKE COMPILING MODULES`);
 
 //reading local settings
 const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
+let PKGsource = {};
 let PKG = {};
 
 try {
-	PKG = JSON.parse( Fs.readFileSync( PackagePath, `utf8` ) );
+	PKGsource = Fs.readFileSync( PackagePath, `utf8` );
+	PKG = JSON.parse( PKGsource );
 
 	Log.verbose(`Read settings at ${ Chalk.yellow( PackagePath ) }`);
 }
@@ -334,7 +336,7 @@ if( PKG.uikit === undefined ) { //let's make merging easy
 	PKG.uikit = {};
 }
 
-//check local settings if syrup should run at all
+//check local settings if syrup should run at all when coming from batter
 if( PKG.uikit['auto-syrup'] === false && Program.batter ) {
 	Log.verbose(`Syrup is disabled via local settings. Stopping here!`);
 
@@ -364,6 +366,7 @@ let SettingsJS = {
 	'name': 'uikit.min.js',
 }
 
+
 //merging default settings with local package.json
 Object.assign( SettingsCSS, PKG.uikit.css );
 Object.assign( SettingsSASS, PKG.uikit.sass );
@@ -392,7 +395,33 @@ allPackages
 		let allSass = '';     //all modules to be collected for SettingsCSS.name file
 		let allJS = [];       //all js file paths from all uikit modules
 
-		//iterate over each module
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Saving settings into local package.json
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		if( allModules.length > 0 && Program.save ) { //only save if we found uikit modules and the flag was supplied
+			Log.verbose(`Saving settings into ${ Chalk.yellow( PackagePath ) }`);
+
+			PKG.uikit.css = SettingsCSS;
+			PKG.uikit.sass = SettingsSASS;
+			PKG.uikit.js = SettingsJS;
+
+			//detect indentation
+			let indentation = 2; //default indentation even though you all should be using tabs for indentation!
+			const PKGlines = PKGsource.split('\n');
+			let _isSpaces = PKGlines[ 1 ].startsWith('  ');
+
+			if( !_isSpaces ) {
+				indentation = '\t'; //here we go!
+			}
+
+			compiledAll.push( WriteFile( PackagePath, JSON.stringify( PKG, null, indentation ) ) ); //write package.json
+		}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Iterate over each module
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		for( const modulePackage of allModules ) {
 			Log.verbose(`Bulding ${ Chalk.yellow( modulePackage.name ) }`);
 
