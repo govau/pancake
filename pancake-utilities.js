@@ -132,8 +132,8 @@ const ReadPackage = ( pkgPath, verbose ) => {
 						path: pkgPath,
 					}
 
-					setTimeout(() => { resolve( miniPackage ); }, 2000); //for testing animation
-					// resolve( miniPackage );
+					// setTimeout(() => { resolve( miniPackage ); }, 3000); //for testing animation
+					resolve( miniPackage );
 				}
 				else {
 					resolve( null ); //non-uikit packages get null so we can identify them later and filter them out
@@ -181,35 +181,30 @@ const GetPackages = ( pkgPath, verbose ) => {
 /**
  * Loading animation
  *
- * @method  start   - Start spinner
- * @method  stop    - Stop spinner
+ * @method  start - Start spinner
+ * @method  stop  - Stop spinner
  *
  * @return {object} - Object with methods
  */
 const Loading = ( verbose ) => {
 
-	let sequence = [
-		"            * • • • •",
-		"            • * • • •",
-		"            • • * • •",
-		"            • • • * •",
-		"            • • • • *",
-		"            • • • * •",
-		"            • • * • •",
-		"            • * • • •",
-		"            * • • • •",
+	//settings
+	let sequence = [ //the sequence of all animation frame
+		Chalk.gray(`            ${ Chalk.yellow('*') } • • • •`),
+		Chalk.gray(`            • ${ Chalk.yellow('*') } • • •`),
+		Chalk.gray(`            • • ${ Chalk.yellow('*') } • •`),
+		Chalk.gray(`            • • • ${ Chalk.yellow('*') } •`),
+		Chalk.gray(`            • • • • ${ Chalk.yellow('*') }`),
+		Chalk.gray(`            • • • ${ Chalk.yellow('*') } •`),
+		Chalk.gray(`            • • ${ Chalk.yellow('*') } • •`),
+		Chalk.gray(`            • ${ Chalk.yellow('*') } • • •`),
+		Chalk.gray(`            ${ Chalk.yellow('*') } • • • •`),
 	];
-	let index = 0;
-	let timer = {};
-	let speed = 80;
+	let index = 0;   //the current index of the animation
+	let timer = {};  //the setInterval object
+	let speed = 80;  //the speed in which to animate
 
 	return {
-		sequence: sequence, //the sequence of all animation frame
-		index: index,       //the current index of the animation
-		timer: timer,       //the setInterval object
-		speed: speed,       //the speed in which to animate
-		verbose: verbose,   //verbose flag
-
 		start: () => {
 			if( !verbose ) {
 				clearInterval( timer ); //stop any possible parallel loaders

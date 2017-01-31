@@ -44,7 +44,7 @@ Program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
 const Log = pancakes.Log;
-const UIKITurl = `https://raw.githubusercontent.com/govau/uikit/master/uikit.json`;
+const UIKITurl = `https://raw.githubusercontent.com/govau/uikit/master/uikit.json?${ Math.floor( new Date().getTime() / 1000 ) }`; //breaking caching here
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ const GetRemoteJson = url => {
 				url: url,
 				json: true,
 				headers: {
-					'User-Agent': 'pancake',
+					'User-Agent': 'pancake', //well, duh!
 				},
 			}, ( error, result, data ) => {
 				if( error ) {
@@ -83,6 +83,50 @@ const GetRemoteJson = url => {
 			}
 		);
 	});
+};
+
+
+/**
+ * Highlight with green the changes of an semver version comparison
+ *
+ * @param  {string} oldVersion - Old version to compare against
+ * @param  {string} newVersion - New version to highlight
+ *
+ * @return {string}            - Highlighted newVersion
+ */
+const HighlightDiff = ( oldVersion, newVersion ) => {
+	if( !Semver.valid( oldVersion ) ) {
+		Log.error(`Version is not a valid semver version: ${ Chalk.yellow( oldVersion ) }`);
+	}
+
+	if( !Semver.valid( newVersion ) ) {
+		Log.error(`Version is not a valid semver version: ${ Chalk.yellow( newVersion ) }`);
+	}
+
+	if( Semver.major( oldVersion ) !== Semver.major( newVersion ) ) {
+		return Chalk.green( newVersion );
+	}
+
+	if( Semver.minor( oldVersion ) !== Semver.minor( newVersion ) ) {
+		return `${ Semver.major( newVersion ) }.${Chalk.green(`${ Semver.minor( newVersion ) }.${ Semver.patch( newVersion ) }`)}`;
+	}
+
+	if( Semver.major( oldVersion ) !== Semver.major( newVersion ) ) {
+		return `${ Semver.major( newVersion ) }.${ Semver.minor( newVersion ) }.${Chalk.green(`${ Semver.patch( newVersion ) }`)}`;
+	}
+};
+
+
+/**
+ * Return a Inquirer separator used as a headline
+ *
+ * @param  {string} headline - Text for headline
+ * @param  {string} subline  - [optional] Text for subline
+ *
+ * @return {object}          - The Inquirer.Separator object
+ */
+const Headline = ( headline, subline = '' ) => {
+	return new Inquirer.Separator(`\n   ════╡ ${ headline } ╞════${ subline.length > 0 ? `\n   ${ Chalk.gray( subline ) }` : `` }`);
 };
 
 
@@ -144,45 +188,53 @@ Promise.all( allPromises )
 			installed.set( modulePackage.name, modulePackage.version );
 		}
 
+		//getting the longest name of all uikit modules
+		const longestName = Object.keys( UIKIT ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
+
 		Log.verbose(
 			`Got all data from uikit.json and installed modules:\n` +
 			`Installed: ${ Chalk.yellow( JSON.stringify( [ ... installed ] ) ) }\n` +
 			`UIKIT:     ${ Chalk.yellow( JSON.stringify( UIKIT ) ) }`
 		);
 
+		choices.push( Headline( `Easy upgrades`,`Below upgrades are backwards compatible` ) );
+
 		//iterate over all uikit modules
 		for( const module of Object.keys( UIKIT ) ) {
 			const thisChoice = {};                            //let's build this choice out
 			const installedVersion = installed.get( module ); //the installed version of this module
+			const name = module.substring( pancakes.npmOrg.length + 1, module.length );
 
-			thisChoice.name = `${ module } v${ UIKIT[ module ] }`; //we add each module of the uikit in here
+			thisChoice.name = `${ name }  ` +
+				`${ ' '.repeat( longestName - name.length ) }` +
+				`v${ UIKIT[ module ].version }`; //we add each module of the uikit in here
+
 			thisChoice.value = {
-				[ module ]: UIKIT[ module ], //let's make sure we can parse the answer
+				[ module ]: UIKIT[ module ].version, //let's make sure we can parse the answer
 			};
 
-			if( installedVersion.length ) { //in case we have this module already installed, let's check if you can upgrade
+			if( installedVersion !== undefined ) { //in case we have this module already installed, let's check if you can upgrade
 				if(
-					Semver.gte( UIKIT[ module ], installedVersion ) && //if this version is newer than the installed one
-					!Semver.eq( UIKIT[ module ], installedVersion )    //and not equal
+					Semver.gte( UIKIT[ module ].version, installedVersion ) && //if this version is newer than the installed one
+					!Semver.eq( UIKIT[ module ].version, installedVersion )    //and not equal
 				) {
-					thisChoice.name = `${ thisChoice.name } - ${ Chalk.green('*NEWER VERSION AVAILABLE*') }`; //this is actually an upgrade
 
-					choices.push({ //this is the module version you got installed
-						name: `${ module } v${ installedVersion }`,
-						value: {
-							[ module ]: installedVersion,
-						},
-						checked: true,
-					});
+					const newVersion = HighlightDiff( installedVersion, UIKIT[ module ].version );
+
+					thisChoice.name = `${ name }  ` +
+						`${ ' '.repeat( longestName - name.length ) }` +
+						`v${ installedVersion }   >   ${ newVersion }   **NEWER VERSION AVAILABLE**`; //this is actually an upgrade
 				}
 
-				if( Semver.eq( UIKIT[ module ], installedVersion ) ) { //if this version is the same as what's installed
-					thisChoice.checked = true; //you got the latest
+				if( Semver.eq( UIKIT[ module ].version, installedVersion ) ) { //if this version is the same as what's installed
+					thisChoice.disabled = Chalk.gray('installed');
 				}
 			}
 
 			choices.push( thisChoice ); //adding to all checkboxes
 		}
+
+		choices.push( Headline( `Danger zone`,`Below upgrades come with breaking changes.` ) );
 
 		Log.space(); //prettiness
 
@@ -201,7 +253,9 @@ Promise.all( allPromises )
 				}
 			}
 		]).then(( modules ) => {
+
 			console.log(JSON.stringify(modules, null, '  ')); //let's work from here :)
+
 		});
 });
 
