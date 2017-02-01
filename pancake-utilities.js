@@ -259,6 +259,8 @@ const Log = {
 		}
 
 		if( !Log.hasError ) {
+			Loading().stop(); //stop any animations first
+
 			CFonts.say(`CONFLICT`, { //we need something big to help npms error system
 				colors: ['red', 'red'],
 				space: false,
