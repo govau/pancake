@@ -38,6 +38,7 @@ Program
 	.action( pkgPathArgument => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
+	.option( `-d, --dry`,     `Run batter without syrup` )
 	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.parse( process.argv );
 
@@ -70,7 +71,12 @@ if( npmVersion < 3 ) {
 }
 
 //now we go through all modules and make sure all peerDependencies are satisfied
-const allPackages = pancakes.GetPackages( pkgPath ); //read all packages and return an object per module
+const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and return an object per module
+	.catch( error => {
+		Log.error( error );
+
+		process.exit( 1 );
+});
 
 allPackages
 	.catch( error => {
@@ -157,10 +163,12 @@ allPackages
 		if( allModules.length > 0 ) {
 			Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
 
-			//Shooting off to syrup
-			Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
+			if( !Program.dry ) {
+				//Shooting off to syrup
+				Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
 
-			Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
+				Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
+			}
 		}
 		else {
 			Log.info( `No modules found 😬` );

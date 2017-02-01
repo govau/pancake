@@ -95,7 +95,16 @@ Program
 	)
 	.version( `v${ Version }` )
 	.usage( `[command] <input>` )
-	.command(`batter`, `✅  Pancakes needs batter first. Check dependencies for conflicts.`)
-	.command(`syrup`,  `🍯  Can’t eat no pancake without Syrup. Write compiled files into location specified in your package.json`)
-	.command('cream',  '👀  And if you don’t want to deal with any of it: Use the cream on top straight up. Discover gov.au UI-Kit modules and install them')
+	.command(`batter`,
+		`✅  will check the peerDependencies of all installed UI-Kit modules for conflicts and error out with a meaningful error message.\n` +
+		Chalk.gray(`               ❝ Pancakes needs batter. Can’t do no pancakes without batter. This is essential! ❞`)
+	)
+	.command(`syrup`,
+		`🍯  will compile all assets and give you options as to where you might want those assets.\n` +
+		Chalk.gray(`               ❝ Eating pancakes without Syrup is pretty dry. You could but it’s not much fun. ❞`)
+	)
+	.command('cream',
+		'👀  will present you with options to upgrade your existing UI-Kit project or to start a new one.\n' +
+		Chalk.gray(`               ❝ To make it a real sweat experience and you happy in the process, put cream on top. ❞`)
+	)
 	.parse( process.argv );

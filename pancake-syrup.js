@@ -386,7 +386,12 @@ Log.verbose(`Merged local settings with defaults:\n` +
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Going through all modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const allPackages = pancakes.GetPackages( pkgPath ); //read all packages and return an object per module
+const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and return an object per module
+	.catch( error => {
+		Log.error( error );
+
+		process.exit( 1 );
+});
 
 allPackages
 	.catch( error => {
@@ -417,7 +422,14 @@ allPackages
 				indentation = '\t'; //here we go!
 			}
 
-			compiledAll.push( WriteFile( PackagePath, JSON.stringify( PKG, null, indentation ) ) ); //write package.json
+			compiledAll.push(
+				WriteFile( PackagePath, JSON.stringify( PKG, null, indentation ) )  //write package.json
+					.catch( error => {
+							Log.error( error );
+
+							process.exit( 1 );
+					})
+			);
 		}
 
 
@@ -435,7 +447,12 @@ allPackages
 			if( SettingsCSS.modules ) {
 				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.css`);
 
-				compiledAll.push( Sassify( location, SettingsCSS, sass ) ); //generate css and write file
+				compiledAll.push(
+					Sassify( location, SettingsCSS, sass ) //generate css and write file
+						.catch( error => {
+							Log.error( error );
+					})
+				);
 			}
 
 			//write scss file
@@ -444,7 +461,14 @@ allPackages
 
 				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }`;
 
-				compiledAll.push( WriteFile( location, sass ) ); //write file
+				compiledAll.push(
+					WriteFile( location, sass ) //write file
+						.catch( error => {
+							Log.error( error );
+
+							process.exit( 1 );
+					})
+				);
 			}
 
 			//check if there is JS
@@ -455,7 +479,11 @@ allPackages
 
 				const jsModuleToPath = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.js`);
 
-				const jsPromise = HandelJS( jsModulePath, SettingsJS, jsModuleToPath ); //compile js and write to file depending on settings
+				const jsPromise = HandelJS( jsModulePath, SettingsJS, jsModuleToPath ) //compile js and write to file depending on settings
+					.catch( error => {
+						Log.error( error );
+				});
+
 				allJS.push( jsPromise );       //collect all js only promises so we can save the SettingsJS.name file later
 				compiledAll.push( jsPromise ); //add them also to the big queue so we don't run into race conditions
 			}
@@ -467,17 +495,34 @@ allPackages
 			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
 			allSass = `/*! UI-Kit 2.0 */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
 
-			compiledAll.push( Sassify( locationCSS, SettingsCSS, allSass ) ); //generate SettingsCSS.name file
+			compiledAll.push(
+				Sassify( locationCSS, SettingsCSS, allSass ) //generate SettingsCSS.name file
+					.catch( error => {
+						Log.error( error );
+				})
+			);
 
 			//write SettingsSASS.name file
 			if( SettingsSASS.generate ) {
 				const locationSASS = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
 
-				compiledAll.push( WriteFile( locationSASS, allSass ) ); //write file
+				compiledAll.push(
+					WriteFile( locationSASS, allSass ) //write file
+						.catch( error => {
+							Log.error( error );
+
+							process.exit( 1 );
+					})
+				);
 			}
 
 			//write SettingsJS.name file
-			compiledAll.push( MinifyAllJS( allJS, SettingsJS ) );
+			compiledAll.push(
+				MinifyAllJS( allJS, SettingsJS )
+					.catch( error => {
+						Log.error( error );
+				})
+			);
 
 
 			//after all files have been compiled and written

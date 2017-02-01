@@ -166,7 +166,14 @@ const GetPackages = ( pkgPath, verbose ) => {
 	if( allModules !== undefined && allModules.length > 0 ) {
 		Log.verbose(`Found the following module folders:\n${ Chalk.yellow( allModules.join('\n') ) }`, verbose);
 
-		const allPackages = allModules.map( pkg => ReadPackage(pkg, verbose) ); //read all packages and save the promise return
+		const allPackages = allModules.map( pkg => {
+			return ReadPackage(pkg, verbose)
+				.catch( error => {
+					Log.error( error );
+
+					process.exit( 1 );
+			})
+		}); //read all packages and save the promise return
 
 		return Promise.all( allPackages ).then( ( packages ) => { //chaining the promise
 			return packages.filter( p => p !== null );              //making sure packages not identified as uikit don't leave a trace in the returned array

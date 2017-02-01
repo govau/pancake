@@ -70,7 +70,12 @@ const GetRemoteJson = url => {
 				if( error ) {
 					Log.error( error );
 
-					reject( error );
+					if( error.code === 'ENOTFOUND' ) {
+						reject(`Unable to find the uikit.json online. Make sure you’re online.`);
+					}
+					else {
+						reject( error );
+					}
 				}
 				else if( result.statusCode !== 200 ) {
 					Log.error(`Status code of request to ${ Chalk.yellow( url ) } returned: ${ Chalk.yellow( result.statusCode ) } `);
@@ -144,7 +149,13 @@ let allPromises = []; //collect both promises
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Log.verbose(`Getting uikit.json from: ${ Chalk.yellow( UIKITurl ) }`);
 
-const gettingUikit = GetRemoteJson( UIKITurl ); //get the uikig json
+const gettingUikit = GetRemoteJson( UIKITurl ) //get the uikig json
+	.catch( error => {
+		Log.error( error );
+
+		process.exit( 1 );
+});
+
 let UIKIT = {};                                 //for uikit data in a larger scope
 
 gettingUikit.then( data => {
@@ -159,7 +170,12 @@ allPromises.push( gettingUikit ); //keep track of all promises
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 let allModules = {}; //for all modules in a larger scope
 
-const allPackages = pancakes.GetPackages( pkgPath ); //read all packages and return an object per module
+const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and return an object per module
+	.catch( error => {
+		Log.error( error );
+
+		process.exit( 1 );
+});
 
 allPackages.then( data => {
 	allModules = data; //adding all uikit modules into our scoped variable
@@ -175,12 +191,18 @@ Promise.all( allPromises )
 	.catch( error => {
 		pancakes.Loading.stop(); //stop loading animation
 
-		Log.error(`An error occurred getting the basics: ${ error }`);
+		Log.error(`An error occurred getting the basics right: ${ error }`); //I hope that never happens ;)
+
+		process.exit( 1 );
 	})
 	.then( () => {
 		pancakes.Loading.stop(); //stop loading animation
 
 		let choices = [];          //to be filled with all choices we have
+		let newChoices = [];       //to be filled with all new uikit modules
+		let easyChoices = [];      //to be filled with all easy upgradeable non-breaking modules
+		let hardChoices = [];      //to be filled with all modules with breaking changes
+		let installedChoices = []; //to be filled with all modules that have been installed already
 		let installed = new Map(); //to be filled with installed modules
 
 		//convert installed modules array into map for better querying
@@ -188,7 +210,7 @@ Promise.all( allPromises )
 			installed.set( modulePackage.name, modulePackage.version );
 		}
 
-		//getting the longest name of all uikit modules
+		//getting the longest name of all uikit modules for nice alignment
 		const longestName = Object.keys( UIKIT ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
 
 		Log.verbose(
@@ -196,8 +218,6 @@ Promise.all( allPromises )
 			`Installed: ${ Chalk.yellow( JSON.stringify( [ ... installed ] ) ) }\n` +
 			`UIKIT:     ${ Chalk.yellow( JSON.stringify( UIKIT ) ) }`
 		);
-
-		choices.push( Headline( `Easy upgrades`,`Below upgrades are backwards compatible` ) );
 
 		//iterate over all uikit modules
 		for( const module of Object.keys( UIKIT ) ) {
@@ -213,28 +233,56 @@ Promise.all( allPromises )
 				[ module ]: UIKIT[ module ].version, //let's make sure we can parse the answer
 			};
 
-			if( installedVersion !== undefined ) { //in case we have this module already installed, let's check if you can upgrade
+			if( installedVersion === undefined ) { //in case we have this module already installed, let's check if you can upgrade
+				newChoices.push( thisChoice ); //this is a new module
+			}
+			else {
 				if(
 					Semver.gte( UIKIT[ module ].version, installedVersion ) && //if this version is newer than the installed one
 					!Semver.eq( UIKIT[ module ].version, installedVersion )    //and not equal
 				) {
-
 					const newVersion = HighlightDiff( installedVersion, UIKIT[ module ].version );
 
 					thisChoice.name = `${ name }  ` +
 						`${ ' '.repeat( longestName - name.length ) }` +
 						`v${ installedVersion }   >   ${ newVersion }   **NEWER VERSION AVAILABLE**`; //this is actually an upgrade
+
+					if( Semver.major( installedVersion ) !== Semver.major( UIKIT[ module ].version ) ) {
+						hardChoices.push( thisChoice ); //this is a breaking change upgrade
+					}
+					else {
+						easyChoices.push( thisChoice ); //this is an easy upgrade
+					}
 				}
 
 				if( Semver.eq( UIKIT[ module ].version, installedVersion ) ) { //if this version is the same as what's installed
 					thisChoice.disabled = Chalk.gray('installed');
+
+					installedChoices.push( thisChoice ); //already installed module
 				}
 			}
-
-			choices.push( thisChoice ); //adding to all checkboxes
 		}
 
-		choices.push( Headline( `Danger zone`,`Below upgrades come with breaking changes.` ) );
+		//building options object
+		if( installedChoices.length ) {
+			choices.push( Headline( `Already installed modules`,`Below modules are already installed` ) );
+			choices.push(...installedChoices); //merging in options
+		}
+
+		if( newChoices.length ) {
+			choices.push( Headline( `New modules`,`Below modules can be newly installed` ) );
+			choices.push(...newChoices); //merging in options
+		}
+
+		if( easyChoices.length ) {
+			choices.push( Headline( `Easy upgrades`,`Below upgrades are backwards compatible` ) );
+			choices.push(...easyChoices); //merging in options
+		}
+
+		if( hardChoices.length ) {
+			choices.push( Headline( `Danger zone`,`Below upgrades come with breaking changes.` ) );
+			choices.push(...hardChoices); //merging in options
+		}
 
 		Log.space(); //prettiness
 
