@@ -547,6 +547,6 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adding some event handling to exit signals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-process.on( 'exit', pancakes.ExitHandler.bind( null, { now: false } ) );              //on closing
+process.on( 'exit', pancakes.ExitHandler.bind( null, { now: Program.batter ? true : false } ) );              //on closing
 process.on( 'SIGINT', pancakes.ExitHandler.bind( null, { now: true } ) );             //on [ctrl] + [c]
 process.on( 'uncaughtException', pancakes.ExitHandler.bind( null, { now: true } ) );  //on uncaught exceptions
