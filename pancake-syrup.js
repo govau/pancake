@@ -4,6 +4,8 @@
  *
  * SYRUP 🍯
  *
+ * This script will compile your assets and save them in a folder outside node_modules/. This behavior can be changed in your own package.json.
+ *
  * @repo    - https://github.com/AusDTO/uikit-pancake
  * @author  - Dominik Wilkowski
  * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)

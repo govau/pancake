@@ -4,6 +4,8 @@
  *
  * CREAM 👀
  *
+ * The script helps you install uikit modules or checks for upgrades for you and presents you with a nice option list to see what to upgrade.
+ *
  * @repo    - https://github.com/AusDTO/uikit-pancake
  * @author  - Dominik Wilkowski
  * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)

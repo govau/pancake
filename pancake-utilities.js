@@ -57,7 +57,14 @@ const CreateDir = ( dir, verbose ) => {
 			currentPath = `${ path }/${ subPath }`;
 
 			if( !Fs.existsSync( currentPath ) ){
-				Fs.mkdirSync( currentPath );
+				try {
+					Fs.mkdirSync( currentPath );
+				}
+				catch( error ) {
+					Log.error( error );
+
+					process.exit( 1 );
+				}
 			}
 		}
 		else {
