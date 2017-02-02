@@ -6,9 +6,9 @@
  *
  * This script will compile your assets and save them in a folder outside node_modules/. This behavior can be changed in your own package.json.
  *
- * @repo    - https://github.com/AusDTO/uikit-pancake
+ * @repo    - https://github.com/AusDTO/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/AusDTO/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -36,12 +36,12 @@ let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgP
 Program
 	.usage( `[command] <input> <option>` )
 	.arguments('<pkgPath>')
-	.action( pkgPathArgument => {
-		pkgPath = pkgPathArgument; //overwriting default value with user input
-	})
 	.option( `-s, --save`,    `Save my compile settings into my package.json` )
 	.option( `-b, --batter`,  `Running syrup directly from batter` )
 	.option( `-v, --verbose`, `Run the program in verbose mode` )
+	.action( pkgPathArgument => {
+		pkgPath = pkgPathArgument; //overwriting default value with user input
+	})
 	.parse( process.argv );
 
 
@@ -336,12 +336,12 @@ catch( error ) {
 	Log.verbose(`No package.json found at ${ Chalk.yellow( PackagePath ) }`);
 }
 
-if( PKG.uikit === undefined ) { //let's make merging easy
-	PKG.uikit = {};
+if( PKG.pancake === undefined ) { //let's make merging easy
+	PKG.pancake = {};
 }
 
 //check local settings if syrup should run at all when coming from batter
-if( PKG.uikit['auto-syrup'] === false && Program.batter ) {
+if( PKG.pancake['auto-syrup'] === false && Program.batter ) {
 	Log.verbose(`Syrup is disabled via local settings. Stopping here!`);
 
 	process.exit( 0 );
@@ -352,29 +352,29 @@ let SettingsCSS = {
 	'minified': true,
 	'modules': false,
 	'browsers': [ 'last 2 versions', 'ie 8', 'ie 9', 'ie 10' ],
-	'location': 'uikit/css/',
-	'name': 'uikit.min.css',
+	'location': 'pancake/css/',
+	'name': 'pancake.min.css',
 };
 
 let SettingsSASS = {
 	'generate': true,
 	'modules': false,
-	'location': 'uikit/sass/',
-	'name': 'uikit.scss',
+	'location': 'pancake/sass/',
+	'name': 'pancake.scss',
 };
 
 let SettingsJS = {
 	'minified': true,
 	'modules': false,
-	'location': 'uikit/js/',
-	'name': 'uikit.min.js',
+	'location': 'pancake/js/',
+	'name': 'pancake.min.js',
 }
 
 
 //merging default settings with local package.json
-Object.assign( SettingsCSS, PKG.uikit.css );
-Object.assign( SettingsSASS, PKG.uikit.sass );
-Object.assign( SettingsJS, PKG.uikit.js );
+Object.assign( SettingsCSS, PKG.pancake.css );
+Object.assign( SettingsSASS, PKG.pancake.sass );
+Object.assign( SettingsJS, PKG.pancake.js );
 
 Log.verbose(`Merged local settings with defaults:\n` +
 	Chalk.yellow(
@@ -402,18 +402,18 @@ allPackages
 	.then( allModules => {  //once we got all the content from all package.json files
 		let compiledAll = []; //for collect all promises
 		let allSass = '';     //all modules to be collected for SettingsCSS.name file
-		let allJS = [];       //all js file paths from all uikit modules
+		let allJS = [];       //all js file paths from all pancake modules
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Saving settings into local package.json
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		if( allModules.length > 0 && Program.save ) { //only save if we found uikit modules and the flag was supplied
+		if( allModules.length > 0 && Program.save ) { //only save if we found pancake modules and the flag was supplied
 			Log.verbose(`Saving settings into ${ Chalk.yellow( PackagePath ) }`);
 
-			PKG.uikit.css = SettingsCSS;
-			PKG.uikit.sass = SettingsSASS;
-			PKG.uikit.js = SettingsJS;
+			PKG.pancake.css = SettingsCSS;
+			PKG.pancake.sass = SettingsSASS;
+			PKG.pancake.js = SettingsJS;
 
 			//detect indentation
 			let indentation = 2; //default indentation even though you all should be using tabs for indentation!
@@ -495,7 +495,7 @@ allPackages
 
 			//write the SettingsCSS.name file
 			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
-			allSass = `/*! UI-Kit 2.0 */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
+			allSass = `/*! PANCAKE */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
 
 			compiledAll.push(
 				Sassify( locationCSS, SettingsCSS, allSass ) //generate SettingsCSS.name file
@@ -537,11 +537,11 @@ allPackages
 				.then( () => {
 					pancakes.Loading.stop(); //stop loading animation
 
-					Log.ok( `Your UI-Kit has been compiled 💥` );
+					Log.ok( `Your delicious pancake is ready to be consumed 💥` );
 			});
 	}
 	else {
-		Log.info( `No UI-Kit modules found 😬` );
+		Log.info( `No pancake modules found 😬` );
 	}
 });
 

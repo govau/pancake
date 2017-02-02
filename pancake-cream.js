@@ -4,11 +4,11 @@
  *
  * CREAM 👀
  *
- * The script helps you install uikit modules or checks for upgrades for you and presents you with a nice option list to see what to upgrade.
+ * The script helps you install pancake modules or checks for upgrades for you and presents you with a nice option list to see what to upgrade.
  *
- * @repo    - https://github.com/AusDTO/uikit-pancake
+ * @repo    - https://github.com/AusDTO/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/AusDTO/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -30,14 +30,17 @@ const Path = require(`path`);
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
+let PANCAKEurl = `https://raw.githubusercontent.com/govau/uikit/master/uikit.json`;
 
 Program
 	.usage( `[command] <input> <option>` )
 	.arguments('<pkgPath>')
-	.action( pkgPathArgument => {
+	.option( `-v, --verbose`,           `Run the program in verbose mode` )
+	.option( `-j, --json [pancakeURL]`, `Overwrite the default json URL` )
+	.action( ( pkgPathArgument, pancakeURL ) => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
+		PANCAKEurl = pancakeURL.json ? pancakeURL.json : PANCAKEurl;
 	})
-	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.parse( process.argv );
 
 
@@ -46,7 +49,9 @@ Program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
 const Log = pancakes.Log;
-const UIKITurl = `https://raw.githubusercontent.com/govau/uikit/master/uikit.json?${ Math.floor( new Date().getTime() / 1000 ) }`; //breaking caching here
+PANCAKEurl += `?${ Math.floor( new Date().getTime() / 1000 ) }`; //breaking caching here
+
+console.log(PANCAKEurl);
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -73,7 +78,7 @@ const GetRemoteJson = url => {
 					Log.error( error );
 
 					if( error.code === 'ENOTFOUND' ) {
-						reject(`Unable to find the uikit.json online. Make sure you’re online.`);
+						reject(`Unable to find the json file online. Make sure you’re online.`);
 					}
 					else {
 						reject( error );
@@ -147,28 +152,28 @@ pancakes.Loading.start(); //start loading animation
 let allPromises = []; //collect both promises
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Get uikit.json
+// Get json file
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Log.verbose(`Getting uikit.json from: ${ Chalk.yellow( UIKITurl ) }`);
+Log.verbose(`Getting json file from: ${ Chalk.yellow( PANCAKEurl ) }`);
 
-const gettingUikit = GetRemoteJson( UIKITurl ) //get the uikig json
+const gettingJSON = GetRemoteJson( PANCAKEurl ) //get the json file
 	.catch( error => {
 		Log.error( error );
 
 		process.exit( 1 );
 });
 
-let UIKIT = {};                                 //for uikit data in a larger scope
+let PANCAKE = {};                                //for pancake data in a larger scope
 
-gettingUikit.then( data => {
-	UIKIT = data; //adding the data of uikit.json into our scoped variable
+gettingJSON.then( data => {
+	PANCAKE = data; //adding the data of the json file into our scoped variable
 });
 
-allPromises.push( gettingUikit ); //keep track of all promises
+allPromises.push( gettingJSON ); //keep track of all promises
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Get uikit modules
+// Get pancake modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 let allModules = {}; //for all modules in a larger scope
 
@@ -180,7 +185,7 @@ const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and retu
 });
 
 allPackages.then( data => {
-	allModules = data; //adding all uikit modules into our scoped variable
+	allModules = data; //adding all pancake modules into our scoped variable
 });
 
 allPromises.push( allPackages ); //keep track of all promises
@@ -201,7 +206,7 @@ Promise.all( allPromises )
 		pancakes.Loading.stop(); //stop loading animation
 
 		let choices = [];          //to be filled with all choices we have
-		let newChoices = [];       //to be filled with all new uikit modules
+		let newChoices = [];       //to be filled with all new pancake modules
 		let easyChoices = [];      //to be filled with all easy upgradeable non-breaking modules
 		let hardChoices = [];      //to be filled with all modules with breaking changes
 		let installedChoices = []; //to be filled with all modules that have been installed already
@@ -212,27 +217,27 @@ Promise.all( allPromises )
 			installed.set( modulePackage.name, modulePackage.version );
 		}
 
-		//getting the longest name of all uikit modules for nice alignment
-		const longestName = Object.keys( UIKIT ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
+		//getting the longest name of all pancake modules for nice alignment
+		const longestName = Object.keys( PANCAKE ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
 
 		Log.verbose(
-			`Got all data from uikit.json and installed modules:\n` +
+			`Got all data from the json file and installed modules:\n` +
 			`Installed: ${ Chalk.yellow( JSON.stringify( [ ... installed ] ) ) }\n` +
-			`UIKIT:     ${ Chalk.yellow( JSON.stringify( UIKIT ) ) }`
+			`PANCAKE:     ${ Chalk.yellow( JSON.stringify( PANCAKE ) ) }`
 		);
 
-		//iterate over all uikit modules
-		for( const module of Object.keys( UIKIT ) ) {
+		//iterate over all pancake modules
+		for( const module of Object.keys( PANCAKE ) ) {
 			const thisChoice = {};                            //let's build this choice out
 			const installedVersion = installed.get( module ); //the installed version of this module
 			const name = module.substring( pancakes.npmOrg.length + 1, module.length );
 
 			thisChoice.name = `${ name }  ` +
 				`${ ' '.repeat( longestName - name.length ) }` +
-				`v${ UIKIT[ module ].version }`; //we add each module of the uikit in here
+				`v${ PANCAKE[ module ].version }`; //we add each module of the json file in here
 
 			thisChoice.value = {
-				[ module ]: UIKIT[ module ].version, //let's make sure we can parse the answer
+				[ module ]: PANCAKE[ module ].version, //let's make sure we can parse the answer
 			};
 
 			if( installedVersion === undefined ) { //in case we have this module already installed, let's check if you can upgrade
@@ -240,16 +245,16 @@ Promise.all( allPromises )
 			}
 			else {
 				if(
-					Semver.gte( UIKIT[ module ].version, installedVersion ) && //if this version is newer than the installed one
-					!Semver.eq( UIKIT[ module ].version, installedVersion )    //and not equal
+					Semver.gte( PANCAKE[ module ].version, installedVersion ) && //if this version is newer than the installed one
+					!Semver.eq( PANCAKE[ module ].version, installedVersion )    //and not equal
 				) {
-					const newVersion = HighlightDiff( installedVersion, UIKIT[ module ].version );
+					const newVersion = HighlightDiff( installedVersion, PANCAKE[ module ].version );
 
 					thisChoice.name = `${ name }  ` +
 						`${ ' '.repeat( longestName - name.length ) }` +
 						`v${ installedVersion }   >   ${ newVersion }   **NEWER VERSION AVAILABLE**`; //this is actually an upgrade
 
-					if( Semver.major( installedVersion ) !== Semver.major( UIKIT[ module ].version ) ) {
+					if( Semver.major( installedVersion ) !== Semver.major( PANCAKE[ module ].version ) ) {
 						hardChoices.push( thisChoice ); //this is a breaking change upgrade
 					}
 					else {
@@ -257,7 +262,7 @@ Promise.all( allPromises )
 					}
 				}
 
-				if( Semver.eq( UIKIT[ module ].version, installedVersion ) ) { //if this version is the same as what's installed
+				if( Semver.eq( PANCAKE[ module ].version, installedVersion ) ) { //if this version is the same as what's installed
 					thisChoice.disabled = Chalk.gray('installed');
 
 					installedChoices.push( thisChoice ); //already installed module
@@ -291,7 +296,7 @@ Promise.all( allPromises )
 		Inquirer.prompt([
 			{
 				type: 'checkbox',
-				message: 'Select your UI-Kit modules',
+				message: 'Select your pancake modules',
 				name: 'modules',
 				choices: choices,
 				validate: ( answer ) => {

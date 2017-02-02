@@ -7,9 +7,9 @@
  * This script will check all modules installed inside the ${ npmOrg } folder and check each peer dependency. Descriptive errors are written out when
  * dependency conflicts are detected.
  *
- * @repo    - https://github.com/AusDTO/uikit-pancake
+ * @repo    - https://github.com/AusDTO/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/AusDTO/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -35,11 +35,11 @@ let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgP
 Program
 	.usage( `[command] <input> <option>` )
 	.arguments('<pkgPath>')
+	.option( `-d, --dry`,     `Run batter without syrup` )
+	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.action( pkgPathArgument => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
-	.option( `-d, --dry`,     `Run batter without syrup` )
-	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.parse( process.argv );
 
 
@@ -65,7 +65,7 @@ Log.verbose(`NPM version ${ Chalk.yellow( npmVersion ) } detected`);
 
 //npm 3 and higher is required as below will install dependencies inside each module folder
 if( npmVersion < 3 ) {
-	Log.error(`The UI-Kit can only be installed via npm 3 and higher.`);
+	Log.error(`Pancake can only be installed via npm 3 and higher.`);
 	Log.space();
 	process.exit( 1 );
 }

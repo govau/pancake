@@ -16,9 +16,9 @@
  * pancake cream
  * Listing. It will list all available modules for you to select and install them for you.
  *
- * @repo    - https://github.com/AusDTO/uikit-pancake
+ * @repo    - https://github.com/AusDTO/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/AusDTO/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -89,14 +89,14 @@ if( process.argv.length <= 2 ) {
 
 
 Program
-	.description(
-		`( ^-^)_旦 🥞  Pancake is a utility for the UI-Kit of the gov.au team. ` +
-		`It lets you check your peerDependencies, write include files for all your UI-Kit modules and lists all available modules for you to select and install.`
-	)
 	.version( `v${ Version }` )
 	.usage( `[command] <input>` )
+	.description(
+		`( ^-^)_旦 🥞  Pancake is an utility for the UI-Kit of the gov.au team. ` +
+		`It lets you check your peerDependencies, write include files for all your pancake modules and lists all available modules for you to select and install.`
+	)
 	.command(`batter`,
-		`✅  will check the peerDependencies of all installed UI-Kit modules for conflicts and error out with a meaningful error message.\n` +
+		`✅  will check the peerDependencies of all installed pancake modules for conflicts and error out with a meaningful error message.\n` +
 		Chalk.gray(`               ❝ Pancakes needs batter. Can’t do no pancakes without batter. This is essential! ❞`)
 	)
 	.command(`syrup`,
@@ -104,7 +104,7 @@ Program
 		Chalk.gray(`               ❝ Eating pancakes without Syrup is pretty dry. You could but it’s not much fun. ❞`)
 	)
 	.command('cream',
-		'👀  will present you with options to upgrade your existing UI-Kit project or to start a new one.\n' +
+		'👀  will present you with options to upgrade your existing pancake project or to start a new one.\n' +
 		Chalk.gray(`               ❝ To make it a real sweat experience and you happy in the process, put cream on top. ❞`)
 	)
 	.parse( process.argv );

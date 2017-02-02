@@ -27,7 +27,7 @@ This tool comes with three commands:
 
 > Pancakes needs batter. Can’t do no pancakes without batter. This is essential!
 
-**Batter** will check the peerDependencies of all installed UI-Kit modules for conflicts and error out with a meaningful error message.
+**Batter** will check the peerDependencies of all installed pancake modules for conflicts and error out with a meaningful error message.
 
 > Eating pancakes without Syrup is pretty dry. You could but it’s not much fun.
 
@@ -35,7 +35,7 @@ This tool comes with three commands:
 
 > To make it a real sweat experience and you happy in the process, put cream on top.
 
-**Cream** will present you with options to upgrade your existing UI-Kit project or to start a new one. All that while checking conflicts, communicating what
+**Cream** will present you with options to upgrade your existing pancake project or to start a new one. All that while checking conflicts, communicating what
 breaking changes might occur and what an easy way out might be.
 
 
@@ -54,7 +54,7 @@ Option: `<path>` _(optional)_
 Default value: `path to one level below cwd`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
-in scope)_</sup> `package.json` in search for a gov.au UI-Kit module. If it finds one, identified by the tag `uikit-module` and org scope `gov.au`, it will
+in scope)_</sup> `package.json` in search for a gov.au UI-Kit module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`, it will
 record it’s peerDependencies and cross check against all other installed modules.
 
 ```shell
@@ -111,7 +111,7 @@ Type: `[command]`
 Option: `<path>` _(optional)_  
 Default value: `path to one level below cwd`
 
-Syrup compiles your UI-Kit assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `uikit` object into your
+Syrup compiles your pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
 `package.json`.
 
 ```shell

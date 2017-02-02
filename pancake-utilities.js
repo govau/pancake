@@ -29,11 +29,11 @@ const Fs = require(`fs`);
 const npmOrg = '@gov.au';
 
 /**
- * This keyword will signal to us that the package we found is a legitimate uikit module
+ * This keyword will signal to us that the package we found is a legitimate pancake module
  *
  * @type constant {String}
  */
-const controlKeyword = 'uikit-module';
+const controlKeyword = 'pancake-module';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,15 +127,14 @@ const ReadPackage = ( pkgPath, verbose ) => {
 
 				const packageJson = JSON.parse( data ); //parse the package.json
 
-				if( packageJson.keywords.indexOf( controlKeyword ) !== -1 ) { //is this a uikit module?
-					Log.verbose(`${ Chalk.green('✔') } Identified ${ Chalk.yellow( packageJson.name ) } as uikit module`, verbose);
+				if( packageJson.keywords.indexOf( controlKeyword ) !== -1 ) { //is this a pancake module?
+					Log.verbose(`${ Chalk.green('✔') } Identified ${ Chalk.yellow( packageJson.name ) } as pancake module`, verbose);
 
 					//we only want a subset
 					const miniPackage = {
 						name: packageJson.name,
 						version: packageJson.version,
 						peerDependencies: packageJson.peerDependencies,
-						uikit: packageJson.uikit,
 						path: pkgPath,
 					}
 
@@ -143,7 +142,7 @@ const ReadPackage = ( pkgPath, verbose ) => {
 					resolve( miniPackage );
 				}
 				else {
-					resolve( null ); //non-uikit packages get null so we can identify them later and filter them out
+					resolve( null ); //non-pancake packages get null so we can identify them later and filter them out
 				}
 			}
 		});
@@ -152,7 +151,7 @@ const ReadPackage = ( pkgPath, verbose ) => {
 
 
 /**
- * Get an object of all uikit modules package.json inside a specified folder
+ * Get an object of all pancake modules package.json inside a specified folder
  *
  * @param  {string}  pkgPath - The path that includes your node_module folder
  * @param  {boolean} verbose - Verbose flag either undefined or true
@@ -166,7 +165,7 @@ const GetPackages = ( pkgPath, verbose ) => {
 
 	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org to the path
 
-	Log.verbose(`Looking for uikit modules in: ${ Chalk.yellow( pkgPath ) }`, verbose);
+	Log.verbose(`Looking for pancake modules in: ${ Chalk.yellow( pkgPath ) }`, verbose);
 
 	const allModules = GetFolders( pkgPath );          //all folders inside the selected path
 
@@ -183,11 +182,11 @@ const GetPackages = ( pkgPath, verbose ) => {
 		}); //read all packages and save the promise return
 
 		return Promise.all( allPackages ).then( ( packages ) => { //chaining the promise
-			return packages.filter( p => p !== null );              //making sure packages not identified as uikit don't leave a trace in the returned array
+			return packages.filter( p => p !== null );              //making sure packages not identified as a pancake module don't leave a trace in the returned array
 		});
 	}
 	else {
-		return Promise.resolve([]); //no uikit modules found at all
+		return Promise.resolve([]); //no pancake modules found at all
 	}
 };
 
