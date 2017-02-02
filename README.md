@@ -25,18 +25,18 @@ This tool comes with three commands:
 * [Syrup](#syrup)
 * [Cream](#Cream)
 
-**Batter** will check the peerDependencies of all installed modules that have the tag `uikit-module` and error out with a meaningful error message if it
-encounters a conflict.
+> Pancakes needs batter. Can’t do no pancakes without batter. This is essential!
 
-> Pancakes needs batter first.
+**Batter** will check the peerDependencies of all installed pancake modules for conflicts and error out with a meaningful error message.
 
-**Syrup** will generate Sass import files that include each module you have installed to a path you can specify in your own `package.json`.
+> Eating pancakes without Syrup is pretty dry. You could but it’s not much fun.
 
-> Can’t eat no pancake without Syrup.
+**Syrup** will compile all assets and give you options as to where you might want those assets.
 
-**Cream** will return a radio list of all modules that can be selected and installed automatically.
+> To make it a real sweat experience and you happy in the process, put cream on top.
 
-> And if you don’t want to deal with any of it: Use the cream on top straight up.
+**Cream** will present you with options to upgrade your existing pancake project or to start a new one. All that while checking conflicts, communicating what
+breaking changes might occur and what an easy way out might be.
 
 
 **[⬆ back to top](#content)**
@@ -54,7 +54,7 @@ Option: `<path>` _(optional)_
 Default value: `path to one level below cwd`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
-in scope)_</sup> `package.json` in search for a gov.au UI-Kit module. If it finds one, identified by the tag `uikit-module` and org scope `gov.au`, it will
+in scope)_</sup> `package.json` in search for a gov.au UI-Kit module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`, it will
 record it’s peerDependencies and cross check against all other installed modules.
 
 ```shell
@@ -70,6 +70,20 @@ pandcake batter /Path/to/folder/of/your/package.json
 Batter will also run [Syrup](#syrup) after a successful run.
 You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json.
 
+
+### command
+**`-d`, `--dry`**  
+Type: `[command]`  
+Option: `<path>` _(optional)_  
+Default value: `no flag`
+
+Run batter without syrup.
+
+```shell
+pancake batter --dry
+```
+
+
 ### command
 **`-v`, `--verbose`**  
 Type: `[command]`  
@@ -81,7 +95,6 @@ Run pancake in verbose silly mode.
 ```shell
 pancake batter --verbose
 ```
-
 
 
 **[⬆ back to top](#content)**
@@ -98,7 +111,7 @@ Type: `[command]`
 Option: `<path>` _(optional)_  
 Default value: `path to one level below cwd`
 
-Syrup compiles your UI-Kit assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `uikit` object into your
+Syrup compiles your pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
 `package.json`.
 
 ```shell

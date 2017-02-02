@@ -7,9 +7,9 @@
  * This script will check all modules installed inside the ${ npmOrg } folder and check each peer dependency. Descriptive errors are written out when
  * dependency conflicts are detected.
  *
- * @repo    - https://github.com/AusDTO/uikit-pancake
+ * @repo    - https://github.com/AusDTO/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/AusDTO/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -33,12 +33,13 @@ const Fs = require(`fs`);
 let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
 
 Program
-	.arguments('<pkgPath>')
 	.usage( `[command] <input> <option>` )
+	.arguments('<pkgPath>')
+	.option( `-d, --dry`,     `Run batter without syrup` )
+	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.action( pkgPathArgument => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
 	})
-	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.parse( process.argv );
 
 
@@ -52,7 +53,9 @@ const Log = pancakes.Log;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // PREPARE, Check for dependencies conflicts
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Log.info(`PANCAKE CHECKING DEPENDENCIES`);
+Log.info(`PANCAKE MAKING THE BATTER`);
+
+pancakes.Loading.start(); //start loading animation
 
 const dependencies = new Map();                             //a map we populate with the dependencies of our modules we found
 const modules = new Map();                                  //a map for all installed modules and their versions
@@ -62,19 +65,27 @@ Log.verbose(`NPM version ${ Chalk.yellow( npmVersion ) } detected`);
 
 //npm 3 and higher is required as below will install dependencies inside each module folder
 if( npmVersion < 3 ) {
-	Log.error(`The UI-Kit can only be installed via npm 3 and higher.`);
+	Log.error(`Pancake can only be installed via npm 3 and higher.`);
 	Log.space();
 	process.exit( 1 );
 }
 
 //now we go through all modules and make sure all peerDependencies are satisfied
-const allPackages = pancakes.GetPackages( pkgPath ); //read all packages and return an object per module
+const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and return an object per module
+	.catch( error => {
+		Log.error( error );
+
+		process.exit( 1 );
+});
 
 allPackages
 	.catch( error => {
+		pancakes.Loading.stop(); //stop loading animation
+
 		Log.error(`Reading all package.json files bumped into an error: ${ error }`, verbose);
 	})
 	.then( allModules => { //once we got all the content from all package.json files
+		pancakes.Loading.stop(); //stop loading animation
 
 		//add all packages into our maps
 		for( const modulePackage of allModules ) {
@@ -151,15 +162,17 @@ allPackages
 
 		if( allModules.length > 0 ) {
 			Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
+
+			if( !Program.dry ) {
+				//Shooting off to syrup
+				Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
+
+				Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
+			}
 		}
 		else {
 			Log.info( `No modules found 😬` );
 		}
-
-		//Shooting off to syrup
-		Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
-
-		Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
 	}
 );
 
