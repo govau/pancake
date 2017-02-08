@@ -18,8 +18,10 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+const StripAnsi = require('strip-ansi');
 const Program = require('commander');
 const Inquirer = require('inquirer');
+const Size = require('window-size');
 const Request = require('request');
 const Semver =  require('semver');
 const Chalk = require('chalk');
@@ -123,22 +125,60 @@ const HighlightDiff = ( oldVersion, newVersion ) => {
 		return `${ Semver.major( newVersion ) }.${Chalk.green(`${ Semver.minor( newVersion ) }.${ Semver.patch( newVersion ) }`)}`;
 	}
 
-	if( Semver.major( oldVersion ) !== Semver.major( newVersion ) ) {
+	if( Semver.patch( oldVersion ) !== Semver.patch( newVersion ) ) {
 		return `${ Semver.major( newVersion ) }.${ Semver.minor( newVersion ) }.${Chalk.green(`${ Semver.patch( newVersion ) }`)}`;
 	}
 };
 
 
 /**
- * Return a Inquirer separator used as a headline
+ * Return a couple Inquirer separator used as a headline
  *
- * @param  {string} headline - Text for headline
- * @param  {string} subline  - [optional] Text for subline
+ * @param  {string} headline    - Text for headline
+ * @param  {string} subline     - [optional] Text for subline
+ * @param {integer} longestName - The max length of all lines we can center align the headline
  *
  * @return {object}          - The Inquirer.Separator object
  */
-const Headline = ( headline, subline = '' ) => {
-	return new Inquirer.Separator(`\n   ════╡ ${ headline } ╞════${ subline.length > 0 ? `\n   ${ Chalk.gray( subline ) }` : `` }`);
+const Headline = ( headline, subline = '', longestName ) => {
+	const side = ( longestName - ( 4 * 2 ) - headline.length ) / 2; //calculate the sides
+
+	return [
+		new Inquirer.Separator(` `),
+		new Inquirer.Separator( Chalk.reset.bgBlue.cyan(`  ═${ '═'.repeat( side ) }╡ ${ headline } ╞${ '═'.repeat( side ) }═  `) ),
+		new Inquirer.Separator(`${ subline.length > 0 ? `  ${ Chalk.reset.bold.gray( subline ) }` : `` }`),
+	];
+};
+
+
+/**
+ * Check all dependencies against installed modules and return what breakage might occur
+ *
+ * @param  {object} dependencies - [description]
+ * @param  {map}    installed    - [description]
+ *
+ * @return {string}              - [description]
+ */
+const CheckDeps = ( dependencies, installed ) => {
+	Log.verbose(
+		`Checking dependencies: ${ Chalk.yellow( JSON.stringify( dependencies ) ) } against installed: ${ Chalk.yellow( JSON.stringify( [ ... installed] ) ) }`
+	);
+
+	for( const module of Object.keys( dependencies ) ) {
+		const installedModule = installed.get( module );
+
+		console.log(module);
+		console.log(dependencies[module]);
+		console.log(installedModule);
+
+		if( installedModule !== undefined ) {
+			console.log('totally found it!');
+			console.log( Semver.satisfies( installedModule, dependencies[ module ] ) );
+		}
+	}
+
+	return 'patch';
+
 };
 
 
@@ -219,11 +259,12 @@ Promise.all( allPromises )
 
 		//getting the longest name of all pancake modules for nice alignment
 		const longestName = Object.keys( PANCAKE ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
+		let longestLine = longestName;
 
 		Log.verbose(
 			`Got all data from the json file and installed modules:\n` +
 			`Installed: ${ Chalk.yellow( JSON.stringify( [ ... installed ] ) ) }\n` +
-			`PANCAKE:     ${ Chalk.yellow( JSON.stringify( PANCAKE ) ) }`
+			`PANCAKE:   ${ Chalk.yellow( JSON.stringify( PANCAKE ) ) }`
 		);
 
 		//iterate over all pancake modules
@@ -240,10 +281,13 @@ Promise.all( allPromises )
 				[ module ]: PANCAKE[ module ].version, //let's make sure we can parse the answer
 			};
 
+			//now let's see where to put it?
 			if( installedVersion === undefined ) { //in case we have this module already installed, let's check if you can upgrade
-				newChoices.push( thisChoice ); //this is a new module
+
+				console.log( CheckDeps( PANCAKE[ module ].peerDependencies, installed ));
+				newChoices.push( thisChoice );       //this is a new module
 			}
-			else {
+			else { //this module is already installed
 				if(
 					Semver.gte( PANCAKE[ module ].version, installedVersion ) && //if this version is newer than the installed one
 					!Semver.eq( PANCAKE[ module ].version, installedVersion )    //and not equal
@@ -268,40 +312,59 @@ Promise.all( allPromises )
 					installedChoices.push( thisChoice ); //already installed module
 				}
 			}
+
+			if( StripAnsi( thisChoice.name ).length > longestLine ) {
+				longestLine = StripAnsi( thisChoice.name ).length;
+			}
 		}
+
+		let lines = 2; //counting output lines
 
 		//building options object
 		if( installedChoices.length ) {
-			choices.push( Headline( `Already installed modules`,`Below modules are already installed` ) );
-			choices.push(...installedChoices); //merging in options
+			choices.push( ...Headline( `Already installed modules`,`Below modules are already installed`, longestLine ) );
+			choices.push( ...installedChoices ); //merging in options
+
+			lines += installedChoices.length + 2; //headline plus choices
 		}
 
 		if( newChoices.length ) {
-			choices.push( Headline( `New modules`,`Below modules can be newly installed` ) );
-			choices.push(...newChoices); //merging in options
+			choices.push( ...Headline( `New modules`,`Below modules can be newly installed`, longestLine ) );
+			choices.push( ...newChoices ); //merging in options
+
+			lines += newChoices.length + 3; //headline plus choices
 		}
 
 		if( easyChoices.length ) {
-			choices.push( Headline( `Easy upgrades`,`Below upgrades are backwards compatible` ) );
-			choices.push(...easyChoices); //merging in options
+			choices.push( ...Headline( `Easy zone`,`Below modules are backwards compatible`, longestLine ) );
+			choices.push( ...easyChoices ); //merging in options
+
+			lines += easyChoices.length + 3; //headline plus choices
 		}
 
 		if( hardChoices.length ) {
-			choices.push( Headline( `Danger zone`,`Below upgrades come with breaking changes.` ) );
-			choices.push(...hardChoices); //merging in options
+			choices.push( ...Headline( `Danger zone`,`Below modules come with breaking changes.`, longestLine ) );
+			choices.push( ...hardChoices ); //merging in options
+
+			lines += hardChoices.length + 3; //headline plus choices
 		}
 
 		Log.space(); //prettiness
+
+		if( lines => ( Size.height - 3 ) ) {
+			lines = Size.height - 3;
+		}
 
 		Inquirer.prompt([
 			{
 				type: 'checkbox',
 				message: 'Select your pancake modules',
 				name: 'modules',
+				pageSize: lines,
 				choices: choices,
 				validate: ( answer ) => {
 					if( answer.length < 1 ) {
-						return 'You must choose at least one module to install.';
+						return 'You must choose at least one module to install or quit the program.';
 					}
 
 					return true;
