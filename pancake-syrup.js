@@ -457,11 +457,11 @@ allPackages
 				);
 			}
 
-			//write scss file
+			//write sass file
 			if( SettingsSASS.generate ) {
 				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.scss`);
 
-				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }`;
+				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
 
 				compiledAll.push(
 					WriteFile( location, sass ) //write file
@@ -495,7 +495,9 @@ allPackages
 
 			//write the SettingsCSS.name file
 			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
-			allSass = `/*! PANCAKE */\n\n` + StripDuplicateLines( allSass ); //remove duplicate import lines
+			allSass = `/*! PANCAKE */\n\n` +
+				StripDuplicateLines( allSass ) + //remove duplicate import lines
+				`\n\n@include versioning-check();\n`;
 
 			compiledAll.push(
 				Sassify( locationCSS, SettingsCSS, allSass ) //generate SettingsCSS.name file

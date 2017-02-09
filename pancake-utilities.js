@@ -267,25 +267,20 @@ const Log = {
 		if( !Log.hasError ) {
 			Loading().stop(); //stop any animations first
 
-			CFonts.say(`CONFLICT`, { //we need something big to help npms error system
+			const messages = [ //because errors don't have to be boring!
+				'Uh oh',
+				'Sorry',
+				'Doh',
+				'Oh my',
+				'Ouch',
+				'Ups',
+			];
+
+			CFonts.say( messages.sort( () => 0.5 - Math.random() )[0], { //we need something big to help npms error system
 				colors: ['red', 'red'],
 				space: false,
 			});
-
-			const messages = [ //because errors don't have to be boring!
-				'Uh oh!',
-				'Sorry!',
-				'Doh!',
-				'Oh my!',
-				'Ouch!',
-				'Ups!',
-				':(',
-				':`(',
-				'-_-',
-			];
-
-			console.error( Chalk.red( messages.sort( () => 0.5 - Math.random() )[0] ) );
-			console.log('\n');
+			console.log();
 		}
 
 		console.error(`🔥  ${ Chalk.red( `ERROR:   ${ text }` ) } `);

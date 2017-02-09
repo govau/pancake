@@ -47,10 +47,10 @@ breaking changes might occur and what an easy way out might be.
 
 ## Batter
 
-### command
-**`batter`**  
+### batter
+`batter`  
 Type: `[command]`  
-Option: `<path>` _(optional)_  
+Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
 Default value: `path to one level below cwd`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
@@ -71,10 +71,9 @@ Batter will also run [Syrup](#syrup) after a successful run.
 You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json.
 
 
-### command
-**`-d`, `--dry`**  
-Type: `[command]`  
-Option: `<path>` _(optional)_  
+### dry
+`-d`, `--dry`  
+Type: `<flag>`  
 Default value: `no flag`
 
 Run batter without syrup.
@@ -84,10 +83,9 @@ pancake batter --dry
 ```
 
 
-### command
-**`-v`, `--verbose`**  
-Type: `[command]`  
-Option: `<path>` _(optional)_  
+### verbose
+`-v`, `--verbose`  
+Type: `<flag>`  
 Default value: `no flag`
 
 Run pancake in verbose silly mode.
@@ -105,10 +103,10 @@ pancake batter --verbose
 
 ## Syrup
 
-### command
-**`syrup`**  
+### syrup
+`syrup`  
 Type: `[command]`  
-Option: `<path>` _(optional)_  
+Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
 Default value: `path to one level below cwd`
 
 Syrup compiles your pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
@@ -153,10 +151,9 @@ Below are all possible settings with default values.
 }
 ```
 
-### command
-**`-s`, `--save`**  
-Type: `[flag]`  
-Option: `<path>` _(optional)_  
+### save
+`-s`, `--save`  
+Type: `<flag>`  
 Default value: `no flag`
 
 The command will merge your local settings, complete them with the defaults and save them into your `package.json`
@@ -166,9 +163,9 @@ This will sort-of shrink-wrap all settings in so you are completely reproducible
 pancake syrup --save
 ```
 
-**`-v`, `--verbose`**  
-Type: `[command]`  
-Option: `<path>` _(optional)_  
+### verbose
+`-v`, `--verbose`  
+Type: `<flag>`  
 Default value: `no flag`
 
 Run pancake in verbose silly mode.
@@ -185,6 +182,40 @@ pancake syrup --verbose
 
 
 ## Cream
+
+### cream
+`cream`  
+Type: `[command]`  
+Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
+Default value: `path to one level below cwd`  
+Option: `--json <path>` _(optional) overwrite where to look for the `pancake.json`_    
+Default value: `https://raw.githubusercontent.com/govau/uikit/master/uikit.json`
+
+
+Cream will analyze your currently installed pancake modules and show you in a user friendly interface what you can easily update and what update will entail
+breaking changes.
+
+```shell
+pancake cream
+```
+
+To overwrite the hardcoded json URL run cream with the `json` flag:
+
+```shell
+pancake cream --json https://you.domain/to/json/file.json
+```
+
+
+### verbose
+`-v`, `--verbose`  
+Type: `<flag>`  
+Default value: `no flag`
+
+Run pancake in verbose silly mode.
+
+```shell
+pancake syrup --verbose
+```
 
 
 **[⬆ back to top](#content)**
