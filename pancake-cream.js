@@ -18,6 +18,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+const Spawn = require( 'child_process' );
 const StripAnsi = require('strip-ansi');
 const Program = require('commander');
 const Inquirer = require('inquirer');
@@ -52,8 +53,6 @@ Program
 const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
 const Log = pancakes.Log;
 PANCAKEurl += `?${ Math.floor( new Date().getTime() / 1000 ) }`; //breaking caching here
-
-console.log(PANCAKEurl);
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,15 +117,15 @@ const HighlightDiff = ( oldVersion, newVersion ) => {
 	}
 
 	if( Semver.major( oldVersion ) !== Semver.major( newVersion ) ) {
-		return Chalk.green( newVersion );
+		return Chalk.magenta( newVersion );
 	}
 
 	if( Semver.minor( oldVersion ) !== Semver.minor( newVersion ) ) {
-		return `${ Semver.major( newVersion ) }.${Chalk.green(`${ Semver.minor( newVersion ) }.${ Semver.patch( newVersion ) }`)}`;
+		return `${ Semver.major( newVersion ) }.${Chalk.magenta(`${ Semver.minor( newVersion ) }.${ Semver.patch( newVersion ) }`)}`;
 	}
 
 	if( Semver.patch( oldVersion ) !== Semver.patch( newVersion ) ) {
-		return `${ Semver.major( newVersion ) }.${ Semver.minor( newVersion ) }.${Chalk.green(`${ Semver.patch( newVersion ) }`)}`;
+		return `${ Semver.major( newVersion ) }.${ Semver.minor( newVersion ) }.${Chalk.magenta(`${ Semver.patch( newVersion ) }`)}`;
 	}
 };
 
@@ -134,50 +133,81 @@ const HighlightDiff = ( oldVersion, newVersion ) => {
 /**
  * Return a couple Inquirer separator used as a headline
  *
- * @param  {string} headline    - Text for headline
- * @param  {string} subline     - [optional] Text for subline
- * @param {integer} longestName - The max length of all lines we can center align the headline
+ * @param  {string}  headline    - Text for headline
+ * @param  {string}  subline     - [optional] Text for subline
+ * @param  {integer} longestName - The max length of all lines we can center align the headline
  *
  * @return {object}          - The Inquirer.Separator object
  */
 const Headline = ( headline, subline = '', longestName ) => {
-	const side = ( longestName - ( 4 * 2 ) - headline.length ) / 2; //calculate the sides
+	const sideHeader = ( longestName - ( 4 * 2 ) - headline.length ) / 2; //calculate the sides for the headline for center alignment
+	const sideSubline = ( longestName + 2 - subline.length ) / 2;         //calculate the sides for the subline for center alignment
 
 	return [
 		new Inquirer.Separator(` `),
-		new Inquirer.Separator( Chalk.reset.bgBlue.cyan(`  ═${ '═'.repeat( side ) }╡ ${ headline } ╞${ '═'.repeat( side ) }═  `) ),
-		new Inquirer.Separator(`${ subline.length > 0 ? `  ${ Chalk.reset.bold.gray( subline ) }` : `` }`),
+		new Inquirer.Separator(
+			Chalk.reset.bgBlue.cyan(`  ═${ '═'.repeat( Math.ceil( sideHeader ) ) }╡ ${ headline } ╞${ '═'.repeat( Math.floor( sideHeader ) ) }═  `)
+		),
+		new Inquirer.Separator(`${ subline.length > 0 ? `${ ' '.repeat( Math.floor( sideSubline ) ) }${ Chalk.reset.bold.gray( subline ) }` : `` }`),
 	];
 };
 
 
 /**
- * Check all dependencies against installed modules and return what breakage might occur
+ * Check all dependencies against installed modules and return what breakage might occur and an array of all dependencies
  *
- * @param  {object} dependencies - [description]
- * @param  {map}    installed    - [description]
+ * @param  {object}  dependencies - All dependencies this module has
+ * @param  {map}     installed    - All installed modules to check against
+ * @param  {integer} longestName  - The longest name in our output so we can calculate spaces
  *
- * @return {string}              - [description]
+ * @return {object}               - { breakage: [boolean], lines: [array], breaking: [array] }
  */
-const CheckDeps = ( dependencies, installed ) => {
+const AddDeps = ( dependencies, installed, longestName ) => {
 	Log.verbose(
-		`Checking dependencies: ${ Chalk.yellow( JSON.stringify( dependencies ) ) } against installed: ${ Chalk.yellow( JSON.stringify( [ ... installed] ) ) }`
+		`Checking dependencies: ${ Chalk.yellow( JSON.stringify( dependencies ) ) } against installed: ${ Chalk.yellow( JSON.stringify( [ ...installed ] ) ) }`
 	);
 
+	let breakage = false; //we always assume the best
+	let breaking = [];    //in here we collect all modules that will break to display at the end
+	let lines = [];       //one line per dependency
+	let i = 0;            //need to see what the last dependency is
+
 	for( const module of Object.keys( dependencies ) ) {
-		const installedModule = installed.get( module );
+		i ++; //count iterations
+		let name = module.substring( pancakes.npmOrg.length + 1, module.length ); //removing npm scoping string
+		let version = dependencies[ module ];
+		const installedModule = installed.get( module ); //looking up if this version exists in our installed modules
 
-		console.log(module);
-		console.log(dependencies[module]);
-		console.log(installedModule);
+		if( installedModule !== undefined && !Semver.satisfies( installedModule, version ) ) { //there is some breakage happening here
+			breaking.push(`${ module }@${ version }`); //we need this for when we display what we've installed later
 
-		if( installedModule !== undefined ) {
-			console.log('totally found it!');
-			console.log( Semver.satisfies( installedModule, dependencies[ module ] ) );
+			//make it easy to read
+			name = Chalk.magenta( name );
+			version = Chalk.magenta( `${ version }   !   ${ installedModule }` );
+
+			breakage = true; //totally borked
 		}
+		else {
+			version += `            `; //alignment is everything for readability
+		}
+
+		//new lines have to be inside a Separator. Bug launched here: https://github.com/SBoudrias/Inquirer.js/issues/494
+		lines.push(
+			new Inquirer.Separator(
+				`${ i >= Object.keys( dependencies ).length ? '└──' : '├──' } ` +
+				`${ name } ` +
+				`${ ' '.repeat( longestName - StripAnsi( name ).length ) }` +
+				`${ version }` +
+				`${ installedModule !== undefined ? '   installed' : '' }`
+			)
+		);
 	}
 
-	return 'patch';
+	return {
+		breakage: breakage,
+		lines: lines,
+		breaking: breaking,
+	};
 
 };
 
@@ -203,7 +233,7 @@ const gettingJSON = GetRemoteJson( PANCAKEurl ) //get the json file
 		process.exit( 1 );
 });
 
-let PANCAKE = {};                                //for pancake data in a larger scope
+let PANCAKE = {}; //for pancake data in a larger scope
 
 gettingJSON.then( data => {
 	PANCAKE = data; //adding the data of the json file into our scoped variable
@@ -246,10 +276,8 @@ Promise.all( allPromises )
 		pancakes.Loading.stop(); //stop loading animation
 
 		let choices = [];          //to be filled with all choices we have
-		let newChoices = [];       //to be filled with all new pancake modules
 		let easyChoices = [];      //to be filled with all easy upgradeable non-breaking modules
 		let hardChoices = [];      //to be filled with all modules with breaking changes
-		let installedChoices = []; //to be filled with all modules that have been installed already
 		let installed = new Map(); //to be filled with installed modules
 
 		//convert installed modules array into map for better querying
@@ -259,11 +287,10 @@ Promise.all( allPromises )
 
 		//getting the longest name of all pancake modules for nice alignment
 		const longestName = Object.keys( PANCAKE ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
-		let longestLine = longestName;
 
 		Log.verbose(
 			`Got all data from the json file and installed modules:\n` +
-			`Installed: ${ Chalk.yellow( JSON.stringify( [ ... installed ] ) ) }\n` +
+			`Installed: ${ Chalk.yellow( JSON.stringify( [ ...installed ] ) ) }\n` +
 			`PANCAKE:   ${ Chalk.yellow( JSON.stringify( PANCAKE ) ) }`
 		);
 
@@ -271,70 +298,74 @@ Promise.all( allPromises )
 		for( const module of Object.keys( PANCAKE ) ) {
 			const thisChoice = {};                            //let's build this choice out
 			const installedVersion = installed.get( module ); //the installed version of this module
-			const name = module.substring( pancakes.npmOrg.length + 1, module.length );
+			const name = module.substring( pancakes.npmOrg.length + 1, module.length ); //removing the scoping string
+			const depLines = AddDeps( PANCAKE[ module ].peerDependencies, installed, longestName );  //let's add all the dependencies under each module
 
-			thisChoice.name = `${ name }  ` +
+			thisChoice.name = ` ${ name }  ` +
 				`${ ' '.repeat( longestName - name.length ) }` +
-				`v${ PANCAKE[ module ].version }`; //we add each module of the json file in here
+				` ${ PANCAKE[ module ].version }`; //we add each module of the json file in here
 
-			thisChoice.value = {
-				[ module ]: PANCAKE[ module ].version, //let's make sure we can parse the answer
+			thisChoice.value = { //let's make sure we can parse the answer
+				name: module,
+				version :PANCAKE[ module ].version,
+				dependencies: PANCAKE[ module ].peerDependencies,
+				breaking: [ ...depLines.breaking ],
 			};
 
 			//now let's see where to put it?
-			if( installedVersion === undefined ) { //in case we have this module already installed, let's check if you can upgrade
-
-				console.log( CheckDeps( PANCAKE[ module ].peerDependencies, installed ));
-				newChoices.push( thisChoice );       //this is a new module
+			if( installedVersion === undefined && !depLines.breakage ) { //in case we have this module already installed and neither it's dependencies break anything
+				easyChoices.push( thisChoice );                             //so this is a new module
+				easyChoices.push( ...depLines.lines );
 			}
-			else { //this module is already installed
+			else if( !depLines.breakage ) { //this module is already installed and doesn't break in any of it's dependencies
 				if(
 					Semver.gte( PANCAKE[ module ].version, installedVersion ) && //if this version is newer than the installed one
 					!Semver.eq( PANCAKE[ module ].version, installedVersion )    //and not equal
 				) {
 					const newVersion = HighlightDiff( installedVersion, PANCAKE[ module ].version );
 
-					thisChoice.name = `${ name }  ` +
+					thisChoice.name = ` ${ name }  ` +
 						`${ ' '.repeat( longestName - name.length ) }` +
-						`v${ installedVersion }   >   ${ newVersion }   **NEWER VERSION AVAILABLE**`; //this is actually an upgrade
+						` ${ newVersion }   ^   ${ installedVersion }   ${ Chalk.gray( 'installed' ) }`; //this is actually an upgrade
 
 					if( Semver.major( installedVersion ) !== Semver.major( PANCAKE[ module ].version ) ) {
+
+						//adding this module to the modules that will break backwards compatibility
+						thisChoice.value.breaking.push(`${ module }@${ PANCAKE[ module ].version }`);
+
 						hardChoices.push( thisChoice ); //this is a breaking change upgrade
+						hardChoices.push( ...depLines.lines );
 					}
 					else {
 						easyChoices.push( thisChoice ); //this is an easy upgrade
+						easyChoices.push( ...depLines.lines );
 					}
 				}
-
-				if( Semver.eq( PANCAKE[ module ].version, installedVersion ) ) { //if this version is the same as what's installed
-					thisChoice.disabled = Chalk.gray('installed');
-
-					installedChoices.push( thisChoice ); //already installed module
-				}
 			}
 
-			if( StripAnsi( thisChoice.name ).length > longestLine ) {
-				longestLine = StripAnsi( thisChoice.name ).length;
+			if( depLines.breakage ) {         //some of this modules dependencies breaks backwards compatibility
+				hardChoices.push( thisChoice ); //so this is a breaking change upgrade
+				hardChoices.push( ...depLines.lines );
 			}
 		}
 
-		let lines = 2; //counting output lines
 
-		//building options object
-		if( installedChoices.length ) {
-			choices.push( ...Headline( `Already installed modules`,`Below modules are already installed`, longestLine ) );
-			choices.push( ...installedChoices ); //merging in options
+		//find the longest line in all choices
+		let longestLine = [...easyChoices, ...hardChoices].reduce( ( a, b ) => {
+			let aLine = a.name || a.line;
+			let bLine = b.name || b.line;
 
-			lines += installedChoices.length + 2; //headline plus choices
-		}
+			return aLine.length > bLine.length ? a : b;
+		});
 
-		if( newChoices.length ) {
-			choices.push( ...Headline( `New modules`,`Below modules can be newly installed`, longestLine ) );
-			choices.push( ...newChoices ); //merging in options
+		longestLine = longestLine.name ? StripAnsi( longestLine.name ).length : StripAnsi( longestLine.line ).length;
 
-			lines += newChoices.length + 3; //headline plus choices
-		}
 
+		//counting output lines so we only show scrolling if the terminal is not high enough
+		let lines = 2;
+
+
+		//adding headlines and choices
 		if( easyChoices.length ) {
 			choices.push( ...Headline( `Easy zone`,`Below modules are backwards compatible`, longestLine ) );
 			choices.push( ...easyChoices ); //merging in options
@@ -343,7 +374,7 @@ Promise.all( allPromises )
 		}
 
 		if( hardChoices.length ) {
-			choices.push( ...Headline( `Danger zone`,`Below modules come with breaking changes.`, longestLine ) );
+			choices.push( ...Headline( `Danger zone`,`Below modules come with breaking changes`, longestLine ) );
 			choices.push( ...hardChoices ); //merging in options
 
 			lines += hardChoices.length + 3; //headline plus choices
@@ -351,10 +382,12 @@ Promise.all( allPromises )
 
 		Log.space(); //prettiness
 
+		//make sure the viewport is respected
 		if( lines => ( Size.height - 3 ) ) {
 			lines = Size.height - 3;
 		}
 
+		//render the prompt
 		Inquirer.prompt([
 			{
 				type: 'checkbox',
@@ -370,9 +403,70 @@ Promise.all( allPromises )
 					return true;
 				}
 			}
-		]).then(( modules ) => {
+		]).then(( answer ) => {
+			Log.verbose(`Got answer:\n${ Chalk.yellow( JSON.stringify( answer.modules ) ) }`);
 
-			console.log(JSON.stringify(modules, null, '  ')); //let's work from here :)
+			//checking if we got yarn installed
+			const command = Spawn.spawnSync( 'yarn', [ '--version' ] );
+			const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+
+			let breaking;
+			let modules = [];
+
+			for( const module of answer.modules ) {
+				modules.push(`${ module.name }@${ module.version }`);
+
+				if( module.breaking.length > 0 ) { //collecting all modules with breaking changes
+					if( breaking !== undefined ) {
+						breaking.push( ...module.breaking );
+					}
+					else {
+						breaking = module.breaking;
+					}
+				}
+			}
+
+			Log.space(); //prettiness
+			pancakes.Loading.start(); //start loading animation
+
+			let installing; //for spawning our install process
+			// modules = ['beast.js@0.1.4'];
+
+			//installing modules
+			if( hasYarn ) {
+				installing = Spawn.spawn( 'yarn', [ 'add', ...modules ] );
+			}
+			else {
+				installing = Spawn.spawn( 'npm', [ 'install', ...modules ] );
+			}
+
+			installing.stderr.on('data', (data) => {
+				//let's output a way out, a way forward maybe?
+				Log.error(
+					`An error has occurred while attemptying to install your chosen modules.\n` +
+					`You can attempt to install those modules yourself by running:\n\n` +
+					Chalk.yellow(`yarn add ${ modules.join(' ') }\n\n`) +
+					`or\n\n` +
+					Chalk.yellow(`npm install ${ modules.join(' ') }`)
+				);
+
+				Log.verbose( data );
+
+				pancakes.Loading.stop(); //stop loading animation
+
+				process.exit( 1 ); // :(
+			});
+
+			installing.on('close', (code) => {
+				Log.verbose(`Finished installing modules: ${ Chalk.yellow( modules.join(', ') ) }`);
+
+				pancakes.Loading.stop(); //stop loading animation
+
+				Log.info(
+					`Modules installed:\n${ Chalk.yellow( modules.join('\n') ) }` +
+					( breaking === undefined ? '' : `\n\nModules and dependencies with breaking changes:\n${ Chalk.yellow( breaking.join('\n') ) }` )
+				);
+			});
 
 		});
 });
