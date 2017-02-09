@@ -20,6 +20,8 @@ Pancake
 
 ## What’s inside?
 
+![the pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.jpg)
+
 This tool comes with three commands:
 * [Batter](#batter)
 * [Syrup](#syrup)
@@ -46,6 +48,8 @@ breaking changes might occur and what an easy way out might be.
 
 
 ## Batter
+
+![the batter command](https://raw.githubusercontent.com/govau/pancake/master/assets/batter.jpg)
 
 ### batter
 `batter`  
@@ -102,6 +106,8 @@ pancake batter --verbose
 
 
 ## Syrup
+
+![the syrup command](https://raw.githubusercontent.com/govau/pancake/master/assets/syrup.jpg)
 
 ### syrup
 `syrup`  
@@ -182,6 +188,8 @@ pancake syrup --verbose
 
 
 ## Cream
+
+![the cream command](https://raw.githubusercontent.com/govau/pancake/master/assets/cream.jpg)
 
 ### cream
 `cream`  
