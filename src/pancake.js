@@ -32,13 +32,14 @@ const Player = require('play-sound')();
 const Program = require('commander');
 const Size = require('window-size');
 const Chalk = require('chalk');
+const Path = require(`path`);
 const Fs = require(`fs`);
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const Package = JSON.parse( Fs.readFileSync( `${ __dirname }/package.json`, `utf8` ) ); //for displaying help and version
+const Package = JSON.parse( Fs.readFileSync( Path.normalize(`${ __dirname }/../package.json`, `utf8`) ) ); //for displaying help and version
 const Version = Package.version;
 
 
@@ -48,7 +49,7 @@ if( process.argv.indexOf( '-x' ) !== -1 || process.argv.indexOf( '--surround-sou
 
 	process.argv.splice( position, 1 ); //don't want the option to be in help
 
-	Player.play('pancake.mp3', ( error ) => {
+	Player.play( Path.normalize(`${ __dirname }/assets/pancake.mp3`), ( error ) => { //120kb ...
 		if( error ) {
 			// throw err; //we are not erroring out as this is not important functionality
 		}
@@ -92,19 +93,31 @@ Program
 	.version( `v${ Version }` )
 	.usage( `[command] <input>` )
 	.description(
-		`( ^-^)_旦 🥞  Pancake is an utility for the UI-Kit of the gov.au team. ` +
-		`It lets you check your peerDependencies, write include files for all your pancake modules and lists all available modules for you to select and install.`
+		`\n( ^-^)_旦 🥞  Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly. ` +
+		`It will check your peerDependencies, write compile the contents for you and lists all available modules for you to select and install.`
 	)
 	.command(`batter`,
-		`✅  will check the peerDependencies of all installed pancake modules for conflicts and error out with a meaningful error message.\n` +
-		Chalk.gray(`               ❝ Pancakes needs batter. Can’t do no pancakes without batter. This is essential! ❞`)
+		`✅  will check the peerDependencies of all installed pancake modules\n` +
+		`               for conflicts and error out with a meaningful error message.\n` +
+		Chalk.gray(
+			`               ❝ Pancakes needs batter. Can’t do no pancakes without batter.\n` +
+			`                 This is essential! ❞`
+		)
 	)
 	.command(`syrup`,
-		`🍯  will compile all assets and give you options as to where you might want those assets.\n` +
-		Chalk.gray(`               ❝ Eating pancakes without Syrup is pretty dry. You could but it’s not much fun. ❞`)
+		`🍯  will compile all assets and give you options\n` +
+		`               as to where you might want those assets.\n` +
+		Chalk.gray(
+			`               ❝ Eating pancakes without Syrup is pretty dry.\n` +
+			`                 You could but it’s not really fun. ❞`
+		)
 	)
 	.command('cream',
-		'👀  will present you with options to upgrade your existing pancake project or to start a new one.\n' +
-		Chalk.gray(`               ❝ To make it a real sweat experience and you happy in the process, put cream on top. ❞`)
+		`👀  will present you with options to upgrade your existing\n` +
+		`               pancake project or to start a new one.\n` +
+		Chalk.gray(
+			`               ❝ Putting cream on top makes this a sweet experience.\n` +
+			`                 This is why you want more. ❞`
+		)
 	)
 	.parse( process.argv );
