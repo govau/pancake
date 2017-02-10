@@ -31,11 +31,11 @@ This tool comes with three commands:
 
 **Batter** will check the peerDependencies of all installed pancake modules for conflicts and error out with a meaningful error message.
 
-> Eating pancakes without Syrup is pretty dry. You could but it’s not much fun.
+> Eating pancakes without Syrup is pretty dry. You could but it’s not really fun.
 
 **Syrup** will compile all assets and give you options as to where you might want those assets.
 
-> To make it a real sweat experience and you happy in the process, put cream on top.
+> Putting cream on top makes this a sweet experience. This is why you want more.
 
 **Cream** will present you with options to upgrade your existing pancake project or to start a new one. All that while checking conflicts, communicating what
 breaking changes might occur and what an easy way out might be.
@@ -62,13 +62,13 @@ in scope)_</sup> `package.json` in search for a gov.au UI-Kit module. If it find
 record it’s peerDependencies and cross check against all other installed modules.
 
 ```shell
-pandcake batter
+pancake batter
 ```
 
 You can also pass it a path to the `node_modules` folder and overwrite the default:
 
 ```shell
-pandcake batter /Path/to/folder/of/your/package.json
+pancake batter /Path/to/folder/of/your/package.json
 ```
 
 Batter will also run [Syrup](#syrup) after a successful run.
