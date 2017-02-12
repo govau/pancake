@@ -4,17 +4,7 @@
  *
  * Checking peerDependencies, writing compiled files and discovering new modules
  *
- * This tool was built for the Australian DTA UI-Kit. It comes with three cli commands:
- *
- * pancake batter
- * Checking. It will make sure Sass modules are build correctly and return a descriptive error message when
- * peerDependencies are in conflict with each other. This is invoked via npm postinstall inside each UI-Kit module.
- *
- * pancake syrup
- * Generate. It will write the appropriate files into a set location for you to digest into your project.
- *
- * pancake cream
- * Listing. It will list all available modules for you to select and install them for you.
+ * This tool was built to make working with npm and the front end easy and seamless.
  *
  * @repo    - https://github.com/AusDTO/pancake
  * @author  - Dominik Wilkowski

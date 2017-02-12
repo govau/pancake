@@ -10,6 +10,7 @@ Pancake
 * [Batter](#batter)
 * [Syrup](#syrup)
 * [Cream](#Cream)
+* [Installing](#installing)
 * [Taste / Tests](#tests)
 * [Release History](#release-history)
 * [License](#license)
@@ -224,6 +225,60 @@ Run pancake in verbose silly mode.
 ```shell
 pancake syrup --verbose
 ```
+
+
+**[⬆ back to top](#content)**
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## Installing
+
+Pancake requires:
+
+- npm >= 3
+
+Pancake has been testing with all node version coming with npm 3 and higher:
+
+- node `v5.0.0`
+- node `v5.12.0`
+- node `v6.9.5`
+- node `v7.0.0`
+- node `v7.4.0`
+- node `v7.5.0`
+
+_Dependencies have been fixed to specific versions to keep the dependency tree and security impact as low as possible._
+
+
+**[⬆ back to top](#content)**
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## Contributing
+
+Hi there 👀,
+
+❤️ We LOVE that you’re looking into this section. We welcome any feedback or pull requests and are super psyched about you putting your own time into this
+project. To make your contribution count, have a read through the code first and see what our thinking was. We will do the same with yours.
+
+To run the project run install dependencies and devDependencies:
+
+```shell
+yarn
+```
+
+To run the transpiler watch that will transpile your ES2016 code into ES5:
+
+```shell
+yarn watch
+```
+
+❗️ Make sure you only edit file inside the `src/` folder. Files inside the `bin/` folder are overwritten by the transpiler.
+
+_Please look at the coding style and work with it, not against it. 🌴_
 
 
 **[⬆ back to top](#content)**
