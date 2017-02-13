@@ -118,7 +118,7 @@ Option: `<path>` _(optional) overwrite where to look for the `node_module` folde
 Default value: `path to one level below cwd`
 
 Syrup compiles your pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
-`package.json`.
+`package.json`. All settings are automatically saved into your `package.json` file unless you supply the `--nosave` flag.
 
 ```shell
 pancake syrup
@@ -160,15 +160,15 @@ Below are all possible settings with default values.
 ```
 
 ### save
-`-s`, `--save`  
+`-n`, `--nosave`  
 Type: `<flag>`  
 Default value: `no flag`
 
-The command will merge your local settings, complete them with the defaults and save them into your `package.json`
+The command will stop pancake from merging your local settings, complete them with the defaults and save them into your `package.json`.
 This will sort-of shrink-wrap all settings in so you are completely reproducible.
 
 ```shell
-pancake syrup --save
+pancake syrup --nosave
 ```
 
 ### verbose
