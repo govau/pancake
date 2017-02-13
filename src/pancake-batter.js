@@ -57,6 +57,8 @@ Log.info(`PANCAKE MAKING THE BATTER`);
 
 pancakes.Loading.start(); //start loading animation
 
+Log.verbose(`Batter running in ${ Chalk.yellow( pkgPath ) }`);
+
 const dependencies = new Map();                             //a map we populate with the dependencies of our modules we found
 const modules = new Map();                                  //a map for all installed modules and their versions
 

@@ -303,6 +303,7 @@ const Log = {
 				`Fudge`,
 				`Blimey`,
 				`Dagnabit`,
+				`Bugger`,
 			];
 
 			CFonts.say( messages.sort( () => 0.5 - Math.random() )[0], { //we need something big to help npms error system

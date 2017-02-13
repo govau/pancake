@@ -10,7 +10,8 @@ Pancake
 * [Batter](#batter)
 * [Syrup](#syrup)
 * [Cream](#Cream)
-* [Installing](#installing)
+* [Requirements](#requirements)
+* [Contributing](#contributing)
 * [Taste / Tests](#tests)
 * [Release History](#release-history)
 * [License](#license)
@@ -233,11 +234,10 @@ pancake syrup --verbose
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## Installing
-
-Pancake requires:
+## Requirements
 
 - npm >= 3
+- a `package.json` file in your root (run `yarn init` or `npm init`)
 
 Pancake has been testing with all node version coming with npm 3 and higher:
 
@@ -288,6 +288,44 @@ _Please look at the coding style and work with it, not against it. 🌴_
 
 
 ## Taste / Tests
+
+We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
+
+**@gov.au/testmodule1**
+- `v3.0.0`
+- `v3.0.1`
+- `v3.0.2`
+- `v3.1.0`
+- `v3.1.1`
+- `v3.2.0`
+- `v3.3.0`
+- `v4.0.0`
+- `v4.0.1`
+
+**@gov.au/testmodule2**
+- `v5.0.0`  
+	└── `@gov.au/testmodule1`: `^3.0.0`
+- `v5.0.1`  
+	└── `@gov.au/testmodule1`: `^3.0.0`
+- `v6.0.0`  
+	└── `@gov.au/testmodule1`: `^4.0.0`
+- `v7.0.0`  
+	└── `@gov.au/testmodule1`: `^4.0.0`
+- `v8.0.0`  
+	└── `@gov.au/testmodule1`: `^4.0.1`
+
+**@gov.au/testmodule3**
+- `v3.0.0`  
+	└── `@gov.au/testmodule1`: `^3.0.0`
+- `v3.0.1`  
+	└── `@gov.au/testmodule1`: `^3.1.0`
+- `v3.0.2`  
+	└── `@gov.au/testmodule1`: `^3.2.0`
+- `v3.1.0`  
+	└── `@gov.au/testmodule1`: `^3.3.0`
+- `v4.0.0`  
+	└── `@gov.au/testmodule1`: `^4.0.1`
+
 
 
 **[⬆ back to top](#content)**
