@@ -69,6 +69,7 @@ var _CreateDir = function _CreateDir(dir, verbose) {
 				try {
 					Fs.mkdirSync(currentPath);
 				} catch (error) {
+					Log.error('Pancake was unable to create the folder ' + Chalk.yellow(currentPath));
 					Log.error(error);
 
 					process.exit(1);

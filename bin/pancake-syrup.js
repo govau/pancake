@@ -191,30 +191,33 @@ var Sassify = function Sassify(location, settings, sass) {
 			outputStyle: settings.minified ? 'compressed' : 'expanded'
 		}, function (error, renered) {
 			if (error) {
-				Log.error(':( Sass compile failed for ' + Chalk.yellow(location));
-				Log.error(error.message);
+				Log.error('Sass compile failed for ' + Chalk.yellow(location));
 
-				reject(error);
+				reject(error.message);
+			} else {
+				Log.verbose('Successfully compiled Sass for ' + Chalk.yellow(location));
+
+				Postcss([Autoprefixer({ browsers: settings.browsers })]).process(renered.css).catch(function (error) {
+					return reject(error);
+				}).then(function (prefixed) {
+					if (prefixed) {
+						prefixed.warnings().forEach(function (warn) {
+							return Log.error(warn.toString());
+						});
+
+						Log.verbose('Successfully autoprefixed CSS for ' + Chalk.yellow(location));
+
+						WriteFile(location, prefixed.css) //write the generated content to file and return its promise
+						.catch(function (error) {
+							Log.error(error);
+
+							reject(error);
+						}).then(function () {
+							resolve(true);
+						});
+					}
+				});
 			}
-			Log.verbose('Successfully compiled Sass for ' + Chalk.yellow(location));
-
-			Postcss([Autoprefixer({ browsers: settings.browsers })]).process(renered.css).then(function (prefixed) {
-				prefixed.warnings().forEach(function (warn) {
-					Log.error(warn.toString());
-
-					reject(error);
-				});
-				Log.verbose('Successfully autoprefixed CSS for ' + Chalk.yellow(location));
-
-				WriteFile(location, prefixed.css) //write the generated content to file and return its promise
-				.catch(function (error) {
-					Log.error(error);
-
-					reject(error);
-				}).then(function () {
-					resolve(true);
-				});
-			});
 		});
 	});
 };
@@ -242,16 +245,25 @@ var StripDuplicateLines = function StripDuplicateLines(content) {
 /**
  * Minify JS so we have one function not several
  *
- * @param  {string} js - The JS code to be minified
+ * @param  {string} js   - The JS code to be minified
+ * @param  {string} file - The file name for error reporting
  *
  * @return {string}    - The minified js code
  */
-var MinifyJS = function MinifyJS(js) {
-	var jsCode = UglifyJS.minify(js, {
-		fromString: true
-	});
+var MinifyJS = function MinifyJS(js, file) {
 
-	return jsCode.code;
+	try {
+		var jsCode = UglifyJS.minify(js, {
+			fromString: true
+		});
+
+		return jsCode.code;
+	} catch (error) {
+		Log.error('Unable to uglify js code for ' + Chalk.yellow(file));
+		Log.error(error.message);
+
+		return js;
+	}
 };
 
 /**
@@ -267,6 +279,7 @@ var HandelJS = function HandelJS(from, settings, to) {
 	return new _promise2.default(function (resolve, reject) {
 		ReadFile(from) //read the module
 		.catch(function (error) {
+			Log.error('Unable to read file ' + Chalk.yellow(from));
 			Log.error(error);
 
 			reject(error);
@@ -276,9 +289,9 @@ var HandelJS = function HandelJS(from, settings, to) {
 
 			if (settings.minified) {
 				//minification = uglify code
-				code = MinifyJS(content);
+				code = MinifyJS(content, from);
 
-				Log.verbose('Successfully uglified JS for ' + Chalk.yellow(jsModulePath));
+				Log.verbose('Successfully uglified JS for ' + Chalk.yellow(from));
 			} else {
 				//no minification = just copy and rename
 				code = content;
@@ -318,7 +331,7 @@ var MinifyAllJS = function MinifyAllJS(allJS, settings) {
 			var code = '';
 
 			if (settings.minified) {
-				code = MinifyJS(js.join('\n\n'));
+				code = MinifyJS(js.join('\n\n'), locationJS);
 
 				Log.verbose('Successfully uglified JS for ' + Chalk.yellow(locationJS));
 			} else {
@@ -430,10 +443,16 @@ allPackages.catch(function (error) {
 		PKG.pancake.sass = SettingsSASS;
 		PKG.pancake.js = SettingsJS;
 
+		var _isSpaces = void 0;
+
 		//detect indentation
 		var indentation = 2; //default indentation even though you all should be using tabs for indentation!
-		var PKGlines = PKGsource.split('\n');
-		var _isSpaces = PKGlines[1].startsWith('  ');
+		try {
+			var PKGlines = PKGsource.split('\n');
+			_isSpaces = PKGlines[1].startsWith('  ');
+		} catch (error) {
+			_isSpaces = true;
+		}
 
 		if (!_isSpaces) {
 			indentation = '\t'; //here we go!
@@ -442,8 +461,6 @@ allPackages.catch(function (error) {
 		compiledAll.push(WriteFile(PackagePath, (0, _stringify2.default)(PKG, null, indentation)) //write package.json
 		.catch(function (error) {
 			Log.error(error);
-
-			process.exit(1);
 		}));
 	}
 
@@ -489,14 +506,14 @@ allPackages.catch(function (error) {
 			}
 
 			//check if there is JS
-			var _jsModulePath = Path.normalize(modulePackage.path + '/dist/js/module.js');
+			var jsModulePath = Path.normalize(modulePackage.path + '/dist/js/module.js');
 
-			if (Fs.existsSync(_jsModulePath)) {
+			if (Fs.existsSync(jsModulePath)) {
 				Log.verbose(Chalk.green('⌘') + ' Found JS code in ' + Chalk.yellow(modulePackage.name));
 
 				var jsModuleToPath = Path.normalize(pkgPath + '/' + SettingsJS.location + '/' + modulePackage.name.substring(pancakes.npmOrg.length + 1) + '.js');
 
-				var jsPromise = HandelJS(_jsModulePath, SettingsJS, jsModuleToPath) //compile js and write to file depending on settings
+				var jsPromise = HandelJS(jsModulePath, SettingsJS, jsModuleToPath) //compile js and write to file depending on settings
 				.catch(function (error) {
 					Log.error(error);
 				});
@@ -560,6 +577,8 @@ allPackages.catch(function (error) {
 			Log.ok('Your delicious pancake is ready to be consumed \uD83D\uDCA5');
 		});
 	} else {
+		pancakes.Loading.stop(); //stop loading animation
+
 		Log.info('No pancake modules found \uD83D\uDE2C');
 	}
 });

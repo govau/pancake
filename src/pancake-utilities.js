@@ -61,6 +61,7 @@ const CreateDir = ( dir, verbose ) => {
 					Fs.mkdirSync( currentPath );
 				}
 				catch( error ) {
+					Log.error(`Pancake was unable to create the folder ${ Chalk.yellow( currentPath ) }`);
 					Log.error( error );
 
 					process.exit( 1 );
