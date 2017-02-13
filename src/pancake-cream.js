@@ -217,6 +217,8 @@ Log.info(`PANCAKE PUTTING THE CREAM ON TOP`);
 
 pancakes.Loading.start(); //start loading animation
 
+Log.verbose(`Cream running in ${ Chalk.yellow( pkgPath ) }`);
+
 let allPromises = []; //collect both promises
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

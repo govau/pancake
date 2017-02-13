@@ -334,6 +334,8 @@ Log.info(`PANCAKE ADDING SYRUP`);
 
 pancakes.Loading.start(); //start loading animation
 
+Log.verbose(`Syrup running in ${ Chalk.yellow( pkgPath ) }`);
+
 //reading local settings
 const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
 let PKGsource = {};
