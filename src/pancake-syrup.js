@@ -36,7 +36,7 @@ let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgP
 Program
 	.usage( `[command] <input> <option>` )
 	.arguments('<pkgPath>')
-	.option( `-s, --save`,    `Save my compile settings into my package.json` )
+	.option( `-n, --nosave`,  `Don't save my compile settings into my package.json` )
 	.option( `-b, --batter`,  `Running syrup directly from batter` )
 	.option( `-v, --verbose`, `Run the program in verbose mode` )
 	.action( pkgPathArgument => {
@@ -423,7 +423,7 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Saving settings into local package.json
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		if( allModules.length > 0 && Program.save ) { //only save if we found pancake modules and the flag was supplied
+		if( allModules.length > 0 && !Program.nosave ) { //only save if we found pancake modules and the flag was not supplied
 			Log.verbose(`Saving settings into ${ Chalk.yellow( PackagePath ) }`);
 
 			PKG.pancake.css = SettingsCSS;
