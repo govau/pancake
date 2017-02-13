@@ -154,35 +154,36 @@ const Sassify = ( location, settings, sass ) => {
 			outputStyle: settings.minified ? 'compressed' : 'expanded',
 		}, ( error, renered ) => {
 			if( error ) {
-				Log.error(`:( Sass compile failed for ${ Chalk.yellow( location ) }`);
-				Log.error( error.message );
+				Log.error(`Sass compile failed for ${ Chalk.yellow( location ) }`);
 
-				reject( error );
+				reject( error.message );
 			}
-			Log.verbose(`Successfully compiled Sass for ${ Chalk.yellow( location ) }`);
+			else {
+				Log.verbose(`Successfully compiled Sass for ${ Chalk.yellow( location ) }`);
 
-			Postcss([ Autoprefixer({ browsers: settings.browsers }) ])
-				.process( renered.css )
-				.then( ( prefixed ) => {
-					prefixed
-						.warnings()
-						.forEach( ( warn ) => {
-							Log.error( warn.toString() );
+				Postcss([ Autoprefixer({ browsers: settings.browsers }) ])
+					.process( renered.css )
+					.catch( error => reject( error ) )
+					.then( ( prefixed ) => {
+						if( prefixed ) {
+							prefixed
+								.warnings()
+								.forEach( warn => Log.error( warn.toString() ) );
 
-							reject( error );
-					});
-					Log.verbose(`Successfully autoprefixed CSS for ${ Chalk.yellow( location ) }`);
+							Log.verbose(`Successfully autoprefixed CSS for ${ Chalk.yellow( location ) }`);
 
-					WriteFile( location, prefixed.css ) //write the generated content to file and return its promise
-						.catch( error => {
-							Log.error( error );
+							WriteFile( location, prefixed.css ) //write the generated content to file and return its promise
+								.catch( error => {
+									Log.error( error );
 
-							reject( error );
-						})
-						.then( () => {
-							resolve( true );
-					});
-			});
+									reject( error );
+								})
+								.then( () => {
+									resolve( true );
+							});
+						}
+				});
+			}
 		});
 	});
 };
@@ -211,16 +212,27 @@ const StripDuplicateLines = content => {
 /**
  * Minify JS so we have one function not several
  *
- * @param  {string} js - The JS code to be minified
+ * @param  {string} js   - The JS code to be minified
+ * @param  {string} file - The file name for error reporting
  *
  * @return {string}    - The minified js code
  */
-const MinifyJS = ( js ) => {
-	const jsCode = UglifyJS.minify( js, {
-		fromString: true,
-	});
+const MinifyJS = ( js, file ) => {
 
-	return jsCode.code;
+	try {
+		const jsCode = UglifyJS.minify( js, {
+			fromString: true,
+		});
+
+		return jsCode.code;
+	}
+	catch( error ) {
+		Log.error(`Unable to uglify js code for ${ Chalk.yellow( file ) }`);
+		Log.error( error.message );
+
+		return js;
+	}
+
 };
 
 
@@ -237,6 +249,7 @@ const HandelJS = ( from, settings, to ) => {
 	return new Promise( ( resolve, reject ) => {
 		ReadFile( from ) //read the module
 			.catch( error => {
+				Log.error(`Unable to read file ${ Chalk.yellow( from ) }`);
 				Log.error( error );
 
 				reject( error );
@@ -246,9 +259,9 @@ const HandelJS = ( from, settings, to ) => {
 				let code = '';
 
 				if( settings.minified ) { //minification = uglify code
-					code = MinifyJS( content );
+					code = MinifyJS( content, from );
 
-					Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( jsModulePath ) }`);
+					Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( from ) }`);
 				}
 				else { //no minification = just copy and rename
 					code = content;
@@ -292,7 +305,7 @@ const MinifyAllJS = ( allJS, settings ) => {
 				let code = '';
 
 				if( settings.minified ) {
-					code = MinifyJS( js.join(`\n\n`) );
+					code = MinifyJS( js.join(`\n\n`), locationJS );
 
 					Log.verbose(`Successfully uglified JS for ${ Chalk.yellow( locationJS ) }`);
 				}
@@ -415,10 +428,17 @@ allPackages
 			PKG.pancake.sass = SettingsSASS;
 			PKG.pancake.js = SettingsJS;
 
+			let _isSpaces;
+
 			//detect indentation
 			let indentation = 2; //default indentation even though you all should be using tabs for indentation!
-			const PKGlines = PKGsource.split('\n');
-			let _isSpaces = PKGlines[ 1 ].startsWith('  ');
+			try {
+				const PKGlines = PKGsource.split('\n');
+				_isSpaces = PKGlines[ 1 ].startsWith('  ');
+			}
+			catch( error ) {
+				_isSpaces = true;
+			}
 
 			if( !_isSpaces ) {
 				indentation = '\t'; //here we go!
@@ -428,8 +448,6 @@ allPackages
 				WriteFile( PackagePath, JSON.stringify( PKG, null, indentation ) )  //write package.json
 					.catch( error => {
 							Log.error( error );
-
-							process.exit( 1 );
 					})
 			);
 		}
@@ -543,6 +561,8 @@ allPackages
 			});
 	}
 	else {
+		pancakes.Loading.stop(); //stop loading animation
+
 		Log.info( `No pancake modules found 😬` );
 	}
 });

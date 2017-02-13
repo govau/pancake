@@ -86,9 +86,7 @@ const GetRemoteJson = url => {
 					}
 				}
 				else if( result.statusCode !== 200 ) {
-					Log.error(`Status code of request to ${ Chalk.yellow( url ) } returned: ${ Chalk.yellow( result.statusCode ) } `);
-
-					reject( result.statusCode );
+					reject(`Request to ${ Chalk.yellow( url ) } returned: ${ Chalk.yellow( result.statusCode ) }`);
 				}
 				else {
 					resolve( data );
