@@ -9,7 +9,7 @@ Pancake
 * [What’s inside?](#whats-inside)
 * [Batter](#batter)
 * [Syrup](#syrup)
-* [Cream](#Cream)
+* [Cream](#cream)
 * [Requirements](#requirements)
 * [Contributing](#contributing)
 * [Taste / Tests](#tests)
@@ -27,7 +27,7 @@ Pancake
 This tool comes with three commands:
 * [Batter](#batter)
 * [Syrup](#syrup)
-* [Cream](#Cream)
+* [Cream](#cream)
 
 > Pancakes needs batter. Can’t do no pancakes without batter. This is essential!
 
@@ -292,39 +292,39 @@ _Please look at the coding style and work with it, not against it. 🌴_
 We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
-- `v3.0.0`
-- `v3.0.1`
-- `v3.0.2`
-- `v3.1.0`
-- `v3.1.1`
-- `v3.2.0`
-- `v3.3.0`
-- `v4.0.0`
-- `v4.0.1`
+- `v10.0.0`
+- `v10.0.1`
+- `v10.0.2`
+- `v10.1.0`
+- `v10.1.1`
+- `v10.2.0`
+- `v10.3.0`
+- `v11.0.0`
+- `v11.0.1`
 
 **@gov.au/testmodule2**
-- `v5.0.0`  
-	└── `@gov.au/testmodule1`: `^3.0.0`
-- `v5.0.1`  
-	└── `@gov.au/testmodule1`: `^3.0.0`
-- `v6.0.0`  
-	└── `@gov.au/testmodule1`: `^4.0.0`
-- `v7.0.0`  
-	└── `@gov.au/testmodule1`: `^4.0.0`
-- `v8.0.0`  
-	└── `@gov.au/testmodule1`: `^4.0.1`
+- `v10.0.0`  
+	└── `@gov.au/testmodule1`: `^10.0.0`
+- `v10.0.1`  
+	└── `@gov.au/testmodule1`: `^10.0.0`
+- `v11.0.0`  
+	└── `@gov.au/testmodule1`: `^11.0.0`
+- `v12.0.0`  
+	└── `@gov.au/testmodule1`: `^11.0.0`
+- `v13.0.0`  
+	└── `@gov.au/testmodule1`: `^11.0.1`
 
 **@gov.au/testmodule3**
-- `v3.0.0`  
-	└── `@gov.au/testmodule1`: `^3.0.0`
-- `v3.0.1`  
-	└── `@gov.au/testmodule1`: `^3.1.0`
-- `v3.0.2`  
-	└── `@gov.au/testmodule1`: `^3.2.0`
-- `v3.1.0`  
-	└── `@gov.au/testmodule1`: `^3.3.0`
-- `v4.0.0`  
-	└── `@gov.au/testmodule1`: `^4.0.1`
+- `v10.0.0`  
+	└── `@gov.au/testmodule1`: `^10.0.0`
+- `v10.0.1`  
+	└── `@gov.au/testmodule1`: `^10.1.0`
+- `v10.0.2`  
+	└── `@gov.au/testmodule1`: `^10.2.0`
+- `v10.1.0`  
+	└── `@gov.au/testmodule1`: `^10.3.0`
+- `v11.0.0`  
+	└── `@gov.au/testmodule1`: `^11.0.1`
 
 
 

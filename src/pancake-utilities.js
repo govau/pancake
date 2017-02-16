@@ -270,6 +270,7 @@ const Log = {
 
 			const messages = [ //because errors don't have to be boring!
 				`Uh oh`,
+				`Oh no`,
 				`Sorry`,
 				`D'oh`,
 				`Oh my`,
