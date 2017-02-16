@@ -426,7 +426,8 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Saving settings into local package.json
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		if( allModules.length > 0 && !Program.nosave ) { //only save if we found pancake modules and the flag was not supplied
+		//only save if we found pancake modules and it wasn't disabled by either flag or package.json setting
+		if( allModules.length > 0 && !Program.nosave && PKG.pancake['auto-save'] !== false ) {
 			Log.verbose(`Saving settings into ${ Chalk.yellow( PackagePath ) }`);
 
 			PKG.pancake.css = SettingsCSS;

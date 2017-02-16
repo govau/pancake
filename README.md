@@ -166,6 +166,7 @@ Default value: `no flag`
 
 The command will stop pancake from merging your local settings, complete them with the defaults and save them into your `package.json`.
 This will sort-of shrink-wrap all settings in so you are completely reproducible.
+You can also opt-out of this behavior by adding `"uikit": { "auto-save": false }` into your package.json.
 
 ```shell
 pancake syrup --nosave
