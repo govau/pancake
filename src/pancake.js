@@ -39,7 +39,7 @@ if( process.argv.indexOf( '-x' ) !== -1 || process.argv.indexOf( '--surround-sou
 
 	process.argv.splice( position, 1 ); //don't want the option to be in help
 
-	Player.play( Path.normalize(`${ __dirname }/assets/pancake.mp3`), ( error ) => { //120kb ...
+	Player.play( Path.normalize(`${ __dirname }/../assets/pancake.mp3`), ( error ) => { //120kb ...
 		if( error ) {
 			// throw err; //we are not erroring out as this is not important functionality
 		}

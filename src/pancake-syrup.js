@@ -121,14 +121,17 @@ const ReadFile = location => {
 const GenerateSass = ( location, dependencies ) => {
 	let sass = ``; //the code goes here
 
-	if( Object.keys( dependencies ).length ) {
-		const baseLocation = Path.normalize(`${ location }/../`);
+	if( dependencies ) {
+		if( Object.keys( dependencies ).length ) {
+			const baseLocation = Path.normalize(`${ location }/../`);
 
-		for( const dependency of Object.keys( dependencies ) ) {
-			const modulePath = dependency.substring( pancakes.npmOrg.length, dependency.length );
+			for( const dependency of Object.keys( dependencies ) ) {
+				const modulePath = dependency.substring( pancakes.npmOrg.length, dependency.length );
 
-			sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/dist/sass/module.scss`) }";\n`;
+				sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/dist/sass/module.scss`) }";\n`;
+			}
 		}
+
 	}
 
 	sass += `@import "${ Path.normalize(`${ location }/dist/sass/module.scss`) }";\n`;
