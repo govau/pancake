@@ -375,7 +375,6 @@ let SettingsCSS = {
 };
 
 let SettingsSASS = {
-	'generate': true,
 	'modules': false,
 	'location': 'pancake/sass/',
 	'name': 'pancake.scss',
@@ -494,7 +493,7 @@ allPackages
 			}
 
 			//write sass file
-			if( SettingsSASS.generate ) {
+			if( SettingsSASS.modules ) {
 				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.scss`);
 
 				compiledAll.push(
@@ -545,7 +544,7 @@ allPackages
 			);
 
 			//write SettingsSASS.name file
-			if( SettingsSASS.generate ) {
+			if( SettingsSASS.name !== false ) {
 				const locationSASS = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ SettingsSASS.name }`);
 
 				compiledAll.push(
