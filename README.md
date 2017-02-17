@@ -240,8 +240,6 @@ pancake syrup --verbose
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
 Default value: `path to one level below cwd`  
-Option: `--json <path>` _(optional) overwrite where to look for the `pancake.json`_    
-Default value: `https://raw.githubusercontent.com/govau/uikit/master/uikit.json`
 
 
 Cream will analyze your currently installed pancake modules and show you in a user friendly interface what you can easily update and what update will entail
@@ -254,7 +252,7 @@ pancake cream
 ### temporarily overwrite cream json
 `-v`, `--verbose`  
 Type: `<flag>`  
-Default value: `no flag`
+Default value: whatever is inside your `settings.json`
 
 To overwrite the cream json global settings URL needed by cream type:
 
