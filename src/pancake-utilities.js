@@ -22,13 +22,6 @@ const Fs = require(`fs`);
 // Variables
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- * npm organization for scoped packages, this is what we are looking into when searching for dependency issues
- *
- * @type constant {String}
- */
-const npmOrg = '@gov.au';
-
-/**
  * This keyword will signal to us that the package we found is a legitimate pancake module
  *
  * @type constant {String}
@@ -42,6 +35,21 @@ const controlKeyword = 'pancake-module';
  * @type constant {String}
  */
 const sassVersioningKeyword = 'pancake-sass-versioning';
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// GLOBAL SETTINGS
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+let SETTINGS = {};
+
+try {
+	SETTINGS = JSON.parse( Fs.readFileSync( Path.normalize(`${ __dirname }/../settings.json`), `utf8` ) );
+}
+catch( error ) {
+	console.error( Chalk.red(`Couldn’t read settings :(`) );
+
+	process.exit( 1 );
+}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -173,7 +181,7 @@ const GetPackages = ( pkgPath, verbose ) => {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Chalk.yellow( typeof pkgPath ) }] "${ Chalk.yellow( pkgPath ) }"`, verbose);
 	}
 
-	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org to the path
+	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ SETTINGS.npmOrg }/`); //we add our npm org to the path
 
 	Log.verbose(`Looking for pancake modules in: ${ Chalk.yellow( pkgPath ) }`, verbose);
 
@@ -211,7 +219,6 @@ const GetPackages = ( pkgPath, verbose ) => {
  */
 const Loading = ( verbose ) => {
 
-	//settings
 	let sequence = [ //the sequence of all animation frame
 		Chalk.gray(`            ${ Chalk.yellow('*') } • • • •`),
 		Chalk.gray(`            • ${ Chalk.yellow('*') } • • •`),
@@ -438,8 +445,8 @@ module.exports = ( verbose ) => {
 		CreateDir: ( thisPath ) => CreateDir( thisPath, verbose ),     //we need to pass verbose mode here
 		GetFolders: ( thisPath ) => GetFolders( thisPath, verbose ),   //we need to pass verbose mode here
 		GetPackages: ( thisPath ) => GetPackages( thisPath, verbose ), //we need to pass verbose mode here
-		npmOrg: npmOrg,
 		controlKeyword: controlKeyword,
 		sassVersioningKeyword: sassVersioningKeyword,
+		SETTINGS: SETTINGS,
 	}
 };

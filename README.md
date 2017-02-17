@@ -11,9 +11,9 @@ Pancake
 * [Batter](#batter)
 * [Syrup](#syrup)
 * [Cream](#cream)
-* [Creating your own pancake modules](creating-your-own-pancake-modules)
+* [Creating your own pancake modules](#creating-your-own-pancake-modules)
 * [Contributing](#contributing)
-* [Taste / Tests](#tests)
+* [Taste / Tests](#taste--tests)
 * [Release History](#release-history)
 * [License](#license)
 
@@ -64,7 +64,7 @@ Pancake has been testing with all node version coming with npm 3 and higher:
 - node `v7.4.0`
 - node `v7.5.0`
 
-_Dependencies have been fixed to specific versions to keep the dependency tree and security impact as low as possible._
+_Dependencies have been fixed to specific versions to keep the dependency tree and security impact as low as possible. We also ship a `yarn.lock` file._
 
 
 **[⬆ back to top](#content)**
@@ -101,7 +101,7 @@ Batter will also run [Syrup](#syrup) after a successful run.
 You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json.
 
 
-### dry
+### dry run
 `-d`, `--dry`  
 Type: `<flag>`  
 Default value: `no flag`
@@ -113,7 +113,24 @@ pancake batter --dry
 ```
 
 
-### verbose
+### settings
+`-s`, `--set`  
+Type: `[setting] [value]`  
+Default value: `no flag`
+
+Save new global settings. Available settings are:
+
+|   setting   |                                 value                                 |
+|-------------|-----------------------------------------------------------------------|
+| `creamJson` | This is the [cream json](#the-json-file) with all your modules inside |
+|   `npmOrg`  | This is the npm org scope                                             |
+
+```shell
+pancake --set npmOrg "@gov.au"
+```
+
+
+### verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
 Default value: `no flag`
@@ -183,7 +200,7 @@ Below are all possible settings with default values.
 }
 ```
 
-### save
+### don't save to package.json
 `-n`, `--nosave`  
 Type: `<flag>`  
 Default value: `no flag`
@@ -196,7 +213,7 @@ You can also opt-out of this behavior by adding `"uikit": { "auto-save": false }
 pancake syrup --nosave
 ```
 
-### verbose
+### verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
 Default value: `no flag`
@@ -234,14 +251,21 @@ breaking changes.
 pancake cream
 ```
 
-To overwrite the hardcoded json URL run cream with the `json` flag:
+### temporarily overwrite cream json
+`-v`, `--verbose`  
+Type: `<flag>`  
+Default value: `no flag`
+
+To overwrite the cream json global settings URL needed by cream type:
 
 ```shell
 pancake cream --json https://you.domain/to/json/file.json
 ```
 
+_Note: You can make this change on a global level by using the [set flag](#settings)._
 
-### verbose
+
+### verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
 Default value: `no flag`
@@ -261,13 +285,15 @@ pancake syrup --verbose
 
 ## Creating your own pancake modules
 
-💡 You can use Pancake with your own modules. All you have to do is:
-- keep a certain folder structure
-- add one or two keywords to your `package.json` file
-- add the pancake script to your `package.json` file
-- and publish your module to npm.
+💡 You can use Pancake with your own modules. All you have to do in your modules is:
 
-### Folder structure
+1. keep a certain folder structure
+2. add one or two keywords to your `package.json` file
+3. add the pancake script to your `package.json` file
+4. publish a json file which contains all modules, versions and dependencies
+5. and publish your module to npm.
+
+### 1. Folder structure
 
 ```shell
 .
@@ -283,18 +309,18 @@ pancake syrup --verbose
 └── package.json          # your package.json file holds some pancake magic described below
 ```
 
-### Keywords
+### 2. Keywords
 
 To make sure pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` keyword:
 
-```json
+```shell
 {
 	"name": "your-module-name",
 	"version": "1.0.0",
 	"description": "Your description",
 	"keywords": [
-		"pancake-module",
-		"pancake-sass-versioning"
+		"pancake-module",          # <------- This keyword
+		"pancake-sass-versioning"  # <------- This keyword
 	],
 	"dependencies": {
 		"@gov.au/pancake": "latest",
@@ -310,13 +336,13 @@ To make sure pancake can detect your module amongst the other hundred npm packag
 ```
 
 You can also add the `pancake-sass-versioning` keyword to tell pancake you are using [Sass-versioning](https://github.com/dominikwilkowski/sass-versioning)
-with your module so it can add the `versioning-check();` function.
+with your module so it can add the `versioning-check();` function at the end of each generated sass file.
 
-### The script
+### 3. The script
 
-The magic of pancake lies within the `postInstall` script. To enable pancake to run right after the install of your module you have to add the script:
+The magic of pancake lies within the `postInstall` script. To enable pancake you need to add it as a dependency and add the script:
 
-```json
+```shell
 {
 	"name": "your-module-name",
 	"version": "1.0.0",
@@ -326,12 +352,12 @@ The magic of pancake lies within the `postInstall` script. To enable pancake to 
 		"pancake-sass-versioning"
 	],
 	"dependencies": {
-		"@gov.au/pancake": "latest",
+		"@gov.au/pancake": "latest",  # <------- This dependency
 	},
 	"peerDependencies": {},
 	"devDependencies": {},
 	"scripts": {
-		"postinstall": "pancake batter \"$(cd .. && npm prefix)\""
+		"postinstall": "pancake batter \"$(cd .. && npm prefix)\""  # <------- This script
 	},
 	"author": "",
 	"license": "ISC"
@@ -340,10 +366,40 @@ The magic of pancake lies within the `postInstall` script. To enable pancake to 
 
 This will run `batter` and `syrup` right after install and make sure pancake is always up-to-date.
 
-### Publish
+### 4. The json file
 
-All that’s left right now is to publish your module. At this moment Pancake has a hard coded npm organization built in. We will change that once we figure out
-how to store/edit those defaults. 😁
+Pancake cream requires a json file to look up what you can install and compare it against what is installed. The format of that json file can be seen below.
+
+```json
+{
+  "@gov.au/core": {
+    "name": "@gov.au/breadcrumbs",
+    "version": "1.0.2",
+    "peerDependencies": {}
+  },
+  "@gov.au/body": {
+    "name": "@gov.au/body",
+    "version": "1.1.0",
+    "peerDependencies": {
+      "@gov.au/core": "^1.0.0"
+    }
+  },
+  "@gov.au/button": {
+    "name": "@gov.au/button",
+    "version": "2.4.10",
+    "peerDependencies": {
+      "@gov.au/core": "^1.0.0",
+      "@gov.au/body": "^1.1.0"
+    }
+  }
+}
+```
+
+Make sure you [change the settings](#settings) for `creamJson` in pancake to suit your module needs.
+
+### 5. Publish
+
+You're ready to publish your modules and start using Pancake.
 
 
 **[⬆ back to top](#content)**
@@ -399,27 +455,27 @@ We have published three test modules in our scoped npm org to test interdependen
 
 **@gov.au/testmodule2**
 - `v10.0.0`  
-	└── `@gov.au/testmodule1`: `^10.0.0`
+	- └── `@gov.au/testmodule1`: `^10.0.0`
 - `v10.0.1`  
-	└── `@gov.au/testmodule1`: `^10.0.0`
+	- └── `@gov.au/testmodule1`: `^10.0.0`
 - `v11.0.0`  
-	└── `@gov.au/testmodule1`: `^11.0.0`
+	- └── `@gov.au/testmodule1`: `^11.0.0`
 - `v12.0.0`  
-	└── `@gov.au/testmodule1`: `^11.0.0`
+	- └── `@gov.au/testmodule1`: `^11.0.0`
 - `v13.0.0`  
-	└── `@gov.au/testmodule1`: `^11.0.1`
+	- └── `@gov.au/testmodule1`: `^11.0.1`
 
 **@gov.au/testmodule3**
 - `v10.0.0`  
-	└── `@gov.au/testmodule1`: `^10.0.0`
+	- └── `@gov.au/testmodule1`: `^10.0.0`
 - `v10.0.1`  
-	└── `@gov.au/testmodule1`: `^10.1.0`
+	- └── `@gov.au/testmodule1`: `^10.1.0`
 - `v10.0.2`  
-	└── `@gov.au/testmodule1`: `^10.2.0`
+	- └── `@gov.au/testmodule1`: `^10.2.0`
 - `v10.1.0`  
-	└── `@gov.au/testmodule1`: `^10.3.0`
+	- └── `@gov.au/testmodule1`: `^10.3.0`
 - `v11.0.0`  
-	└── `@gov.au/testmodule1`: `^11.0.1`
+	- └── `@gov.au/testmodule1`: `^11.0.1`
 
 
 

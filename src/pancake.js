@@ -82,6 +82,7 @@ if( process.argv.length <= 2 ) {
 Program
 	.version( `v${ Version }` )
 	.usage( `[command] <input>` )
+	.option( `-s, --set [pancakeURL] [pancakeURL]`, `Overwrite a default setting` )
 	.description(
 		`\n( ^-^)_旦 🥞  Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly. ` +
 		`It will check your peerDependencies, write compile the contents for you and lists all available modules for you to select and install.`
@@ -111,3 +112,32 @@ Program
 		)
 	)
 	.parse( process.argv );
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// SETTING GLOBALS
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+if( Program.set ) {
+	const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
+	const Log = pancakes.Log;
+
+	Log.info(`PANCAKE SAVING DEFAULT SETTING`);
+
+	if( pancakes.SETTINGS[ Program.set ] !== undefined ) {
+		pancakes.SETTINGS[ Program.set ] = Program.args[0]; //setting new value
+
+		try {
+			Fs.writeFileSync( Path.normalize(`${ __dirname }/../settings.json`), JSON.stringify( pancakes.SETTINGS, null, '\t' ), 'utf8' );
+
+			Log.ok(`Value for ${ Chalk.yellow( Program.set ) } saved`);
+			Log.space();
+		}
+		catch( error ) {
+			Log.error(`Saving settings failed`);
+			Log.error( error );
+		}
+	}
+	else {
+		Log.error(`Setting ${ Chalk.yellow( Program.set ) } not found`);
+	}
+}
