@@ -128,13 +128,13 @@ const GenerateSass = ( location, dependencies ) => {
 			for( const dependency of Object.keys( dependencies ) ) {
 				const modulePath = dependency.substring( pancakes.npmOrg.length, dependency.length );
 
-				sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/dist/sass/module.scss`) }";\n`;
+				sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/lib/sass/_module.scss`) }";\n`;
 			}
 		}
 
 	}
 
-	sass += `@import "${ Path.normalize(`${ location }/dist/sass/module.scss`) }";\n`;
+	sass += `@import "${ Path.normalize(`${ location }/lib/sass/_module.scss`) }";\n`;
 
 	return sass;
 };
@@ -415,7 +415,7 @@ const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and retu
 
 allPackages
 	.catch( error => {
-		Log.error(`Reading all package.json files bumped into an error: ${ error }`);
+		Log.error(`Trying to read all package.json files just bumped into an error: ${ error }`);
 	})
 	.then( allModules => {  //once we got all the content from all package.json files
 		let compiledAll = []; //for collect all promises
@@ -462,12 +462,24 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		let sassVersioning = true; //let's assume the pancake module was build with sass-versioning
+
 		for( const modulePackage of allModules ) {
 			Log.verbose(`Bulding ${ Chalk.yellow( modulePackage.name ) }`);
 
 			//generate the import statements depending on dependencies
 			let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );
 			allSass += sass; //for SettingsCSS.name file
+
+			//adding banner and conditional sass-versioning
+			if( modulePackage.sassVersioning === true ) {
+				sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
+
+				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
+			}
+			else {
+				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;
+			}
 
 			//write css file
 			if( SettingsCSS.modules ) {
@@ -485,8 +497,6 @@ allPackages
 			if( SettingsSASS.generate ) {
 				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.scss`);
 
-				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
-
 				compiledAll.push(
 					WriteFile( location, sass ) //write file
 						.catch( error => {
@@ -498,7 +508,7 @@ allPackages
 			}
 
 			//check if there is JS
-			const jsModulePath = Path.normalize(`${ modulePackage.path }/dist/js/module.js`);
+			const jsModulePath = Path.normalize(`${ modulePackage.path }/lib/js/module.js`);
 
 			if( Fs.existsSync( jsModulePath ) ) {
 				Log.verbose(`${ Chalk.green('⌘') } Found JS code in ${ Chalk.yellow( modulePackage.name ) }`);
@@ -519,9 +529,13 @@ allPackages
 
 			//write the SettingsCSS.name file
 			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
-			allSass = `/*! PANCAKE */\n\n` +
-				StripDuplicateLines( allSass ) + //remove duplicate import lines
-				`\n\n@include versioning-check();\n`;
+
+			if( sassVersioning === true ) {
+				allSass = `/* PANCAKE */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+			}
+			else {
+				allSass = `/* PANCAKE */\n\n${ StripDuplicateLines( allSass ) }\n`;
+			}
 
 			compiledAll.push(
 				Sassify( locationCSS, SettingsCSS, allSass ) //generate SettingsCSS.name file

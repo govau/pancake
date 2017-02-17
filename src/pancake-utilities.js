@@ -35,6 +35,14 @@ const npmOrg = '@gov.au';
  */
 const controlKeyword = 'pancake-module';
 
+/**
+ * This keyword will signal to us that the package we found has sass-versioning support
+ * https://github.com/dominikwilkowski/sass-versioning
+ *
+ * @type constant {String}
+ */
+const sassVersioningKeyword = 'pancake-sass-versioning';
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Objects / functions
@@ -136,6 +144,7 @@ const ReadPackage = ( pkgPath, verbose ) => {
 						name: packageJson.name,
 						version: packageJson.version,
 						peerDependencies: packageJson.peerDependencies,
+						sassVersioning: packageJson.keywords.indexOf( sassVersioningKeyword ) > -1 ? true : false,
 						path: pkgPath,
 					}
 
@@ -431,5 +440,6 @@ module.exports = ( verbose ) => {
 		GetPackages: ( thisPath ) => GetPackages( thisPath, verbose ), //we need to pass verbose mode here
 		npmOrg: npmOrg,
 		controlKeyword: controlKeyword,
+		sassVersioningKeyword: sassVersioningKeyword,
 	}
 };
