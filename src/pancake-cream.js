@@ -172,7 +172,7 @@ const AddDeps = ( dependencies, installed, longestName ) => {
 
 	for( const module of Object.keys( dependencies ) ) {
 		i ++; //count iterations
-		let name = module.substring( pancakes.npmOrg.length + 1, module.length ); //removing npm scoping string
+		let name = module.substring( pancakes.SETTINGS.npmOrg.length + 1, module.length ); //removing npm scoping string
 		let version = dependencies[ module ];
 		const installedModule = installed.get( module ); //looking up if this version exists in our installed modules
 
@@ -286,7 +286,7 @@ Promise.all( allPromises )
 		}
 
 		//getting the longest name of all pancake modules for nice alignment
-		const longestName = Object.keys( PANCAKE ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.npmOrg.length + 1 );
+		const longestName = Object.keys( PANCAKE ).reduce( ( a, b) => a.length > b.length ? a : b ).length - ( pancakes.SETTINGS.npmOrg.length + 1 );
 
 		Log.verbose(
 			`Got all data from the json file and installed modules:\n` +
@@ -298,7 +298,7 @@ Promise.all( allPromises )
 		for( const module of Object.keys( PANCAKE ) ) {
 			const thisChoice = {};                            //let's build this choice out
 			const installedVersion = installed.get( module ); //the installed version of this module
-			const name = module.substring( pancakes.npmOrg.length + 1, module.length ); //removing the scoping string
+			const name = module.substring( pancakes.SETTINGS.npmOrg.length + 1, module.length ); //removing the scoping string
 			const depLines = AddDeps( PANCAKE[ module ].peerDependencies, installed, longestName );  //let's add all the dependencies under each module
 
 			thisChoice.name = ` ${ name }  ` +

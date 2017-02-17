@@ -121,17 +121,20 @@ const ReadFile = location => {
 const GenerateSass = ( location, dependencies ) => {
 	let sass = ``; //the code goes here
 
-	if( Object.keys( dependencies ).length ) {
-		const baseLocation = Path.normalize(`${ location }/../`);
+	if( dependencies ) {
+		if( Object.keys( dependencies ).length ) {
+			const baseLocation = Path.normalize(`${ location }/../`);
 
-		for( const dependency of Object.keys( dependencies ) ) {
-			const modulePath = dependency.substring( pancakes.npmOrg.length, dependency.length );
+			for( const dependency of Object.keys( dependencies ) ) {
+				const modulePath = dependency.substring( pancakes.SETTINGS.npmOrg.length, dependency.length );
 
-			sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/dist/sass/module.scss`) }";\n`;
+				sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/lib/sass/_module.scss`) }";\n`;
+			}
 		}
+
 	}
 
-	sass += `@import "${ Path.normalize(`${ location }/dist/sass/module.scss`) }";\n`;
+	sass += `@import "${ Path.normalize(`${ location }/lib/sass/_module.scss`) }";\n`;
 
 	return sass;
 };
@@ -412,7 +415,7 @@ const allPackages = pancakes.GetPackages( pkgPath ) //read all packages and retu
 
 allPackages
 	.catch( error => {
-		Log.error(`Reading all package.json files bumped into an error: ${ error }`);
+		Log.error(`Trying to read all package.json files just bumped into an error: ${ error }`);
 	})
 	.then( allModules => {  //once we got all the content from all package.json files
 		let compiledAll = []; //for collect all promises
@@ -423,7 +426,8 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Saving settings into local package.json
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		if( allModules.length > 0 && !Program.nosave ) { //only save if we found pancake modules and the flag was not supplied
+		//only save if we found pancake modules and it wasn't disabled by either flag or package.json setting
+		if( allModules.length > 0 && !Program.nosave && PKG.pancake['auto-save'] !== false ) {
 			Log.verbose(`Saving settings into ${ Chalk.yellow( PackagePath ) }`);
 
 			PKG.pancake.css = SettingsCSS;
@@ -458,6 +462,8 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		let sassVersioning = true; //let's assume the pancake module was build with sass-versioning
+
 		for( const modulePackage of allModules ) {
 			Log.verbose(`Bulding ${ Chalk.yellow( modulePackage.name ) }`);
 
@@ -465,9 +471,19 @@ allPackages
 			let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );
 			allSass += sass; //for SettingsCSS.name file
 
+			//adding banner and conditional sass-versioning
+			if( modulePackage.sassVersioning === true ) {
+				sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
+
+				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
+			}
+			else {
+				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;
+			}
+
 			//write css file
 			if( SettingsCSS.modules ) {
-				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.css`);
+				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.css`);
 
 				compiledAll.push(
 					Sassify( location, SettingsCSS, sass ) //generate css and write file
@@ -479,9 +495,7 @@ allPackages
 
 			//write sass file
 			if( SettingsSASS.generate ) {
-				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.scss`);
-
-				sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
+				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.scss`);
 
 				compiledAll.push(
 					WriteFile( location, sass ) //write file
@@ -494,12 +508,12 @@ allPackages
 			}
 
 			//check if there is JS
-			const jsModulePath = Path.normalize(`${ modulePackage.path }/dist/js/module.js`);
+			const jsModulePath = Path.normalize(`${ modulePackage.path }/lib/js/module.js`);
 
 			if( Fs.existsSync( jsModulePath ) ) {
 				Log.verbose(`${ Chalk.green('⌘') } Found JS code in ${ Chalk.yellow( modulePackage.name ) }`);
 
-				const jsModuleToPath = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.npmOrg.length + 1 ) }.js`);
+				const jsModuleToPath = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.js`);
 
 				const jsPromise = HandelJS( jsModulePath, SettingsJS, jsModuleToPath ) //compile js and write to file depending on settings
 					.catch( error => {
@@ -515,9 +529,13 @@ allPackages
 
 			//write the SettingsCSS.name file
 			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
-			allSass = `/*! PANCAKE */\n\n` +
-				StripDuplicateLines( allSass ) + //remove duplicate import lines
-				`\n\n@include versioning-check();\n`;
+
+			if( sassVersioning === true ) {
+				allSass = `/* PANCAKE */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+			}
+			else {
+				allSass = `/* PANCAKE */\n\n${ StripDuplicateLines( allSass ) }\n`;
+			}
 
 			compiledAll.push(
 				Sassify( locationCSS, SettingsCSS, allSass ) //generate SettingsCSS.name file
