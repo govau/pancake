@@ -185,10 +185,9 @@ Below are all possible settings with default values.
 			"name": "uikit.min.css"    //name of your css file with all modules
 		},
 		"sass": {
-			"generate": true,          //save sass files?
 			"modules": false,          //save a sass file per module?
 			"location": "uikit/sass/", //path where to save those files, relative to your package.json
-			"name": "uikit.scss"       //name of the sass file with all modules
+			"name": "uikit.scss"       //name of the sass file with all modules, set this to false if you don't want the sass files to be generated
 		},
 		"js": {
 			"minified": true,          //minify js code?
