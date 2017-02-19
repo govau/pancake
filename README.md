@@ -11,7 +11,7 @@ Pancake
 * [Batter](#batter)
 * [Syrup](#syrup)
 * [Cream](#cream)
-* [Creating your own pancake modules](#creating-your-own-pancake-modules)
+* [Creating your own Pancake modules](#creating-your-own-pancake-modules)
 * [Contributing](#contributing)
 * [Taste / Tests](#taste--tests)
 * [Release History](#release-history)
@@ -23,24 +23,24 @@ Pancake
 
 ## What’s inside?
 
-![the pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.jpg)
+![the Pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.jpg)
 
 This tool comes with three commands:
 * [Batter](#batter)
 * [Syrup](#syrup)
 * [Cream](#cream)
 
-> Pancakes needs batter. Can’t do no pancakes without batter. This is essential!
+> Pancakes needs batter. Can’t do no Pancakes without batter. This is essential!
 
-**Batter** will check the peerDependencies of all installed pancake modules for conflicts and error out with a meaningful error message.
+**Batter** will check the peerDependencies of all installed Pancake modules for conflicts and error out with a meaningful error message.
 
-> Eating pancakes without Syrup is pretty dry. You could but it’s not really fun.
+> Eating Pancakes without Syrup is pretty dry. You could but it’s not really fun.
 
 **Syrup** will compile all assets and give you options as to where you might want those assets.
 
 > Putting cream on top makes this a sweet experience. This is why you want more.
 
-**Cream** will present you with options to upgrade your existing pancake project or to start a new one. All that while checking conflicts, communicating what
+**Cream** will present you with options to upgrade your existing Pancake project or to start a new one. All that while checking conflicts, communicating what
 breaking changes might occur and what an easy way out might be.
 
 
@@ -80,12 +80,12 @@ _Dependencies have been fixed to specific versions to keep the dependency tree a
 ### batter
 `batter`  
 Type: `[command]`  
-Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
+Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
 Default value: `path to one level below cwd`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
-in scope)_</sup> `package.json` in search for a gov.au UI-Kit module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`, it will
-record it’s peerDependencies and cross check against all other installed modules.
+in scope)_</sup> `package.json` in search for a Pancake module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`
+<sup>_(A [setting](#settings) you can change)_</sup>, it will record it’s peerDependencies and cross check against all other installed Pancake modules.
 
 ```shell
 pancake batter
@@ -98,13 +98,12 @@ pancake batter /Path/to/folder/of/your/package.json
 ```
 
 Batter will also run [Syrup](#syrup) after a successful run.
-You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json.
+You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json or run batter with the `--dry` flag.
 
 
 ### dry run
 `-d`, `--dry`  
 Type: `<flag>`  
-Default value: `no flag`
 
 Run batter without syrup.
 
@@ -115,8 +114,7 @@ pancake batter --dry
 
 ### settings
 `-s`, `--set`  
-Type: `[setting] [value]`  
-Default value: `no flag`
+Type: `<flag> [setting] [value]`  
 
 Save new global settings. Available settings are:
 
@@ -133,9 +131,8 @@ pancake --set npmOrg "@gov.au"
 ### verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
-Default value: `no flag`
 
-Run pancake in verbose silly mode.
+Run Pancake in verbose silly mode.
 
 ```shell
 pancake batter --verbose
@@ -155,10 +152,10 @@ pancake batter --verbose
 ### syrup
 `syrup`  
 Type: `[command]`  
-Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
+Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
 Default value: `path to one level below cwd`
 
-Syrup compiles your pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
+Syrup compiles your Pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
 `package.json`. All settings are automatically saved into your `package.json` file unless you supply the `--nosave` flag.
 
 ```shell
@@ -185,9 +182,9 @@ Below are all possible settings with default values.
 			"name": "uikit.min.css"    //name of your css file with all modules
 		},
 		"sass": {
-			"modules": false,          //save a sass file per module?
+			"modules": false,          //save a Sass file per module?
 			"location": "uikit/sass/", //path where to save those files, relative to your package.json
-			"name": "uikit.scss"       //name of the sass file with all modules, set this to false if you don't want the sass files to be generated
+			"name": "uikit.scss"       //name of the Sass file with all modules, set this to false if you don’t want the Sass files to be generated
 		},
 		"js": {
 			"minified": true,          //minify js code?
@@ -199,12 +196,11 @@ Below are all possible settings with default values.
 }
 ```
 
-### don't save to package.json
+### don’t save to package.json
 `-n`, `--nosave`  
 Type: `<flag>`  
-Default value: `no flag`
 
-The command will stop pancake from merging your local settings, complete them with the defaults and save them into your `package.json`.
+The command will stop Pancake from merging your local settings, complete them with the defaults and save them into your `package.json`.
 This will sort-of shrink-wrap all settings in so you are completely reproducible.
 You can also opt-out of this behavior by adding `"uikit": { "auto-save": false }` into your package.json.
 
@@ -215,9 +211,8 @@ pancake syrup --nosave
 ### verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
-Default value: `no flag`
 
-Run pancake in verbose silly mode.
+Run Pancake in verbose silly mode.
 
 ```shell
 pancake syrup --verbose
@@ -237,11 +232,10 @@ pancake syrup --verbose
 ### cream
 `cream`  
 Type: `[command]`  
-Option: `<path>` _(optional) overwrite where to look for the `node_module` folder_  
+Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
 Default value: `path to one level below cwd`  
 
-
-Cream will analyze your currently installed pancake modules and show you in a user friendly interface what you can easily update and what update will entail
+Cream will analyze your currently installed Pancake modules and show you in a user friendly interface what you can easily update and what update will entail
 breaking changes.
 
 ```shell
@@ -265,9 +259,8 @@ _Note: You can make this change on a global level by using the [set flag](#setti
 ### verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
-Default value: `no flag`
 
-Run pancake in verbose silly mode.
+Run Pancake in verbose silly mode.
 
 ```shell
 pancake syrup --verbose
@@ -280,13 +273,13 @@ pancake syrup --verbose
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## Creating your own pancake modules
+## Creating your own Pancake modules
 
 💡 You can use Pancake with your own modules. All you have to do in your modules is:
 
 1. keep a certain folder structure
 2. add one or two keywords to your `package.json` file
-3. add the pancake script to your `package.json` file
+3. add the Pancake script to your `package.json` file
 4. publish a json file which contains all modules, versions and dependencies
 5. and publish your module to npm.
 
@@ -297,18 +290,18 @@ pancake syrup --verbose
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
-├── lib                   # this is the folder that pancake with look into to compile your assets
+├── lib                   # this is the folder that Pancake with look into to compile your assets
 │   ├── js
 │   │   └── module.js     # (optional) your javascript goes in this folder and must be named module.js
 │   └── sass
-│       ├── _globals.scss # you can have other sass partials in this folder but make sure they are imported inside the _module.scss file
-│       └── _module.scss  # your sass partial goes in this folder and must be named _module.scss
-└── package.json          # your package.json file holds some pancake magic described below
+│       ├── _globals.scss # you can have other Sass partials in this folder but make sure they are imported inside the _module.scss file
+│       └── _module.scss  # your Sass partial goes in this folder and must be named _module.scss
+└── package.json          # your package.json file holds some Pancake magic described below
 ```
 
 ### 2. Keywords
 
-To make sure pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` keyword:
+To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` keyword:
 
 ```shell
 {
@@ -332,12 +325,12 @@ To make sure pancake can detect your module amongst the other hundred npm packag
 }
 ```
 
-You can also add the `pancake-sass-versioning` keyword to tell pancake you are using [Sass-versioning](https://github.com/dominikwilkowski/sass-versioning)
-with your module so it can add the `versioning-check();` function at the end of each generated sass file.
+You can also add the `pancake-sass-versioning` keyword to tell Pancake you are using [Sass-versioning](https://github.com/dominikwilkowski/sass-versioning)
+with your module so it can add the `versioning-check();` function at the end of each generated Sass file.
 
 ### 3. The script
 
-The magic of pancake lies within the `postInstall` script. To enable pancake you need to add it as a dependency and add the script:
+The magic of Pancake lies within the `postinstall` script. To enable Pancake add it as a dependency and add the script:
 
 ```shell
 {
@@ -361,7 +354,13 @@ The magic of pancake lies within the `postInstall` script. To enable pancake you
 }
 ```
 
-This will run `batter` and `syrup` right after install and make sure pancake is always up-to-date.
+This will run `batter` and `syrup` right after install and make sure Pancake is always up-to-date.
+If you have to change settings (very likely) you don’t actually have to fork this project. You can set those settings globally before running it with your
+`postinstall` script.
+
+```shell
+"postinstall": "pancake set creamJson \"https://yourjson.com\" && pancake set npmOrg \"yourOrg\" && pancake batter \"$(cd .. && npm prefix)\""
+```
 
 ### 4. The json file
 
@@ -369,34 +368,34 @@ Pancake cream requires a json file to look up what you can install and compare i
 
 ```json
 {
-  "@gov.au/core": {
-    "name": "@gov.au/breadcrumbs",
-    "version": "1.0.2",
-    "peerDependencies": {}
-  },
-  "@gov.au/body": {
-    "name": "@gov.au/body",
-    "version": "1.1.0",
-    "peerDependencies": {
-      "@gov.au/core": "^1.0.0"
-    }
-  },
-  "@gov.au/button": {
-    "name": "@gov.au/button",
-    "version": "2.4.10",
-    "peerDependencies": {
-      "@gov.au/core": "^1.0.0",
-      "@gov.au/body": "^1.1.0"
-    }
-  }
+	"@gov.au/core": {
+		"name": "@gov.au/breadcrumbs",
+		"version": "1.0.2",
+		"peerDependencies": {}
+	},
+	"@gov.au/body": {
+		"name": "@gov.au/body",
+		"version": "1.1.0",
+		"peerDependencies": {
+			"@gov.au/core": "^1.0.0"
+		}
+	},
+	"@gov.au/button": {
+		"name": "@gov.au/button",
+		"version": "2.4.10",
+		"peerDependencies": {
+			"@gov.au/core": "^1.0.0",
+			"@gov.au/body": "^1.1.0"
+		}
+	}
 }
 ```
 
-Make sure you [change the settings](#settings) for `creamJson` in pancake to suit your module needs.
+Make sure you [change the settings](#settings) for `creamJson` in Pancake to suit your module needs.
 
 ### 5. Publish
 
-You're ready to publish your modules and start using Pancake.
+You’re ready to publish your modules and start using Pancake.
 
 
 **[⬆ back to top](#content)**
@@ -412,7 +411,7 @@ Hi there 👀,
 ❤️ We LOVE that you’re looking into this section. We welcome any feedback or pull requests and are super psyched about you putting your own time into this
 project. To make your contribution count, have a read through the code first and see what our thinking was. We will do the same with yours.
 
-To run the project run install dependencies and devDependencies:
+To run the project install dependencies and devDependencies:
 
 ```shell
 yarn
@@ -484,8 +483,8 @@ We have published three test modules in our scoped npm org to test interdependen
 
 ## Release History
 
-* v0.1.0 - First pancake
-* v0.0.X - Pre-releases of unstable, undercooked pancakes
+* v0.1.0 - First Pancake
+* v0.0.X - Pre-releases of unstable, undercooked Pancakes
 
 
 **[⬆ back to top](#content)**
