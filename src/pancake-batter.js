@@ -19,7 +19,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const Spawn = require( 'child_process' ).spawnSync;
+const Spawn = require('child_process').spawnSync;
 const Program = require('commander');
 const Semver =  require('semver');
 const Chalk = require('chalk');

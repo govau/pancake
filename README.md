@@ -169,6 +169,8 @@ Below are all possible settings with default values.
 	"name": "your-name",
 	"version": "0.1.0",
 	"uikit": {
+		"auto-syrup": true,          //run syrup right after batter
+		"auto-save": true,           //save all settings into your package.json
 		"css": {
 			"minified": true,          //minify your CSS output?
 			"modules": false,          //save a css file per module?
