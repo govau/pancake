@@ -1,7 +1,4 @@
 {
-	"dependencies": {
-		"@gov.au/testmodule2": "13.0.0"
-	},
 	"pancake": {
 		"auto-save": false,
 		"css": {

@@ -1,11 +1,8 @@
 {
-	"dependencies": {
-		"@gov.au/testmodule2": "13.0.0"
-	},
 	"pancake": {
 		"auto-save": false,
 		"css": {
-			"minified": true,
+			"minified": false,
 			"modules": false,
 			"browsers": [
 				"last 2 versions",
@@ -23,7 +20,7 @@
 			"generate": true
 		},
 		"js": {
-			"minified": true,
+			"minified": false,
 			"modules": false,
 			"location": "pancake/js/",
 			"name": "pancake.min.js"

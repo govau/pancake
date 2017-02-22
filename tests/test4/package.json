@@ -3,26 +3,26 @@
 		"auto-save": false,
 		"css": {
 			"minified": true,
-			"modules": true,
+			"modules": false,
 			"browsers": [
 				"last 2 versions",
 				"ie 8",
 				"ie 9",
 				"ie 10"
 			],
-			"location": "pancake/css/",
+			"location": "testfolder/testcss/",
 			"name": "pancake.min.css"
 		},
 		"sass": {
-			"modules": true,
-			"location": "pancake/sass/",
+			"modules": false,
+			"location": "testfolder/testsass/",
 			"name": "pancake.scss",
 			"generate": true
 		},
 		"js": {
 			"minified": true,
-			"modules": true,
-			"location": "pancake/js/",
+			"modules": false,
+			"location": "testfolder/testjs/",
 			"name": "pancake.min.js"
 		}
 	}

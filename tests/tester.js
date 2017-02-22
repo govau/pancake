@@ -37,29 +37,45 @@ const TESTER = (() => { //constructor factory
 		PASS: true,
 		UNITS: [
 			{
+				name: 'Batter test with two modules',
 				folder: 'test1',
 				script: {
 					command: 'batter',
-					options: '',
+					options: [],
 				},
-				hash: '02333a3fc5107546f270d41e97f556386196f57beb21df0ef0435af4ef0b30ac',
+				compare: 'pancake/',
+				hash: 'c7339efc1cda7858d7b6d74f10627010486429071ef04b4143962ac2aa94bc24',
 			},
 			{
+				name: 'Batter test with five modules and modules enabled',
 				folder: 'test2',
 				script: {
 					command: 'batter',
-					options: '',
+					options: [],
 				},
-				hash: '6f1a995d73c1359c5082b8fb401a56d4d04f3053281d9dcd7409180fd3b10a11',
+				compare: 'pancake/',
+				hash: '0c9ecfaf56c48faae00e32fc845c61b8113582ca618eabc280a0edf61aea8089',
 			},
-			// {
-			// 	folder: 'test3',
-			// 	script: {
-			// 		command: 'batter',
-			// 		options: '--org @other.org'
-			// 	},
-			// 	hash: '6f1a995d73c1359c5082b8fb401a56d4d04f3053281d9dcd7409180fd3b10a11',
-			// },
+			{
+				name: 'Batter test with orgName overwrite and minification off',
+				folder: 'test3',
+				script: {
+					command: 'batter',
+					options: [ '--org', '@other.org' ],
+				},
+				compare: 'pancake/',
+				hash: '66b74390f6ad8366e007806f9b30fb9e3a04285f92027eef38435d48dca67cd3',
+			},
+			{
+				name: 'Syrup test with folder overwrite',
+				folder: 'test4',
+				script: {
+					command: 'syrup',
+					options: [],
+				},
+				compare: 'testfolder/',
+				hash: 'f89f36ff87419101ce16163ddb82792138c1e2d2cb191bd700aaa35579c4f53d',
+			},
 		],
 
 
@@ -69,7 +85,7 @@ const TESTER = (() => { //constructor factory
 		init: () => {
 			let allTasks = [];
 
-			TESTER.log.info(`Testing each folder`);
+			TESTER.log.info(`Testing …`);
 
 			//loop over all folders and start each test
 			for( const unit of TESTER.UNITS ) {
@@ -77,10 +93,10 @@ const TESTER = (() => { //constructor factory
 
 				allTasks.push(
 					TESTER
-						.delete( scriptFolder )                                  //delete trash first
-						.then( () => TESTER.run( scriptFolder, unit.script ) )   //now run script
-						.then( () => TESTER.compare( scriptFolder, unit.hash ) ) //now compare output
-						.catch( error => TESTER.log.error( error ) )             //catch errors...
+						.delete( scriptFolder, unit )                       //delete trash first
+						.then( () => TESTER.run( scriptFolder, unit ) )     //now run script
+						.then( () => TESTER.compare( scriptFolder, unit ) ) //now compare output
+						.catch( error => TESTER.log.error( error ) )        //catch errors...
 				);
 			}
 
@@ -110,11 +126,13 @@ const TESTER = (() => { //constructor factory
 		/**
 		 * Deleting files from previous tests
 		 *
-		 * @param  {string} path - The path to the folder that needs cleaning
+		 * @param  {string} path     - The path to the folder that needs cleaning
+		 * @param  {object} settings - The settings object for this test
 		 */
-		delete: ( path ) => {
+		delete: ( path, settings ) => {
 			const trash = [
 				Path.normalize(`${ path }/pancake`),
+				Path.normalize(`${ path }/testfolder`),
 				Path.normalize(`${ path }/yarn.lock`),
 				Path.normalize(`${ path }/*.log.*`),
 			];
@@ -136,15 +154,16 @@ const TESTER = (() => { //constructor factory
 		/**
 		 * Running shell script
 		 *
-		 * @param  {string} path - The path to the shell script
+		 * @param  {string} path     - The path to the shell script
+		 * @param  {object} settings - The settings object for this test
 		 */
-		run: ( path, script ) => {
+		run: ( path, settings ) => {
 			return new Promise( ( resolve, reject ) => {
 
-				// console.log('node ', [ Path.normalize(`${ path }/../../bin/pancake.js`), script.command, path, script.options ].join(' '));
+				// console.log('node ', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ].join(' '));
 
 				Spawn
-					.spawn( 'node', [ Path.normalize(`${ path }/../../bin/pancake.js`), script.command, path, script.options ])
+					.spawn( 'node', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ])
 					// .stdout.on('data', ( data ) => {
 					// 	console.log( data.toString() );
 					// })
@@ -167,12 +186,12 @@ const TESTER = (() => { //constructor factory
 		/**
 		 * Compare the output of a test against its fixture
 		 *
-		 * @param  {string} path - The path to the test folder
-		 * @param  {string} hash - The sha256 hash of the folder
+		 * @param  {string} path     - The path to the test folder
+		 * @param  {object} settings - The settings object for this test
 		 */
-		compare: ( path, hash ) => {
+		compare: ( path, settings ) => {
 			return new Promise( ( resolve, reject ) => {
-				Dirsum.digest( Path.normalize(`${ path }/pancake/`), 'sha256', ( error, hashes ) => {
+				Dirsum.digest( Path.normalize(`${ path }/${ settings.compare }/`), 'sha256', ( error, hashes ) => {
 					if( error ) {
 						console.error( error );
 
@@ -182,12 +201,12 @@ const TESTER = (() => { //constructor factory
 					}
 					else {
 
-						if( hashes.hash === hash ) {
-							TESTER.log.pass(`Test for ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } passed`);
+						if( hashes.hash === settings.hash ) {
+							TESTER.log.pass(`${ Chalk.bgWhite.black(` ${ settings.name } `) } passed`);
 						}
 						else {
-							TESTER.log.fail(`Test for ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } failed`);
-							TESTER.log.fail(`${ hashes.hash } !== ${ hash }`);
+							TESTER.log.fail(`${ Chalk.bgWhite.black(` ${ settings.name } `) } failed`);
+							TESTER.log.fail(`${ hashes.hash } !== ${ settings.hash }`);
 
 							TESTER.PASS = false;
 						}
