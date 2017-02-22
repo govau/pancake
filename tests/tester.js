@@ -38,12 +38,28 @@ const TESTER = (() => { //constructor factory
 		UNITS: [
 			{
 				folder: 'test1',
+				script: {
+					command: 'batter',
+					options: '',
+				},
 				hash: '02333a3fc5107546f270d41e97f556386196f57beb21df0ef0435af4ef0b30ac',
 			},
 			{
-				'folder': 'test2',
-				'hash': '6f1a995d73c1359c5082b8fb401a56d4d04f3053281d9dcd7409180fd3b10a11',
+				folder: 'test2',
+				script: {
+					command: 'batter',
+					options: '',
+				},
+				hash: '6f1a995d73c1359c5082b8fb401a56d4d04f3053281d9dcd7409180fd3b10a11',
 			},
+			// {
+			// 	folder: 'test3',
+			// 	script: {
+			// 		command: 'batter',
+			// 		options: '--org @other.org'
+			// 	},
+			// 	hash: '6f1a995d73c1359c5082b8fb401a56d4d04f3053281d9dcd7409180fd3b10a11',
+			// },
 		],
 
 
@@ -62,7 +78,7 @@ const TESTER = (() => { //constructor factory
 				allTasks.push(
 					TESTER
 						.delete( scriptFolder )                                  //delete trash first
-						.then( () => TESTER.run( scriptFolder ) )                //now run script
+						.then( () => TESTER.run( scriptFolder, unit.script ) )   //now run script
 						.then( () => TESTER.compare( scriptFolder, unit.hash ) ) //now compare output
 						.catch( error => TESTER.log.error( error ) )             //catch errors...
 				);
@@ -98,7 +114,6 @@ const TESTER = (() => { //constructor factory
 		 */
 		delete: ( path ) => {
 			const trash = [
-				Path.normalize(`${ path }/node_modules`),
 				Path.normalize(`${ path }/pancake`),
 				Path.normalize(`${ path }/yarn.lock`),
 				Path.normalize(`${ path }/*.log.*`),
@@ -123,10 +138,16 @@ const TESTER = (() => { //constructor factory
 		 *
 		 * @param  {string} path - The path to the shell script
 		 */
-		run: ( path ) => {
+		run: ( path, script ) => {
 			return new Promise( ( resolve, reject ) => {
-				const script = Spawn
-					.spawn( 'sh', [ Path.normalize(`${ path }/task.sh`) ], { cwd: path })
+
+				// console.log('node ', [ Path.normalize(`${ path }/../../bin/pancake.js`), script.command, path, script.options ].join(' '));
+
+				Spawn
+					.spawn( 'node', [ Path.normalize(`${ path }/../../bin/pancake.js`), script.command, path, script.options ])
+					// .stdout.on('data', ( data ) => {
+					// 	console.log( data.toString() );
+					// })
 					.on( 'close', ( code ) => {
 						if( code === 0 ) {
 							TESTER.log.pass(`Ran shell script in ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } folder`);
@@ -134,7 +155,9 @@ const TESTER = (() => { //constructor factory
 							resolve();
 						}
 						else {
-							reject();
+							TESTER.PASS = false;
+
+							reject(`Script errored out!`);
 						}
 				});
 			});
@@ -151,20 +174,26 @@ const TESTER = (() => { //constructor factory
 			return new Promise( ( resolve, reject ) => {
 				Dirsum.digest( Path.normalize(`${ path }/pancake/`), 'sha256', ( error, hashes ) => {
 					if( error ) {
-						reject();
-					}
-
-					if( hashes.hash === hash ) {
-						TESTER.log.pass(`Test for ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } passed`);
-					}
-					else {
-						TESTER.log.fail(`Test for ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } failed`);
-						TESTER.log.fail(`${ hashes.hash } !== ${ hash }`);
+						console.error( error );
 
 						TESTER.PASS = false;
-					}
 
-					resolve();
+						reject( error );
+					}
+					else {
+
+						if( hashes.hash === hash ) {
+							TESTER.log.pass(`Test for ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } passed`);
+						}
+						else {
+							TESTER.log.fail(`Test for ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } failed`);
+							TESTER.log.fail(`${ hashes.hash } !== ${ hash }`);
+
+							TESTER.PASS = false;
+						}
+
+						resolve();
+					}
 				});
 			});
 		},
