@@ -31,14 +31,17 @@ const Fs = require(`fs`);
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
+let npmOrg;
 
 Program
 	.usage( `[command] <input> <option>` )
 	.arguments('<pkgPath>')
-	.option( `-d, --dry`,     `Run batter without syrup` )
-	.option( `-v, --verbose`, `Run the program in verbose mode` )
-	.action( pkgPathArgument => {
+	.option( `-v, --verbose`,      `Run the program in verbose mode` )
+	.option( `-o, --org [npmOrg]`, `Overwrite the default json URL` )
+	.option( `-d, --dry`,          `Run batter without syrup` )
+	.action( ( pkgPathArgument, options ) => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
+		npmOrg = options.org ? options.org : npmOrg;
 	})
 	.parse( process.argv );
 
@@ -46,7 +49,7 @@ Program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Globals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
+const pancakes = require(`./pancake-utilities.js`)( Program.verbose, npmOrg );
 const Log = pancakes.Log;
 
 
@@ -169,7 +172,7 @@ allPackages
 				//Shooting off to syrup
 				Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
 
-				Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '--batter'], { shell: true, stdio: 'inherit' });
+				Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', '-o', npmOrg, '--batter'], { shell: true, stdio: 'inherit' });
 			}
 		}
 		else {

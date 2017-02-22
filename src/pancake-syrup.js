@@ -32,15 +32,18 @@ const Fs = require(`fs`);
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
+let npmOrg;
 
 Program
 	.usage( `[command] <input> <option>` )
 	.arguments('<pkgPath>')
-	.option( `-n, --nosave`,  `Don't save my compile settings into my package.json` )
-	.option( `-b, --batter`,  `Running syrup directly from batter` )
-	.option( `-v, --verbose`, `Run the program in verbose mode` )
-	.action( pkgPathArgument => {
+	.option( `-n, --nosave`,       `Don't save my compile settings into my package.json` )
+	.option( `-b, --batter`,       `Running syrup directly from batter` )
+	.option( `-v, --verbose`,      `Run the program in verbose mode` )
+	.option( `-o, --org [npmOrg]`, `Overwrite the default json URL` )
+	.action( ( pkgPathArgument, options ) => {
 		pkgPath = pkgPathArgument; //overwriting default value with user input
+		npmOrg = options.org ? options.org : npmOrg;
 	})
 	.parse( process.argv );
 
@@ -48,9 +51,10 @@ Program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Globals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const pancakes = require(`./pancake-utilities.js`)( Program.verbose );
+const pancakes = require(`./pancake-utilities.js`)( Program.verbose, npmOrg );
 const Log = pancakes.Log;
 
+npmOrg = npmOrg ? npmOrg : pancakes.SETTINGS.npmOrg;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Reusable functions
@@ -126,7 +130,7 @@ const GenerateSass = ( location, dependencies ) => {
 			const baseLocation = Path.normalize(`${ location }/../`);
 
 			for( const dependency of Object.keys( dependencies ) ) {
-				const modulePath = dependency.substring( pancakes.SETTINGS.npmOrg.length, dependency.length );
+				const modulePath = dependency.split('/')[ 1 ];
 
 				sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/lib/sass/_module.scss`) }";\n`;
 			}
@@ -482,7 +486,7 @@ allPackages
 
 			//write css file
 			if( SettingsCSS.modules ) {
-				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.css`);
+				const location = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ modulePackage.name.split('/')[ 1 ] }.css`);
 
 				compiledAll.push(
 					Sassify( location, SettingsCSS, sass ) //generate css and write file
@@ -494,7 +498,7 @@ allPackages
 
 			//write sass file
 			if( SettingsSASS.modules ) {
-				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.scss`);
+				const location = Path.normalize(`${ pkgPath }/${ SettingsSASS.location }/${ modulePackage.name.split('/')[ 1 ] }.scss`);
 
 				compiledAll.push(
 					WriteFile( location, sass ) //write file
@@ -512,7 +516,7 @@ allPackages
 			if( Fs.existsSync( jsModulePath ) ) {
 				Log.verbose(`${ Chalk.green('⌘') } Found JS code in ${ Chalk.yellow( modulePackage.name ) }`);
 
-				const jsModuleToPath = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.substring( pancakes.SETTINGS.npmOrg.length + 1 ) }.js`);
+				const jsModuleToPath = Path.normalize(`${ pkgPath }/${ SettingsJS.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
 
 				const jsPromise = HandelJS( jsModulePath, SettingsJS, jsModuleToPath ) //compile js and write to file depending on settings
 					.catch( error => {

@@ -173,15 +173,16 @@ const ReadPackage = ( pkgPath, verbose ) => {
  *
  * @param  {string}  pkgPath - The path that includes your node_module folder
  * @param  {boolean} verbose - Verbose flag either undefined or true
+ * @param  {string}  npmOrg  - The npmOrg setting which can be overwritten by the user temporarily
  *
  * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
  */
-const GetPackages = ( pkgPath, verbose ) => {
+const GetPackages = ( pkgPath, verbose, npmOrg = SETTINGS.npmOrg ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Chalk.yellow( typeof pkgPath ) }] "${ Chalk.yellow( pkgPath ) }"`, verbose);
 	}
 
-	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ SETTINGS.npmOrg }/`); //we add our npm org to the path
+	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org to the path
 
 	Log.verbose(`Looking for pancake modules in: ${ Chalk.yellow( pkgPath ) }`, verbose);
 
@@ -430,7 +431,7 @@ function ExitHandler( exiting, error ) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Exporting all the things
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-module.exports = ( verbose ) => {
+module.exports = ( verbose, npmOrg ) => {
 	return {
 		Log: {
 			output: Log.hadOutput,
@@ -444,7 +445,7 @@ module.exports = ( verbose ) => {
 		Loading: Loading( verbose ),
 		CreateDir: ( thisPath ) => CreateDir( thisPath, verbose ),     //we need to pass verbose mode here
 		GetFolders: ( thisPath ) => GetFolders( thisPath, verbose ),   //we need to pass verbose mode here
-		GetPackages: ( thisPath ) => GetPackages( thisPath, verbose ), //we need to pass verbose mode here
+		GetPackages: ( thisPath ) => GetPackages( thisPath, verbose, npmOrg ), //we need to pass verbose mode here
 		controlKeyword: controlKeyword,
 		sassVersioningKeyword: sassVersioningKeyword,
 		SETTINGS: SETTINGS,
