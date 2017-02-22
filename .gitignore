@@ -11,3 +11,6 @@ validation-status.json
 npm-debug.log
 yarn-error.log
 bin/
+tests/*/pancake/
+tests/*/yarn.lock
+!tests/*/node_modules/

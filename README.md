@@ -8,6 +8,7 @@ Pancake
 
 * [What’s inside?](#whats-inside)
 * [Requirements](#requirements)
+* [Pancake](#pancake)
 * [Batter](#batter)
 * [Syrup](#syrup)
 * [Cream](#cream)
@@ -73,6 +74,49 @@ _Dependencies have been fixed to specific versions to keep the dependency tree a
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+## Pancake
+
+![the batter command](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.png)
+
+### batter
+`batter`  
+Type: `[command]`  
+
+The root command will display the help.
+
+```shell
+pancake
+```
+
+You can also get help for each command.
+
+```shell
+pancake help batter
+```
+
+
+### settings
+`-s`, `--set`  
+Type: `<flag> [setting] [value]`  
+
+Save new global settings. Available settings are:
+
+|   setting   |                                 value                                 |
+|-------------|-----------------------------------------------------------------------|
+| `creamJson` | This is the [cream json](#the-json-file) with all your modules inside |
+|   `npmOrg`  | This is the npm org scope                                             |
+
+```shell
+pancake --set npmOrg "@gov.au"
+```
+
+
+**[⬆ back to top](#content)**
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ## Batter
 
 ![the batter command](https://raw.githubusercontent.com/govau/pancake/master/assets/batter.jpg)
@@ -94,7 +138,7 @@ pancake batter
 You can also pass it a path to the `node_modules` folder and overwrite the default:
 
 ```shell
-pancake batter /Path/to/folder/of/your/package.json
+pancake batter https//your.domain.tld/to/folder/of/your/package.json
 ```
 
 Batter will also run [Syrup](#syrup) after a successful run.
@@ -112,19 +156,15 @@ pancake batter --dry
 ```
 
 
-### settings
-`-s`, `--set`  
-Type: `<flag> [setting] [value]`  
+### overwrite npm org name
+`-o`, `--org`  
+Type: `<flag> [setting]`  
 
-Save new global settings. Available settings are:
-
-|   setting   |                                 value                                 |
-|-------------|-----------------------------------------------------------------------|
-| `creamJson` | This is the [cream json](#the-json-file) with all your modules inside |
-|   `npmOrg`  | This is the npm org scope                                             |
+You can temporarily overwrite the npm org scope by suppling this flag. This can be useful for testing. Do make sure to use the [settings](#settings) for a
+permanent change.
 
 ```shell
-pancake --set npmOrg "@gov.au"
+pancake batter --org @otherOrg
 ```
 
 
@@ -169,6 +209,8 @@ Below are all possible settings with default values.
 	"name": "your-name",
 	"version": "0.1.0",
 	"uikit": {
+		"auto-syrup": true,          //run syrup right after batter
+		"auto-save": true,           //save all settings into your package.json
 		"css": {
 			"minified": true,          //minify your CSS output?
 			"modules": false,          //save a css file per module?
@@ -196,6 +238,7 @@ Below are all possible settings with default values.
 }
 ```
 
+
 ### don’t save to package.json
 `-n`, `--nosave`  
 Type: `<flag>`  
@@ -207,6 +250,19 @@ You can also opt-out of this behavior by adding `"uikit": { "auto-save": false }
 ```shell
 pancake syrup --nosave
 ```
+
+
+### overwrite npm org name
+`-o`, `--org`  
+Type: `<flag> [setting]`  
+
+You can temporarily overwrite the npm org scope by suppling this flag. This can be useful for testing. Do make sure to use the [settings](#settings) for a
+permanent change.
+
+```shell
+pancake batter --org @otherOrg
+```
+
 
 ### verbose output
 `-v`, `--verbose`  
@@ -254,6 +310,18 @@ pancake cream --json https://you.domain/to/json/file.json
 ```
 
 _Note: You can make this change on a global level by using the [set flag](#settings)._
+
+
+### overwrite npm org name
+`-o`, `--org`  
+Type: `<flag> [setting]`  
+
+You can temporarily overwrite the npm org scope by suppling this flag. This can be useful for testing. Do make sure to use the [settings](#settings) for a
+permanent change.
+
+```shell
+pancake batter --org @otherOrg
+```
 
 
 ### verbose output

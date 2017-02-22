@@ -1,0 +1,1 @@
+confirm('testmodule3:v10.0.0');
