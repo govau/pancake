@@ -54,6 +54,7 @@ breaking changes might occur and what an easy way out might be.
 ## Requirements
 
 - npm >= 3
+- bash (Windows is not supported at this time)
 - a `package.json` file in your root (run `yarn init` or `npm init`)
 
 Pancake has been testing with all node version coming with npm 3 and higher:
