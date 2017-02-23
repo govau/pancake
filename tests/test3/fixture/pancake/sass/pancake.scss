@@ -1,0 +1,6 @@
+/* PANCAKE v0.0.9 */
+
+@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test3/node_modules/@other.org/testmodule1/lib/sass/_module.scss";
+@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test3/node_modules/@other.org/testmodule2/lib/sass/_module.scss";
+
+@include versioning-check();

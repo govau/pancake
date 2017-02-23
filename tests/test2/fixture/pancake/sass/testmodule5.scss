@@ -1,0 +1,6 @@
+/* @gov.au/testmodule5 v11.0.0 */
+
+@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test2/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
+@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test2/node_modules/@gov.au/testmodule5/lib/sass/_module.scss";
+
+@include versioning-check();
