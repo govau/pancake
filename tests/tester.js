@@ -362,7 +362,7 @@ const TESTER = (() => { //constructor factory
 						const fileName = file.split('/');
 
 						if( fixture[ file ] !== compare && fileName[ fileName.length - 1 ] !== 'hash' ) { //we don’t want to compare folders
-							TESTER.log.error(`Difference inside ${ Chalk.yellow( file ) } file`);
+							TESTER.log.error(`Difference inside ${ Chalk.yellow( settings.folder + file ) } file`);
 						}
 					}
 				}

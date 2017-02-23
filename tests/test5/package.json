@@ -14,10 +14,7 @@
 			"name": "pancake.min.css"
 		},
 		"sass": {
-			"modules": true,
-			"location": "pancake/sass/",
-			"name": "pancake.scss",
-			"generate": true
+			"name": false
 		},
 		"js": {
 			"minified": true,
