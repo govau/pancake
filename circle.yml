@@ -9,10 +9,10 @@ machine:
 
 dependencies:
   pre:
-    - curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github' #getting the cf tool
-    - sudo dpkg -i cf-cli_amd64.deb #installing it
-    - cf -v                         #logging what we got
-    - sudo apt-get install tree     #install tree (soo much nicer)
+    # - curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github' #getting the cf tool
+    # - sudo dpkg -i cf-cli_amd64.deb #installing it
+    # - cf -v                         #logging what we got
+    # - sudo apt-get install tree     #install tree (soo much nicer)
   override:
     - yarn                          #install dependencies
     - yarn build                    #running build script -> build all assets
