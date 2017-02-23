@@ -541,6 +541,15 @@ We have published three test modules in our scoped npm org to test interdependen
 - `v11.0.0`  
 	- └── `@gov.au/testmodule1`: `^11.0.1`
 
+Pancake comes with automated end-to-end test that are run via the test command.
+
+```shell
+yarn test
+```
+
+[The script](https://github.com/govau/pancake/blob/develop/tests/tester.js) will take a number of scenarios and compare the output of pancake against fixtures.
+
+_(We will be adding unit tests as we progress.)_
 
 
 **[⬆ back to top](#content)**
