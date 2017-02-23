@@ -22,8 +22,9 @@
 		"pancake": "./bin/pancake.js"
 	},
 	"scripts": {
-		"prepublish": "npm run build",
+		"prepublish": "npm run test && npm run build",
 
+		"pretest": "npm run build",
 		"test": "node tests/tester.js",
 
 		"build": "npm run build:js",

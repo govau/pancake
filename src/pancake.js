@@ -29,8 +29,7 @@ const Fs = require(`fs`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const Package = JSON.parse( Fs.readFileSync( Path.normalize(`${ __dirname }/../package.json`, `utf8`) ) ); //for displaying help and version
-const Version = Package.version;
+const Package = require( Path.normalize(`${ __dirname }/../package.json`) ); //for displaying help and version
 
 
 //Adding the all important business logic
@@ -80,7 +79,7 @@ if( process.argv.length <= 2 ) {
 
 
 Program
-	.version( `v${ Version }` )
+	.version( `v${ Package.version }` )
 	.usage( `[command] <input>` )
 	.option( `-s, --set [pancakeURL] [pancakeURL]`, `Overwrite a default setting` )
 	.description(

@@ -222,7 +222,7 @@ const StripDuplicateLines = content => {
  * @param  {string} js   - The JS code to be minified
  * @param  {string} file - The file name for error reporting
  *
- * @return {string}    - The minified js code
+ * @return {string}      - The minified js code
  */
 const MinifyJS = ( js, file ) => {
 
@@ -532,12 +532,13 @@ allPackages
 
 			//write the SettingsCSS.name file
 			const locationCSS = Path.normalize(`${ pkgPath }/${ SettingsCSS.location }/${ SettingsCSS.name }`);
+			const Package = require( Path.normalize(`${ __dirname }/../package.json`) ); //for displaying help and version
 
 			if( sassVersioning === true ) {
-				allSass = `/* PANCAKE */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
 			}
 			else {
-				allSass = `/* PANCAKE */\n\n${ StripDuplicateLines( allSass ) }\n`;
+				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
 			}
 
 			compiledAll.push(

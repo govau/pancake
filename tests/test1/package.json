@@ -1,7 +1,4 @@
 {
-	"dependencies": {
-		"@gov.au/testmodule2": "13.0.0"
-	},
 	"pancake": {
 		"auto-save": false,
 		"css": {
@@ -17,10 +14,7 @@
 			"name": "pancake.min.css"
 		},
 		"sass": {
-			"modules": false,
-			"location": "pancake/sass/",
-			"name": "pancake.scss",
-			"generate": true
+			"name": false
 		},
 		"js": {
 			"minified": true,

@@ -172,7 +172,13 @@ allPackages
 				//Shooting off to syrup
 				Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
 
-				Spawn('pancake', ['syrup', pkgPath, Program.verbose ? '-v' : '', npmOrg ? `--org ${ npmOrg }` : '', '--batter'], { shell: true, stdio: 'inherit' });
+				Spawn('node', [
+					Path.normalize(`${ __dirname }/pancake.js`),
+					'syrup',
+					pkgPath,
+					Program.verbose ? '-v' : '', npmOrg ? `--org ${ npmOrg }` : '',
+					'--batter'
+				], { shell: true, stdio: 'inherit' });
 			}
 		}
 		else {

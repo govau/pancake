@@ -1,0 +1,19 @@
+/* PANCAKE v0.0.9 */
+/*! @gov.au/testmodule1 v11.0.1 */
+/**
+ * Sass versioning
+ *
+ * @description  Version your scss modules and test them at compile time
+ * @author       @dominikwilkowski
+ * @website      https://dominikwilkowski.github.io/sass-versioning/sassdoc/
+ * @repository   https://github.com/dominikwilkowski/sass-versioning
+ * @license      https://raw.githubusercontent.com/dominikwilkowski/sass-versioning/master/LICENSE GPL-3.0
+ */
+.test {
+		content: 'testmodule1:v11.0.1';
+}
+
+/*! @gov.au/testmodule2 v13.0.0 */
+.test {
+		content: 'testmodule2:v13.0.0';
+}
