@@ -30,7 +30,9 @@ const Fs = require(`fs`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
+const nextPkg = Spawn( 'npm', ['prefix'], { cwd: Path.normalize(`${ process.cwd() }/../`) } ).stdout.toString().replace('\n', '');
+
+let pkgPath = Path.normalize( nextPkg ); //default value of the pkgPath path
 let npmOrg;
 
 Program
@@ -40,7 +42,12 @@ Program
 	.option( `-o, --org [npmOrg]`, `Overwrite the default json URL` )
 	.option( `-d, --dry`,          `Run batter without syrup` )
 	.action( ( pkgPathArgument, options ) => {
-		pkgPath = pkgPathArgument; //overwriting default value with user input
+		pkgPath = pkgPathArgument;
+
+		if( !Path.isAbsolute( pkgPath ) ) { //converting to absolute path
+			pkgPath = Path.resolve( pkgPath );
+		}
+
 		npmOrg = options.org ? options.org : npmOrg;
 	})
 	.parse( process.argv );

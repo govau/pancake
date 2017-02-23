@@ -54,10 +54,10 @@ breaking changes might occur and what an easy way out might be.
 ## Requirements
 
 - npm >= 3
-- bash (Windows is not supported at this time)
+- bash _(Windows is not supported at this time)_
 - a `package.json` file in your root (run `yarn init` or `npm init`)
 
-Pancake has been testing with all node version coming with npm 3 and higher:
+Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 all node version coming with npm 3 and higher:
 
 - node `v5.0.0`
 - node `v5.12.0`
@@ -65,6 +65,7 @@ Pancake has been testing with all node version coming with npm 3 and higher:
 - node `v7.0.0`
 - node `v7.4.0`
 - node `v7.5.0`
+- node `v7.6.0`
 
 _Dependencies have been fixed to specific versions to keep the dependency tree and security impact as low as possible. We also ship a `yarn.lock` file._
 
@@ -126,7 +127,7 @@ pancake --set npmOrg "@gov.au"
 `batter`  
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `path to one level below cwd`
+Default value: `The path to the next available package.json`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
 in scope)_</sup> `package.json` in search for a Pancake module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`
@@ -139,7 +140,7 @@ pancake batter
 You can also pass it a path to the `node_modules` folder and overwrite the default:
 
 ```shell
-pancake batter https//your.domain.tld/to/folder/of/your/package.json
+pancake batter path/to/folder/of/your/project
 ```
 
 Batter will also run [Syrup](#syrup) after a successful run.
@@ -194,7 +195,7 @@ pancake batter --verbose
 `syrup`  
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `path to one level below cwd`
+Default value: `The path to the next available package.json`
 
 Syrup compiles your Pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
 `package.json`. All settings are automatically saved into your `package.json` file unless you supply the `--nosave` flag.
@@ -290,7 +291,7 @@ pancake syrup --verbose
 `cream`  
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `path to one level below cwd`  
+Default value: `The path to the next available package.json`  
 
 Cream will analyze your currently installed Pancake modules and show you in a user friendly interface what you can easily update and what update will entail
 breaking changes.

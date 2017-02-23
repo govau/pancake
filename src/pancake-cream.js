@@ -32,9 +32,11 @@ const Path = require(`path`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-let pkgPath = Path.normalize(`${ process.cwd() }/`); //default value of the pkgPath path
-let PANCAKEurl;
+const nextPkg = Spawn( 'npm', ['prefix'], { cwd: Path.normalize(`${ process.cwd() }/../`) } ).stdout.toString().replace('\n', '');
+
+let pkgPath = Path.normalize( nextPkg ); //default value of the pkgPath path
 let npmOrg;
+let PANCAKEurl;
 
 Program
 	.usage( `[command] <input> <option>` )
@@ -43,7 +45,12 @@ Program
 	.option( `-j, --json [pancakeURL]`, `Overwrite the default json URL` )
 	.option( `-o, --org [npmOrg]`,      `Overwrite the default json URL` )
 	.action( ( pkgPathArgument, options ) => {
-		pkgPath = pkgPathArgument; //overwriting default value with user input
+		pkgPath = pkgPathArgument;
+
+		if( !Path.isAbsolute( pkgPath ) ) { //converting to absolute path
+			pkgPath = Path.resolve( pkgPath );
+		}
+
 		PANCAKEurl = options.json ? options.json : PANCAKEurl;
 		npmOrg = options.org ? options.org : npmOrg;
 	})
