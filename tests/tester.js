@@ -58,31 +58,34 @@ const TESTER = (() => { //constructor factory
 		PASS: true,
 		UNITS: [
 			{
-				name: 'Batter test with two modules',
+				name: 'Batter/syrup test with two modules',
 				folder: 'test1',
 				script: {
 					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
+				empty: false,
 			},
 			{
-				name: 'Batter test with five modules and modules enabled',
+				name: 'Batter/syrup test with five modules and modules enabled',
 				folder: 'test2',
 				script: {
 					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
+				empty: false,
 			},
 			{
-				name: 'Batter test with orgName overwrite and minification off',
+				name: 'Batter/syrup test with orgName overwrite and minification off',
 				folder: 'test3',
 				script: {
 					command: 'batter',
 					options: [ '--org', '@other.org' ],
 				},
 				compare: 'pancake/',
+				empty: false,
 			},
 			{
 				name: 'Syrup test with folder overwrite',
@@ -92,6 +95,17 @@ const TESTER = (() => { //constructor factory
 					options: [],
 				},
 				compare: 'testfolder/',
+				empty: false,
+			},
+			{
+				name: 'Batter test with conflict',
+				folder: 'test5',
+				script: {
+					command: 'batter',
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: true,
 			},
 		],
 
@@ -116,7 +130,7 @@ const TESTER = (() => { //constructor factory
 						.then( result => TESTER.result( scriptFolder, unit, result ) )  //get hash for result of test
 						.then( result => TESTER.compare( unit, result ) )               //now compare both and detail errors
 						.then( () => TESTER.delete( scriptFolder, unit ) )              //cleaning up after ourself
-						.catch( error => TESTER.log.error( error ) )                    //catch errors...
+						.catch( error => TESTER.log.error(`Nooo: ${ error }`) )         //catch errors...
 				);
 			}
 
@@ -167,7 +181,7 @@ const TESTER = (() => { //constructor factory
 						reject( error );
 					})
 					.then( paths => {
-						TESTER.log.pass(`Cleaned ${ Chalk.bgWhite.black(` ${ settings.folder } `) } folder`);
+						// TESTER.log.pass(`Cleaned ${ Chalk.bgWhite.black(` ${ settings.folder } `) } folder`);
 
 						resolve();
 				});
@@ -196,7 +210,7 @@ const TESTER = (() => { //constructor factory
 					// })
 					.on( 'close', ( code ) => {
 						if( code === 0 ) {
-							TESTER.log.pass(`Ran shell script in ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } folder`);
+							// TESTER.log.pass(`Ran test in ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } folder`);
 
 							resolve();
 						}
@@ -220,18 +234,23 @@ const TESTER = (() => { //constructor factory
 		 */
 		fixture: ( path, settings ) => {
 			return new Promise( ( resolve, reject ) => {
-				Dirsum.digest( Path.normalize(`${ path }/fixture/${ settings.compare }/`), 'sha256', ( error, hashes ) => {
-					if( error ) {
-						TESTER.log.pass( error );
+				if( !settings.empty ) {
+					Dirsum.digest( Path.normalize(`${ path }/fixture/${ settings.compare }/`), 'sha256', ( error, hashes ) => {
+						if( error ) {
+							TESTER.log.pass( error );
 
-						TESTER.PASS = false;
+							TESTER.PASS = false;
 
-						reject( error );
-					}
-					else {
-						resolve( hashes );
-					}
-				});
+							reject( error );
+						}
+						else {
+							resolve( hashes );
+						}
+					});
+				}
+				else {
+					resolve({});
+				}
 			});
 		},
 
@@ -246,24 +265,66 @@ const TESTER = (() => { //constructor factory
 		 * @return {Promise object}  - The hash object of all files inside the resulting files
 		 */
 		result: ( path, settings, fixture ) => {
+			const location = Path.normalize(`${ path }/${ settings.compare }/`);
+
 			return new Promise( ( resolve, reject ) => {
-				Dirsum.digest( Path.normalize(`${ path }/${ settings.compare }/`), 'sha256', ( error, hashes ) => {
-					if( error ) {
-						TESTER.log.pass( error );
+				if( !settings.empty ) {
+					Dirsum.digest( location, 'sha256', ( error, hashes ) => {
+						if( error ) {
+							TESTER.log.error( error );
 
-						TESTER.PASS = false;
+							TESTER.PASS = false;
 
-						reject();
-					}
-					else {
+							reject();
+						}
+						else {
 
-						resolve({ //passing it to compare later
-							fixture,
-							result: hashes,
-						});
+							resolve({ //passing it to compare later
+								fixture,
+								result: hashes,
+							});
 
-					}
-				});
+						}
+					});
+				}
+				else {
+					Fs.access( location, Fs.constants.R_OK, error => {
+
+						if( !error || error.code !== 'ENOENT' ) {
+							TESTER.log.fail(`${ Chalk.bgWhite.black(` ${ settings.name } `) } failed becasue it produced files but really shoudn’t`);
+
+							TESTER.PASS = false;
+
+							resolve({
+								fixture: {
+									hash: 'xx',
+									files: {
+										location: 'nope',
+									},
+								},
+								result: {
+									hash: 'xxx',
+									files: {
+										location: 'nope',
+									},
+								},
+							});
+
+						}
+						else {
+
+							resolve({
+								fixture: {
+									hash: 'xxx',
+								},
+								result: {
+									hash: 'xxx',
+								},
+							});
+
+						}
+					});
+				}
 			});
 		},
 
