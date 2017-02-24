@@ -203,8 +203,8 @@ allPackages
 				pancakes.SpawningSync('node', [
 					Path.normalize(`${ __dirname }/pancake.js`),
 					'syrup',
-					pkgPath,
-					Program.verbose ? '-v' : '', npmOrg ? `--org ${ npmOrg }` : '',
+					`"${ pkgPath }"`,
+					Program.verbose ? '-v' : '', npmOrg ? `--org "${ npmOrg }"` : '',
 					'--batter'
 				], { shell: true, stdio: 'inherit' });
 			}
