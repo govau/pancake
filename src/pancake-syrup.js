@@ -70,13 +70,20 @@ pancakes.Loading.start(); //start loading animation
 // Working folder
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 if( pkgPath.length > 0 ) { //the path has been set by user
-	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: pkgPath } ).stdout.toString().replace('\n', '');
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: pkgPath } );
 }
 else { //we go with default
-	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: process.cwd() } ).stdout.toString().replace('\n', '');
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: process.cwd() } );
 }
 
-pkgPath = Path.normalize( pkgPath ); //normalize some oddities npm gives us
+if( pkgPath.error ) {
+	Log.error(`Pancake was unable to find a folder with a package.json file.`);
+	Log.space();
+	process.exit( 1 );
+}
+else {
+	pkgPath = Path.normalize( pkgPath.stdout.toString().replace('\n', '') ); //normalize some oddities npm gives us
+}
 
 Log.verbose(`The woring directory is ${ Chalk.yellow( pkgPath ) }`);
 

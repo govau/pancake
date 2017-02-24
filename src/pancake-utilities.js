@@ -116,13 +116,18 @@ const Spawning = {
 const CreateDir = ( dir, verbose ) => {
 	Log.verbose(`Creating path ${ Chalk.yellow( dir ) }`, verbose);
 
-	const splitPath = dir.split('/');
+	const splitPath = dir.split( Path.sep );
 
 	splitPath.reduce( ( path, subPath ) => {
 		let currentPath;
 
 		if( subPath != '.' ) {
-			currentPath = `${ path }/${ subPath }`;
+			if( path.length > 0 ) {
+				currentPath = Path.normalize(`${ path }/${ subPath }`);
+			}
+			else {
+				currentPath = Path.normalize(`${ subPath }`);
+			}
 
 			if( !Fs.existsSync( currentPath ) ){
 				try {
