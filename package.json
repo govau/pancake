@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly.",
 	"keywords": [
 		"uikit",

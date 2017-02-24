@@ -12,6 +12,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+const Spawn = require('child_process')
 const CFonts = require(`cfonts`);
 const Chalk = require('chalk');
 const Path = require(`path`);
@@ -55,6 +56,57 @@ catch( error ) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Objects / functions
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Spawning child processes in an abstraction so we can handle different OS
+ *
+ * @type {Object}
+ */
+const Spawning = {
+	isWin: /^win/.test(process.platform), //sniffing the os, Can’t use os.platform() as we want to support node 5
+
+	/**
+	 * Spawning async
+	 *
+	 * @param  {string}  command - The program we run
+	 * @param  {array}   options - the flags and options we pass to it
+	 * @param  {object}  param   - Parameters we pass to child_process
+	 * @param  {boolean} verbose - Verbose flag either undefined or true
+	 *
+	 * @return {Promise object}  - The object returned from child_process.spawn
+	 */
+	async: ( command, options, param = {}, verbose ) => {
+		Log.verbose(`Spawning ${ Chalk.yellow(`${ command } ${ [ ...options ].join(' ') } `) } with ${ Chalk.yellow( JSON.stringify( param ) ) }`, verbose );
+
+		if( Spawning.isWin ) {
+			return Spawn.spawn( 'cmd.exe', [ '/s', '/c', command, ...options ], param );
+		}
+		else {
+			return Spawn.spawn( command, [ ...options ], param );
+		}
+	},
+
+	/**
+	 * Spawning sync
+	 *
+	 * @param  {string}  command - The program we run
+	 * @param  {array}   options - the flags and options we pass to it
+	 * @param  {object}  param   - Parameters we pass to child_process
+	 * @param  {boolean} verbose - Verbose flag either undefined or true
+	 *
+	 * @return {Promise object}  - The object returned from child_process.spawnSync
+	 */
+	sync: ( command, options, param = {}, verbose ) => {
+		Log.verbose(`Spawning ${ Chalk.yellow(`${ command } ${ [ ...options ].join(' ') }`) } with ${ Chalk.yellow( JSON.stringify( param ) ) }`, verbose );
+
+		if( Spawning.isWin ) {
+			return Spawn.spawnSync( 'cmd.exe', [ '/s', '/c', command, ...options ], param );
+		}
+		else {
+			return Spawn.spawnSync( command, [ ...options ], param );
+		}
+	},
+}
+
 /**
  * Create a path if it doesn't exist
  *
@@ -431,21 +483,23 @@ function ExitHandler( exiting, error ) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Exporting all the things
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-module.exports = ( verbose, npmOrg ) => {
+module.exports = ( verbose, npmOrg = SETTINGS.npmOrg ) => {
 	return {
 		Log: {
 			output: Log.hadOutput,
 			error: Log.error,
 			info: Log.info,
 			ok: Log.ok,
-			verbose: ( text ) => Log.verbose( text, verbose ),           //we need to pass verbose mode here
+			verbose: ( text ) => Log.verbose( text, verbose ),
 			space: Log.space,
 		},
 		ExitHandler: ExitHandler,
 		Loading: Loading( verbose ),
-		CreateDir: ( thisPath ) => CreateDir( thisPath, verbose ),     //we need to pass verbose mode here
-		GetFolders: ( thisPath ) => GetFolders( thisPath, verbose ),   //we need to pass verbose mode here
-		GetPackages: ( thisPath ) => GetPackages( thisPath, verbose, npmOrg ), //we need to pass verbose mode here
+		Spawning: ( command, options, param ) => Spawning.async( command, options, param, verbose ),
+		SpawningSync: ( command, options, param ) => Spawning.sync( command, options, param, verbose ),
+		CreateDir: ( thisPath ) => CreateDir( thisPath, verbose ),
+		GetFolders: ( thisPath ) => GetFolders( thisPath, verbose ),
+		GetPackages: ( thisPath ) => GetPackages( thisPath, verbose, npmOrg ),
 		controlKeyword: controlKeyword,
 		sassVersioningKeyword: sassVersioningKeyword,
 		SETTINGS: SETTINGS,

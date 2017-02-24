@@ -19,7 +19,6 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const Spawn = require('child_process').spawnSync;
 const Program = require('commander');
 const Semver =  require('semver');
 const Chalk = require('chalk');
@@ -30,10 +29,8 @@ const Fs = require(`fs`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const nextPkg = Spawn( 'npm', ['prefix'], { cwd: Path.normalize(`${ process.cwd() }/../`) } ).stdout.toString().replace('\n', '');
-
-let pkgPath = Path.normalize( nextPkg ); //default value of the pkgPath path
-let npmOrg;
+//possible settings to overwrite
+let pkgPath = ''; //the working path as global
 
 Program
 	.usage( `[command] <input> <option>` )
@@ -47,8 +44,6 @@ Program
 		if( !Path.isAbsolute( pkgPath ) ) { //converting to absolute path
 			pkgPath = Path.resolve( pkgPath );
 		}
-
-		npmOrg = options.org ? options.org : npmOrg;
 	})
 	.parse( process.argv );
 
@@ -56,23 +51,49 @@ Program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Globals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const pancakes = require(`./pancake-utilities.js`)( Program.verbose, npmOrg );
+const pancakes = require(`./pancake-utilities.js`)( Program.verbose, Program.org ? Program.org : undefined );
 const Log = pancakes.Log;
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// PREPARE, Check for dependencies conflicts
+// Banner and loading
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 Log.info(`PANCAKE MAKING THE BATTER`);
 
 pancakes.Loading.start(); //start loading animation
 
-Log.verbose(`Batter running in ${ Chalk.yellow( pkgPath ) }`);
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Working folder
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+if( pkgPath.length > 0 ) { //the path has been set by user
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: pkgPath } ).stdout.toString().replace('\n', '');
+}
+else { //we go with default
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: process.cwd() } ).stdout.toString().replace('\n', '');
+}
+
+pkgPath = Path.normalize( pkgPath ); //normalize some oddities npm gives us
+
+Log.verbose(`The woring directory is ${ Chalk.yellow( pkgPath ) }`);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// npm scope setting
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+let npmOrg = Program.org ? Program.org : pancakes.SETTINGS.npmOrg;
+
+Log.verbose(`The npm scope is ${ Chalk.yellow( npmOrg ) }`);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// PREPARE, Check for dependencies conflicts
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const dependencies = new Map();                             //a map we populate with the dependencies of our modules we found
 const modules = new Map();                                  //a map for all installed modules and their versions
 
-const npmVersion = parseInt( Spawn('npm', ['-v']).stdout ); //check the npm version
+
+const npmVersion = parseInt( pancakes.SpawningSync( 'npm', ['-v'] ).stdout.toString().replace('\n', '') );
 Log.verbose(`NPM version ${ Chalk.yellow( npmVersion ) } detected`);
 
 //npm 3 and higher is required as below will install dependencies inside each module folder
@@ -111,7 +132,7 @@ allPackages
 
 		//iterate over all dependencies [dependencies] and check against what we have installed [modules]
 		for( let [ module, moduleDependencies ] of dependencies ) {
-			Log.verbose(`Checking dependencies for ${ Chalk.yellow( module ) }  which are: ${ Chalk.yellow( JSON.stringify( moduleDependencies ) ) }`);
+			Log.verbose(`Checking dependencies for ${ Chalk.yellow( module ) } which are: ${ Chalk.yellow( JSON.stringify( moduleDependencies ) ) }`);
 
 			for( let dependency of Object.keys( moduleDependencies ) ) {
 				let version = moduleDependencies[ dependency ];  //the version we require
@@ -179,7 +200,7 @@ allPackages
 				//Shooting off to syrup
 				Log.verbose(`Running syrup with: ${ Chalk.yellow( `pancake syrup ${ pkgPath } ${ Program.verbose ? '-v' : '' } --batter` ) }`);
 
-				Spawn('node', [
+				pancakes.SpawningSync('node', [
 					Path.normalize(`${ __dirname }/pancake.js`),
 					'syrup',
 					pkgPath,

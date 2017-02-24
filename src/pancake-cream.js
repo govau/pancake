@@ -18,7 +18,6 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const Spawn = require('child_process');
 const StripAnsi = require('strip-ansi');
 const Program = require('commander');
 const Inquirer = require('inquirer');
@@ -32,11 +31,8 @@ const Path = require(`path`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const nextPkg = Spawn( 'npm', ['prefix'], { cwd: Path.normalize(`${ process.cwd() }/../`) } ).stdout.toString().replace('\n', '');
-
-let pkgPath = Path.normalize( nextPkg ); //default value of the pkgPath path
-let npmOrg;
-let PANCAKEurl;
+//possible settings to overwrite
+let pkgPath = ''; //the working path as global
 
 Program
 	.usage( `[command] <input> <option>` )
@@ -50,28 +46,57 @@ Program
 		if( !Path.isAbsolute( pkgPath ) ) { //converting to absolute path
 			pkgPath = Path.resolve( pkgPath );
 		}
-
-		PANCAKEurl = options.json ? options.json : PANCAKEurl;
-		npmOrg = options.org ? options.org : npmOrg;
 	})
 	.parse( process.argv );
-
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Globals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const pancakes = require(`./pancake-utilities.js`)( Program.verbose, npmOrg );
+const pancakes = require(`./pancake-utilities.js`)( Program.verbose, Program.org ? Program.org : undefined );
 const Log = pancakes.Log;
-PANCAKEurl = PANCAKEurl ? PANCAKEurl : pancakes.SETTINGS.creamJson;
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Banner and loading
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Log.info(`PANCAKE PUTTING THE CREAM ON TOP`);
+
+pancakes.Loading.start(); //start loading animation
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Working folder
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+if( pkgPath.length > 0 ) { //the path has been set by user
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: pkgPath } ).stdout.toString().replace('\n', '');
+}
+else { //we go with default
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: process.cwd() } ).stdout.toString().replace('\n', '');
+}
+
+pkgPath = Path.normalize( pkgPath ); //normalize some oddities npm gives us
+
+Log.verbose(`The woring directory is ${ Chalk.yellow( pkgPath ) }`);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Cream json and npm scope settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+let PANCAKEurl = Program.json ? Program.json : pancakes.SETTINGS.creamJson;
 PANCAKEurl += `?${ Math.floor( new Date().getTime() / 1000 ) }`; //breaking caching here
-npmOrg = npmOrg ? npmOrg : pancakes.SETTINGS.npmOrg;
+
+Log.verbose(`The cream json is ${ Chalk.yellow( PANCAKEurl ) }`);
+
+let npmOrg = Program.org ? Program.org : pancakes.SETTINGS.npmOrg;
+
+Log.verbose(`The npm scope is ${ Chalk.yellow( npmOrg ) }`);
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Reusable functions
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Get remote json file and return it's data
+ * Get remote json file and return it’s data
  *
  * @param  {string} url - The URL of the remote json file
  *
@@ -150,8 +175,16 @@ const HighlightDiff = ( oldVersion, newVersion ) => {
  * @return {object}          - The Inquirer.Separator object
  */
 const Headline = ( headline, subline = '', longestName ) => {
-	const sideHeader = ( longestName - ( 4 * 2 ) - headline.length ) / 2; //calculate the sides for the headline for center alignment
-	const sideSubline = ( longestName + 2 - subline.length ) / 2;         //calculate the sides for the subline for center alignment
+	let sideHeader = ( longestName - ( 4 * 2 ) - headline.length ) / 2; //calculate the sides for the headline for center alignment
+	let sideSubline = ( longestName + 2 - subline.length ) / 2;         //calculate the sides for the subline for center alignment
+
+	if( sideHeader < 0 ) { //getting edgy
+		sideHeader = 0;
+	}
+
+	if( sideSubline < 0 ) { //getting edgy
+		sideSubline = 0;
+	}
 
 	return [
 		new Inquirer.Separator(` `),
@@ -189,7 +222,7 @@ const AddDeps = ( dependencies, installed, longestName ) => {
 		const installedModule = installed.get( module ); //looking up if this version exists in our installed modules
 
 		if( installedModule !== undefined && !Semver.satisfies( installedModule, version ) ) { //there is some breakage happening here
-			breaking.push(`${ module }@${ version }`); //we need this for when we display what we've installed later
+			breaking.push(`${ module }@${ version }`); //we need this for when we display what we’ve installed later
 
 			//make it easy to read
 			name = Chalk.magenta( name );
@@ -225,13 +258,8 @@ const AddDeps = ( dependencies, installed, longestName ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Cream
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Log.info(`PANCAKE PUTTING THE CREAM ON TOP`);
-
-pancakes.Loading.start(); //start loading animation
-
-Log.verbose(`Cream running in ${ Chalk.yellow( pkgPath ) }`);
-
 let allPromises = []; //collect both promises
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Get json file
@@ -308,7 +336,7 @@ Promise.all( allPromises )
 
 		//iterate over all pancake modules
 		for( const module of Object.keys( PANCAKE ) ) {
-			const thisChoice = {};                            //let's build this choice out
+			const thisChoice = {};                            //let’s build this choice out
 			const installedVersion = installed.get( module ); //the installed version of this module
 			const name = module.split('/')[ 1 ]; //removing the scoping string
 			const depLines = AddDeps( PANCAKE[ module ].peerDependencies, installed, longestName );  //let's add all the dependencies under each module
@@ -317,19 +345,20 @@ Promise.all( allPromises )
 				`${ ' '.repeat( longestName - name.length ) }` +
 				` ${ PANCAKE[ module ].version }`; //we add each module of the json file in here
 
-			thisChoice.value = { //let's make sure we can parse the answer
+			thisChoice.value = { //let’s make sure we can parse the answer
 				name: module,
 				version :PANCAKE[ module ].version,
 				dependencies: PANCAKE[ module ].peerDependencies,
 				breaking: [ ...depLines.breaking ],
 			};
 
+
 			//now let's see where to put it?
-			if( installedVersion === undefined && !depLines.breakage ) { //in case we have this module already installed and neither it's dependencies break anything
+			if( installedVersion === undefined && !depLines.breakage ) { //in case we don’t have this module already installed and no dependencies breaks anything
 				easyChoices.push( thisChoice );                             //so this is a new module
 				easyChoices.push( ...depLines.lines );
 			}
-			else if( !depLines.breakage ) { //this module is already installed and doesn't break in any of it's dependencies
+			else if( !depLines.breakage ) { //this module is already installed and doesn’t break in any of it’s dependencies
 				if(
 					Semver.gte( PANCAKE[ module ].version, installedVersion ) && //if this version is newer than the installed one
 					!Semver.eq( PANCAKE[ module ].version, installedVersion )    //and not equal
@@ -419,8 +448,10 @@ Promise.all( allPromises )
 			Log.verbose(`Got answer:\n${ Chalk.yellow( JSON.stringify( answer.modules ) ) }`);
 
 			//checking if we got yarn installed
-			const command = Spawn.spawnSync( 'yarn', [ '--version' ] );
+			const command = pancakes.SpawningSync( 'yarn', [ '--version' ] );
 			const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+
+			Log.verbose(`Yarn ${ Chalk.yellow( hasYarn ? 'was ' : 'was not ' ) }detected`);
 
 			let breaking;
 			let modules = [];
@@ -442,18 +473,18 @@ Promise.all( allPromises )
 			pancakes.Loading.start(); //start loading animation
 
 			let installing; //for spawning our install process
-			// modules = ['beast.js@0.1.4'];
 
 			//installing modules
 			if( hasYarn ) {
-				installing = Spawn.spawn( 'yarn', [ 'add', ...modules ] );
+				installing = pancakes.Spawning( 'yarn', [ 'add', ...modules ] );
 			}
 			else {
-				installing = Spawn.spawn( 'npm', [ 'install', ...modules ] );
+				installing = pancakes.Spawning( 'npm', [ 'install', ...modules ] );
 			}
 
+			//if things went south
 			installing.stderr.on('data', (data) => {
-				//let's output a way out, a way forward maybe?
+				//let’s output a way out, a way forward maybe?
 				Log.error(
 					`An error has occurred while attemptying to install your chosen modules.\n` +
 					`You can attempt to install those modules yourself by running:\n\n` +

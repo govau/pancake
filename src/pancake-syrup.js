@@ -31,10 +31,8 @@ const Fs = require(`fs`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // CLI program
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const nextPkg = Spawn( 'npm', ['prefix'], { cwd: Path.normalize(`${ process.cwd() }/../`) } ).stdout.toString().replace('\n', '');
-
-let pkgPath = Path.normalize( nextPkg ); //default value of the pkgPath path
-let npmOrg;
+//possible settings to overwrite
+let pkgPath = ''; //the working path as global
 
 Program
 	.usage( `[command] <input> <option>` )
@@ -49,18 +47,47 @@ Program
 		if( !Path.isAbsolute( pkgPath ) ) { //converting to absolute path
 			pkgPath = Path.resolve( pkgPath );
 		}
-
-		npmOrg = options.org ? options.org : npmOrg;
 	})
 	.parse( process.argv );
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Globals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const pancakes = require(`./pancake-utilities.js`)( Program.verbose, npmOrg );
+const pancakes = require(`./pancake-utilities.js`)( Program.verbose, Program.org ? Program.org : undefined );
 const Log = pancakes.Log;
 
-npmOrg = npmOrg ? npmOrg : pancakes.SETTINGS.npmOrg;
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Banner and loading
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Log.info(`PANCAKE ADDING SYRUP`);
+
+pancakes.Loading.start(); //start loading animation
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Working folder
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+if( pkgPath.length > 0 ) { //the path has been set by user
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: pkgPath } ).stdout.toString().replace('\n', '');
+}
+else { //we go with default
+	pkgPath = pancakes.SpawningSync( 'npm', ['prefix'], { cwd: process.cwd() } ).stdout.toString().replace('\n', '');
+}
+
+pkgPath = Path.normalize( pkgPath ); //normalize some oddities npm gives us
+
+Log.verbose(`The woring directory is ${ Chalk.yellow( pkgPath ) }`);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// npm scope setting
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+let npmOrg = Program.org ? Program.org : pancakes.SETTINGS.npmOrg;
+
+Log.verbose(`The npm scope is ${ Chalk.yellow( npmOrg ) }`);
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Reusable functions
@@ -343,12 +370,6 @@ const MinifyAllJS = ( allJS, settings ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Reading and merging settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Log.info(`PANCAKE ADDING SYRUP`);
-
-pancakes.Loading.start(); //start loading animation
-
-Log.verbose(`Syrup running in ${ Chalk.yellow( pkgPath ) }`);
-
 //reading local settings
 const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
 let PKGsource = {};

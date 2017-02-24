@@ -127,7 +127,7 @@ pancake --set npmOrg "@gov.au"
 `batter`  
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `The path to the next available package.json`
+Default value: `The path to the nearest package.json on this folder or below`
 
 To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
 in scope)_</sup> `package.json` in search for a Pancake module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`
@@ -195,7 +195,7 @@ pancake batter --verbose
 `syrup`  
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `The path to the next available package.json`
+Default value: `The path to the nearest package.json on this folder or below`
 
 Syrup compiles your Pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
 `package.json`. All settings are automatically saved into your `package.json` file unless you supply the `--nosave` flag.
@@ -291,7 +291,7 @@ pancake syrup --verbose
 `cream`  
 Type: `[command]`  
 Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `The path to the next available package.json`  
+Default value: `The path to the nearest package.json on this folder or`  below 
 
 Cream will analyze your currently installed Pancake modules and show you in a user friendly interface what you can easily update and what update will entail
 breaking changes.

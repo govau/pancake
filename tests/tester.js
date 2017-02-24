@@ -88,10 +88,10 @@ const TESTER = (() => { //constructor factory
 				empty: false,
 			},
 			{
-				name: 'Syrup test with folder overwrite',
+				name: 'Batter/syrup test with folder overwrite',
 				folder: 'test4',
 				script: {
-					command: 'syrup',
+					command: 'batter',
 					options: [],
 				},
 				compare: 'testfolder/',
@@ -204,7 +204,7 @@ const TESTER = (() => { //constructor factory
 				// console.log('node ', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ].join(' '));
 
 				Spawn
-					.spawn( 'node', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ])
+					.spawn( 'node', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ] )
 					// .stdout.on('data', ( data ) => {
 					// 	console.log( data.toString() );
 					// })
