@@ -122,12 +122,7 @@ const CreateDir = ( dir, verbose ) => {
 		let currentPath;
 
 		if( subPath != '.' ) {
-			if( path.length > 0 ) {
-				currentPath = Path.normalize(`${ path }/${ subPath }`);
-			}
-			else {
-				currentPath = Path.normalize(`${ subPath }`);
-			}
+			currentPath = Path.normalize(`${ path }/${ subPath }`);
 
 			if( !Fs.existsSync( currentPath ) ){
 				try {
