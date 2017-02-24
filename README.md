@@ -417,7 +417,7 @@ The magic of Pancake lies within the `postinstall` script. To enable Pancake add
 	"peerDependencies": {},
 	"devDependencies": {},
 	"scripts": {
-		"postinstall": "pancake batter \"$(cd .. && npm prefix)\""  # <------- This script
+		"postinstall": "pancake batter ../"  # <------- This script
 	},
 	"author": "",
 	"license": "ISC"
@@ -509,39 +509,44 @@ _Please look at the coding style and work with it, not against it. 🌴_
 We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
-- `v10.0.0`
-- `v10.0.1`
-- `v10.0.2`
-- `v10.1.0`
-- `v10.1.1`
-- `v10.2.0`
-- `v10.3.0`
-- `v11.0.0`
-- `v11.0.1`
+- `v12.0.0`
+- `v12.0.1`
+- `v12.0.2`
+- `v12.1.0`
+- `v12.1.1`
+- `v12.2.0`
+- `v12.3.0`
+- `v13.0.0`
+- `v13.0.1`
 
 **@gov.au/testmodule2**
-- `v10.0.0`  
-	- └── `@gov.au/testmodule1`: `^10.0.0`
-- `v10.0.1`  
-	- └── `@gov.au/testmodule1`: `^10.0.0`
-- `v11.0.0`  
-	- └── `@gov.au/testmodule1`: `^11.0.0`
-- `v12.0.0`  
-	- └── `@gov.au/testmodule1`: `^11.0.0`
-- `v13.0.0`  
-	- └── `@gov.au/testmodule1`: `^11.0.1`
+- `v14.0.0`  
+	- └── `@gov.au/testmodule1`: `^12.0.0`
+- `v14.0.1`  
+	- └── `@gov.au/testmodule1`: `^12.0.0`
+- `v15.0.0`  
+	- └── `@gov.au/testmodule1`: `^13.0.0`
+- `v16.0.0`  
+	- └── `@gov.au/testmodule1`: `^13.0.0`
+- `v17.0.0`  
+	- └── `@gov.au/testmodule1`: `^13.0.1`
 
 **@gov.au/testmodule3**
-- `v10.0.0`  
-	- └── `@gov.au/testmodule1`: `^10.0.0`
-- `v10.0.1`  
-	- └── `@gov.au/testmodule1`: `^10.1.0`
-- `v10.0.2`  
-	- └── `@gov.au/testmodule1`: `^10.2.0`
-- `v10.1.0`  
-	- └── `@gov.au/testmodule1`: `^10.3.0`
-- `v11.0.0`  
-	- └── `@gov.au/testmodule1`: `^11.0.1`
+- `v12.0.0`  
+	- ├── `@gov.au/testmodule1`: `^12.0.0`
+	- └── `@gov.au/testmodule2`: `^14.0.0`
+- `v12.0.1`  
+	- ├── `@gov.au/testmodule1`: `^12.1.0`
+	- └── `@gov.au/testmodule2`: `^14.0.0`
+- `v12.0.2`  
+	- ├── `@gov.au/testmodule1`: `^12.2.0`
+	- └── `@gov.au/testmodule2`: `^14.0.1`
+- `v12.1.0`  
+	- ├── `@gov.au/testmodule1`: `^12.3.0`
+	- └── `@gov.au/testmodule2`: `^14.0.1`
+- `v13.0.1`  
+	- ├── `@gov.au/testmodule1`: `^13.0.1`
+	- └── `@gov.au/testmodule2`: `^17.0.0`
 
 Pancake comes with automated end-to-end test that are run via the test command.
 

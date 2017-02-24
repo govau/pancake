@@ -1,21 +1,22 @@
 {
 	"@gov.au/testmodule1": {
 		"name": "@gov.au/testmodule1",
-		"version": "11.0.1",
+		"version": "13.0.1",
 		"peerDependencies": {}
 	},
 	"@gov.au/testmodule2": {
 		"name": "@gov.au/testmodule2",
-		"version": "13.0.0",
+		"version": "17.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^13.0.1"
 		}
 	},
 	"@gov.au/testmodule3": {
 		"name": "@gov.au/testmodule3",
-		"version": "11.0.0",
+		"version": "13.0.1",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^13.0.1",
+			"@gov.au/testmodule2": "^17.0.0"
 		}
 	}
 }

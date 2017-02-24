@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+	<title>Testmodule1 v12.0.1</title>
+	<circle fill="rebeccapurple" cx="64" cy="64" r="64"/>
+	<circle fill="#fff" cx="64" cy="64" r="48"/>
+	<path fill="rebeccapurple" fill-rule="nonzero" d="M18.745 92.284l73.54-73.54 16.97 16.972-73.54 73.54z"/>
+</svg>
