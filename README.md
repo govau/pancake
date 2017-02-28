@@ -211,30 +211,36 @@ Below are all possible settings with default values.
 	"name": "your-name",
 	"version": "0.1.0",
 	"uikit": {
-		"auto-syrup": true,          //run syrup right after batter
-		"auto-save": true,           //save all settings into your package.json
+		"auto-syrup": true,               //run syrup right after batter
+		"auto-save": true,                //save all settings into your package.json
 		"css": {
-			"minified": true,          //minify your CSS output?
-			"modules": false,          //save a css file per module?
-			"browsers": [              //the browser support settings for autoprefixer
+			"minified": true,               //minify your CSS output?
+			"modules": false,               //save a css file per module?
+			"browsers": [                   //the browser support settings for autoprefixer
 				"last 2 versions",
 				"ie 8",
 				"ie 9",
 				"ie 10"
 			],
-			"location": "uikit/css/",  //path where to save those files, relative to your package.json
-			"name": "uikit.min.css"    //name of your css file with all modules
+			"location": "uikit/css/",       //path where to save those files, relative to your package.json
+			"name": "uikit.min.css"         //name of your css file with all modules
 		},
 		"sass": {
-			"modules": false,          //save a Sass file per module?
-			"location": "uikit/sass/", //path where to save those files, relative to your package.json
-			"name": "uikit.scss"       //name of the Sass file with all modules, set this to false if you don’t want the Sass files to be generated
+			"modules": false,               //save a Sass file per module?
+			"location": "uikit/sass/",      //path where to save those files, relative to your package.json
+			"name": "uikit.scss"            //name of the Sass file with all modules, set this to false if you don’t want the Sass files to be generated
 		},
 		"js": {
-			"minified": true,          //minify js code?
-			"modules": false,          //save a js file per module?
-			"location": "uikit/js/",   //path where to save those files, relative to your package.json
-			"name": "uikit.min.js"     //name of the js file with all modules
+			"minified": true,               //minify js code?
+			"modules": false,               //save a js file per module?
+			"location": "uikit/js/",        //path where to save those files, relative to your package.json
+			"name": "uikit.min.js"          //name of the js file with all modules
+		},
+		"svg": {
+			"modules": false,               //save single svg files?
+			"pngs": "pancake/svg/png/",     //path where to save the fallback pngs, you can disable this by setting it to false
+			"location": "pancake/svg/",     //path where to save those svg files
+			"name": "pancake.sprite.svg"    //name of the svg sprite file with all svgs, set this to false if you don’t want the sprite to be created
 		}
 	}
 }

@@ -18,13 +18,16 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+const SvgGenerator = require('svg-sprite-generator');
 const Autoprefixer = require('autoprefixer');
+const SvgToPng = require('svg-to-png');
 const UglifyJS = require("uglify-js");
 const Program = require('commander');
 const Postcss = require('postcss');
 const Sass = require('node-sass');
 const Chalk = require('chalk');
 const Path = require(`path`);
+const Util = require('util');
 const Fs = require(`fs`);
 
 
@@ -150,6 +153,38 @@ const ReadFile = location => {
 				resolve( content );
 			}
 		});
+	});
+};
+
+
+/**
+ * Copy a file to another location
+ *
+ * @param  {string} fromFile - The path to the source file
+ * @param  {string} toFile   - The path to the destination
+ */
+const CopyFile = ( fromFile, toFile ) => {
+	return new Promise( ( resolve, reject ) => {
+		let stream2 = Fs.createWriteStream( toFile )
+			.on( 'error', handleError )
+			.on( 'finish', () => {
+				Log.verbose(`Successfully copied ${ Chalk.yellow( toFile ) }`);
+
+				resolve();
+			});
+
+		let stream1 = Fs.createReadStream( fromFile )
+			.on( 'error', handleError )
+			.pipe( stream2 );
+
+		function handleError( error ) {
+			Log.error(`Copying file failed for ${ Chalk.yellow( location ) }`);
+			Log.error( JSON.stringify( error ) );
+
+			stream1.destroy();
+			stream2.end();
+			reject( error );
+		}
 	});
 };
 
@@ -425,17 +460,26 @@ let SettingsJS = {
 	'name': 'pancake.min.js',
 }
 
+let SettingsSVG = {
+	'modules': false,
+	'pngs': 'pancake/svg/png/',
+	'location': 'pancake/svg/',
+	'name': 'pancake.sprite.svg',
+}
+
 
 //merging default settings with local package.json
 Object.assign( SettingsCSS, PKG.pancake.css );
 Object.assign( SettingsSASS, PKG.pancake.sass );
 Object.assign( SettingsJS, PKG.pancake.js );
+Object.assign( SettingsSVG, PKG.pancake.svg );
 
 Log.verbose(`Merged local settings with defaults:\n` +
 	Chalk.yellow(
 		`SettingsCSS:  ${ JSON.stringify( SettingsCSS ) }\n` +
 		`SettingsSASS: ${ JSON.stringify( SettingsSASS ) }\n` +
-		`SettingsJS:   ${ JSON.stringify( SettingsJS ) }`
+		`SettingsJS: ${ JSON.stringify( SettingsJS ) }\n` +
+		`SettingsSVG:   ${ JSON.stringify( SettingsSVG ) }`
 	)
 );
 
@@ -470,6 +514,7 @@ allPackages
 			PKG.pancake.css = SettingsCSS;
 			PKG.pancake.sass = SettingsSASS;
 			PKG.pancake.js = SettingsJS;
+			PKG.pancake.svg = SettingsSVG;
 
 			let _isSpaces;
 
@@ -490,7 +535,7 @@ allPackages
 			compiledAll.push(
 				WriteFile( PackagePath, JSON.stringify( PKG, null, indentation ) )  //write package.json
 					.catch( error => {
-							Log.error( error );
+						Log.error( error );
 					})
 			);
 		}
@@ -559,6 +604,85 @@ allPackages
 
 				allJS.push( jsPromise );       //collect all js only promises so we can save the SettingsJS.name file later
 				compiledAll.push( jsPromise ); //add them also to the big queue so we don't run into race conditions
+			}
+
+			//check if SVG exist
+			const SVGModulePath = Path.normalize(`${ modulePackage.path }/lib/svg/`);
+			if( Fs.existsSync( SVGModulePath ) ) {
+				Log.verbose(`${ Chalk.green('⌘') } Found SVGs in ${ Chalk.yellow( modulePackage.name ) }`);
+
+				//get all svgs
+				const svgs = Fs
+					.readdirSync( SVGModulePath )                                   //read all files in the svg folder
+					.filter( name => !name.startsWith('.') )                        //let’s hide hidden files
+					.map( name => Path.normalize(`${ SVGModulePath }/${ name }`) ); //making them absolute paths
+
+				//convert svg to png
+				if( SettingsSVG.pngs !== false ) {
+					Log.verbose(`Converting svgs to PNGs for ${ Chalk.yellow( modulePackage.name ) }`);
+
+					const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.pngs }/`);
+
+					pancakes.CreateDir( location );  //create directory
+
+					console.log = text => {};        //temporarily display console
+
+					compiledAll.push( SvgToPng.convert( svgs, location ) );
+
+					console.log = function( text ) { //enable again
+						process.stdout.write(`${ Util.format.apply( null, arguments ) }\n`);
+					};
+				}
+
+				//create svg sprite
+				if( SettingsSVG.name !== false ) {
+					Log.verbose(`Converting svgs to sprite for ${ Chalk.yellow( modulePackage.name ) }`);
+
+					const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.location }/${ SettingsSVG.name }`);
+
+					// console.log(SvgGenerator);
+
+					SvgGenerator.spriteFromFiles([ SVGModulePath, location ])
+						.then(function (rs) {
+							console.log(rs);
+					});
+
+					// const result = pancakes.SpawningSync( 'svg-sprite-generate', [ '-d', SVGModulePath, '-o', location ] );
+
+					// console.log(result);
+
+					// const spriter = new SVGSpriter({
+					// 	dest: location,
+					// });
+
+					// svgs.map( svg => {
+					// 	spriter.add( svg, null, Fs.readFileSync( svg, { encoding: 'utf-8' } ) );
+					// });
+
+					// spriter.compile( ( error, result ) => {
+					// 	console.log(result);
+					// 	// for (var mode in result) {
+					// 	// 	for (var resource in result[mode]) {
+					// 	// 		mkdirp.sync(path.dirname(result[mode][resource].path));
+					// 	// 		fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
+					// 	// 	}
+					// 	// }
+					// });
+				}
+
+
+				//copying all svgs
+				svgs.map( svg => {
+					const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.location }/${ Path.basename( svg ) }`);
+
+					compiledAll.push(
+						CopyFile( svg, location )
+							.catch( error => {
+								Log.error( error );
+							})
+					);
+				});
+
 			}
 		}
 
@@ -629,6 +753,6 @@ allPackages
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adding some event handling to exit signals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-process.on( 'exit', pancakes.ExitHandler.bind( null, { now: Program.batter ? true : false } ) );              //on closing
-process.on( 'SIGINT', pancakes.ExitHandler.bind( null, { now: true } ) );             //on [ctrl] + [c]
-process.on( 'uncaughtException', pancakes.ExitHandler.bind( null, { now: true } ) );  //on uncaught exceptions
+process.on( 'exit', pancakes.ExitHandler.bind( null, { now: Program.batter ? true : false } ) ); //on closing
+process.on( 'SIGINT', pancakes.ExitHandler.bind( null, { now: true } ) );                        //on [ctrl] + [c]
+process.on( 'uncaughtException', pancakes.ExitHandler.bind( null, { now: true } ) );             //on uncaught exceptions
