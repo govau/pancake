@@ -2,10 +2,14 @@
 	"name": "@gov.au/testmodule3",
 	"version": "13.0.1",
 	"description": "Testing module for uikit",
-	"keywords": [
-		"pancake-module",
-		"pancake-sass-versioning"
-	],
+	"pancake": {
+		"version": "1.0.0",
+		"plugins": [
+			"pancake-sass",
+			"pancake-js",
+			"pancake-svg"
+		]
+	},
 	"scripts": {
 		"postinstall": "pancake batter ../ -v"
 	},
