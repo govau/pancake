@@ -3,12 +3,14 @@
 	"version": "12.3.0",
 	"description": "Testing module for uikit",
 	"pancake": {
-		"version": "1.0.0",
-		"plugins": [
-			"pancake-sass",
-			"pancake-js",
-			"pancake-svg"
-		]
+		"pancake-module": {
+			"version": "1.0.0",
+			"plugins": [
+				"pancake-sass",
+				"pancake-js",
+				"pancake-svg"
+			]
+		}
 	},
 	"scripts": {
 		"postinstall": "pancake batter ../ -v"

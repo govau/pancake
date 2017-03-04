@@ -45,7 +45,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	black: ( text ) => {
-		return `\u001B[30m${ text }\u001B[39m`;
+		return `\u001B[30m${ text.replace( '\u001b[39m', '\u001B[30m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -56,7 +56,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	red: ( text ) => {
-		return `\u001B[31m${ text }\u001B[39m`;
+		return `\u001B[31m${ text.replace( '\u001b[39m', '\u001B[31m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -67,7 +67,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	green: ( text ) => {
-		return `\u001B[32m${ text }\u001B[39m`;
+		return `\u001B[32m${ text.replace( '\u001b[39m', '\u001B[32m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -78,7 +78,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	yellow: ( text ) => {
-		return `\u001B[33m${ text }\u001B[39m`;
+		return `\u001B[33m${ text.replace( '\u001b[39m', '\u001B[33m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -89,7 +89,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	blue: ( text ) => {
-		return `\u001B[34m${ text }\u001B[39m`;
+		return `\u001B[34m${ text.replace( '\u001b[39m', '\u001B[34m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -100,7 +100,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	magenta: ( text ) => {
-		return `\u001B[35m${ text }\u001B[39m`;
+		return `\u001B[35m${ text.replace( '\u001b[39m', '\u001B[35m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -111,7 +111,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	cyan: ( text ) => {
-		return `\u001B[36m${ text }\u001B[39m`;
+		return `\u001B[36m${ text.replace( '\u001b[39m', '\u001B[36m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -122,7 +122,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	white: ( text ) => {
-		return `\u001B[37m${ text }\u001B[39m`;
+		return `\u001B[37m${ text.replace( '\u001b[39m', '\u001B[90m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -133,7 +133,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	gray: ( text ) => {
-		return `\u001B[90m${ text }\u001B[39m`;
+		return `\u001B[90m${ text.replace( '\u001b[39m', '\u001B[90m' ) }\u001b[39m`;
 	},
 
 	/**
@@ -144,7 +144,7 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	bold: ( text ) => {
-		return `\u001B[1m${ text }\u001B[22m`;
+		return `\u001B[1m${ text }\u001b[22m`;
 	},
 };
 

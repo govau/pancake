@@ -2,8 +2,7 @@
 
 /***************************************************************************************************************************************************************
  *
- * Checking peerDependencies, writing compiled files and discovering new modules
- *
+ * Checking peerDependencies for conflicts
  * This tool was built to make working with npm and the front end easy and seamless.
  *
  * @repo    - https://github.com/govau/pancake
@@ -16,9 +15,10 @@
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Included modules and export them
+// Using this file to export the reusable items
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import { Log, Style } from './logging';
-import { Cwd } from './cwd';
+import { Cwd } from './helpers';
+
 
 export { Log, Style, Cwd };

@@ -10,7 +10,8 @@ validation-report.json
 validation-status.json
 npm-debug.log
 yarn-error.log
-bin/
+dist/
+lib/
 tests/*/pancake/
 tests/*/yarn.lock
 tests/*/testfolder/
