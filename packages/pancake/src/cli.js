@@ -22,9 +22,9 @@ import Fs from 'fs';
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import { ParseArgs } from './parse-arguments';
-import { ExitHandler, Cwd } from './helpers';
+import { ExitHandler, Cwd, Size } from './helpers';
 import { Settings } from './settings';
-import { Log } from './logging';
+import { Log, Style } from './logging';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,8 +36,6 @@ import { Log } from './logging';
  * @param  {array} argv - The arguments passed to node
  */
 export const init = ( argv = process.argv ) => {
-
-	Log.info(`PANCAKE MIXING THE BATTER`);
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Get global settings
@@ -54,15 +52,88 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Set global settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	if( ARGS.version ) {
+		const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
+
+		console.log(`v${ pkg.version }`);
+
+		if( ARGS.verbose ) {
+			Log.space();
+		}
+
+		process.exit( 0 );
+	}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Set global settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	if( ARGS.set.length > 0 ) {
-		SETTINGS = Settings.set( ARGS.set[ 0 ], ARGS.set[ 1 ], SETTINGS );
+		SETTINGS = Settings.set( SETTINGS, ...ARGS.set );
+
+		Log.space();
+		process.exit( 0 );
 	}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Display help
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	//
+	if( ARGS.help ) {
+		if( Size().width > 110 ) { //only show if we have enough space
+			Log.info(`Pancake help`);
+
+			console.log( Style.yellow(`
+                                                 ${ Style.white(`.,;+@@@@@@@@@#+;,
+                                              #+':               .+@@;
+                                            @\`                       \`##
+                                           @+   \`;@@#+'      ,+@@@@@@@@@@`) }
+                                 \`,;''+#@@++${ Style.white(`@     .,;@;    @@@@@@@@@@@@@ #@@@@`) }+:\`
+                          \`,'@@+,\`   :;:;+'${ Style.white(`\`:@@;.       \`@@@@@@@@@@@+..@@@@@@@@@@@`) }#;\`
+                       +@#,        \`\`.,.  ${ Style.white(`@@.+ @@@':. \`;@#  ;.,+@@@@@@@@@@@@@@@@@@@@@@@@@@@`) }'
+                   ,#@,     \`.\`        ${ Style.white(`#@.#@@@@@@#@@@ \`: ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@`) }   ;@'
+               .@@@;:,\`  .;++;,      ${ Style.white(`#@#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`) }        \`   \`@:
+             @@,   ,;::;;,.        ${ Style.white(`@@@@@@@@@@@@#':'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`) }    \`  \`,\`  \`  .#+\`
+           '@.   ..   ,'+':\`      ${ Style.white(`@@@@@@@@'\`        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`) }\'      .,  .\`     ,@'
+        ,@+       '.               ${ Style.white(`@@@@,           ,@@@@@@:    .#@@@@@@@@@@@@@@@@@@@@@+`) }                  ;@
+      ;@,                                           ${ Style.white(`#@+\`          .@@@@@+     .+@@@#+@`) };                    @
+      @+      .@'++                                                 ${ Style.white(`:@@@`) }                                  @#
+         +#@,          :;:':':                     - pancake -        ${ Style.white(`@@@`) }                         \`:'':  \`@'
+       '@@@@@@@@@@,                                                    ${ Style.white(`@@`) }:      '\`  ,'+##@@@@@@@@@.    \`\`
+   \`@@\`   \`::,';:;#@@@@@@#;.  \`,;++',                               .' ${ Style.white(`@@@`) }  ,@@@,@@@@@@@#+':,\`             ,+#
+  :@\`                    .#@@@@@@+#@@@@@@@@@@@@@@#+''+++@@@@@@@+#+++   ${ Style.white(`@@@@`) };,,;,\`                             @
+  \`@:                                   \`:;+#@@##@@@+;,\`              ${ Style.white(`#@';@@`) }                                 #,
+    ;#+;            \`\`\`                                               ${ Style.white(`@@+@@#`) }                             .+'.
+         '@@@@@@@@@@@@@@@@#.                             \`\`           ${ Style.white(`#@@@#`) }     \`\`         \`#@@@@@@:'@@@@@@,
+                   \`\`...,,+@@@@@@@@'.\`.,;''#@@@;    \`'@@@@@@@@@@@@@@#:     @@@#'\` \`###@@#'.        ,;;,::
+                                     ,@@@@@@@@#@@@:@@@@#;.`));
+		}
+
+		console.log(
+			Style.yellow(`\n  ( ^-^)_旦\n\n`) +
+			`  🥞  Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly.\n\n` +
+			`  It will check your peerDependencies for conflicts and comes with plugins to compile the contents\n` +
+			`  for you and lists all available modules for you to select and install.\n\n` +
+			`  ${ Style.gray(`-------------------------------------------------------------------------------------------------\n\n`) }` +
+			`  ${ Style.bold(`PATH`) }            - Run pancake in a specific path and look for pancake modules there.\n` +
+			`    $ ${ Style.gray(`pancake /Users/you/project/folder`) }\n\n` +
+			`  ${ Style.bold(`SETTINGS`) }        - Set global settings. Available settings are: ${ Style.yellow( Object.keys( SETTINGS ).join(', ') ) }.\n` +
+			`    $ ${ Style.gray(`pancake --set npmOrg "@yourOrg"`) }\n\n` +
+			`  ${ Style.bold(`JSON`) }            - Temporarily overwrite the address to the json file of all your pancake modules.\n` +
+			`    $ ${ Style.gray(`pancake --json https://domain.tld/pancake-modules.json`) }\n\n` +
+			`  ${ Style.bold(`PLUGINS`) }         - Temporarily turn off all plugins.\n` +
+			`    $ ${ Style.gray(`pancake --plugins`) }\n\n` +
+			`  ${ Style.bold(`IGNORED PLUGINS`) } - Prevent a certain plugin(s) from being installed and run.\n` +
+			`    $ ${ Style.gray(`pancake --ignore @gov.au/pancake-js,@gov.au/pancake-sass`) }\n\n` +
+			`  ${ Style.bold(`HELP`) }            - Display the help (this screen).\n` +
+			`    $ ${ Style.gray(`pancake --help`) }\n\n` +
+			`  ${ Style.bold(`VERBOSE`) }         - Run pancake in verbose silly mode\n` +
+			`    $ ${ Style.gray(`pancake --verbose`) }`
+		);
+
+		Log.space();
+		process.exit( 0 );
+	}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -74,6 +145,8 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // check for conflicts
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	Log.info(`PANCAKE MIXING THE BATTER`);
+
 	//
 
 
@@ -93,6 +166,6 @@ export const init = ( argv = process.argv ) => {
 // Adding some event handling to exit signals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	process.on( 'exit', ExitHandler.bind( null, { withoutSpace: false } ) );              //on closing
-	process.on( 'SIGINT', ExitHandler.bind( null, { withoutSpace: false } ) );             //on [ctrl] + [c]
-	process.on( 'uncaughtException', ExitHandler.bind( null, { withoutSpace: false } ) );  //on uncaught exceptions
+	// process.on( 'SIGINT', ExitHandler.bind( null, { withoutSpace: false } ) );             //on [ctrl] + [c]
+	// process.on( 'uncaughtException', ExitHandler.bind( null, { withoutSpace: false } ) );  //on uncaught exceptions
 }

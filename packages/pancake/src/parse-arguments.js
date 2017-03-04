@@ -39,6 +39,11 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 	Log.verbose(`Cli arguments: ${ Style.yellow( args.slice( 2 ).join(', ') ) }`);
 
 	const allowed = { //all allowed commands
+		'--version': {
+			name: 'version',
+			short: '-V',
+			options: 0,
+		},
 		'--verbose': {
 			name: 'verbose',
 			short: '-v',
@@ -73,6 +78,7 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 
 	const defaults = { //we need to return these
 		cwd: undefined,
+		version: false,
 		verbose: false,
 		set: [],
 		json: SETTINGS.creamJson,

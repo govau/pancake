@@ -61,18 +61,30 @@ export const Settings = {
 	/**
 	 * Writing new global settings to the settings.json file
 	 *
-	 * @param  {string} setting  - The setting to be changed
-	 * @param  {string} value    - The value the above setting should be set to
 	 * @param  {object} SETTINGS - The settings object so we don’t have to read it twice
+	 * @param  {array}  items    - The setting to be changed, first item is the name and the following the values
 	 *
 	 * @return {object}          - The settings object with the new setting
 	 */
-	set: ( setting, value, SETTINGS ) => {
-		Log.space();
+	set: ( SETTINGS, ...items ) => {
 		Log.info(`PANCAKE SAVING DEFAULT SETTING`);
 
+		const setting = items[ 0 ];
+		const value = items.splice( 1 );
+
 		if( SETTINGS[ setting ] !== undefined ) {
-			SETTINGS[ setting ] = value; //setting new value
+			//setting new value
+			if( typeof SETTINGS[ setting ] === 'object' ) {
+				SETTINGS[ setting ].push( ...value );
+			}
+
+			if( typeof SETTINGS[ setting ] === 'boolean' ) {
+				SETTINGS[ setting ] = ( value === "true" );
+			}
+
+			if( typeof SETTINGS[ setting ] === 'string' ) {
+				SETTINGS[ setting ] = value.toString();
+			}
 
 			try {
 				Fs.writeFileSync( Path.normalize(`${ __dirname }/../settings.json`), JSON.stringify( SETTINGS, null, '\t' ), 'utf8' );

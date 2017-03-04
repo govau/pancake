@@ -16,6 +16,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import Spawn from 'child_process';
 import Path from 'path';
+import TTY from 'tty';
+import OS from 'os';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -52,7 +54,16 @@ export const Cwd = ( cwd = process.cwd() ) => {
 
 			rootPath = Path.normalize(`${ cwd }/../`); //so let’s go down one level and look for the next package.json file
 
-			pkgPath = Spawning.sync( 'npm', ['prefix'], { cwd: rootPath } ).stdout.toString().replace('\n', ''); //this will find the nearest package.json
+			pkgPath = Spawning.sync( 'npm', ['prefix'], { cwd: rootPath } ); //this will find the nearest package.json
+
+			if( pkgPath.error ) {
+				Log.error(`Pancake was unable to find a folder with a package.json file from ${ Style.yellow( rootPath ) }.`);
+				Log.space();
+				process.exit( 1 );
+			}
+			else {
+				pkgPath = Path.normalize( pkgPath.stdout.toString().replace('\n', '') ); //normalize some oddities npm gives us
+			}
 		}
 		else { //not a valid pancake module
 			Log.verbose(`Package.json not a pancake-module in ${ Style.yellow( location ) }`);
@@ -65,12 +76,73 @@ export const Cwd = ( cwd = process.cwd() ) => {
 
 		rootPath = Path.normalize(`${ cwd }/`); //we start looking from here on for the next package.json
 
-		pkgPath = Spawning.sync( 'npm', ['prefix'], { cwd: rootPath } ).stdout.toString().replace('\n', ''); //this will find the nearest package.json
+		pkgPath = Spawning.sync( 'npm', ['prefix'], { cwd: rootPath } ); //this will find the nearest package.json
+
+		if( pkgPath.error ) {
+			Log.error(`Pancake was unable to find a folder with a package.json file from ${ Style.yellow( rootPath ) }.`);
+			Log.space();
+			process.exit( 1 );
+		}
+		else {
+			pkgPath = Path.normalize( pkgPath.stdout.toString().replace('\n', '') ); //normalize some oddities npm gives us
+		}
 	}
 
 	Log.verbose(`Cwd is ${ Style.yellow( pkgPath ) }`);
 
 	return pkgPath;
+};
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Get cli window size
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Get the size of the cli window
+ * A port from https://github.com/jonschlinkert/window-size
+ *
+ * @return {object} - An object with width and height
+ */
+export const Size = () => {
+	let width;
+	let height;
+
+	if( TTY.isatty( 1 ) ) {
+		if( process.stdout.getWindowSize ) {
+			width = process.stdout.getWindowSize( 1 )[ 0 ];
+			height = process.stdout.getWindowSize( 1 )[ 1 ];
+		}
+		else if( TTY.getWindowSize ) {
+			width = TTY.getWindowSize()[ 1 ];
+			height = TTY.getWindowSize()[ 0 ];
+		}
+		else if( process.stdout.columns && process.stdout.rows ) {
+			height = process.stdout.rows;
+			width = process.stdout.columns;
+		}
+	}
+	else if( OS.release().startsWith('10') ) {
+		const numberPattern = /\d+/g;
+		const cmd = 'wmic path Win32_VideoController get CurrentHorizontalResolution,CurrentVerticalResolution';
+		const code = Spawn.execSync( cmd ).toString('utf8');
+		const res = code.match( numberPattern );
+
+		return {
+			height: ~~res[ 1 ],
+			width: ~~res[ 0 ],
+		};
+	}
+	else {
+		return {
+			height: undefined,
+			width: undefined,
+		};
+	}
+
+	return {
+		height: height,
+		width: width,
+	};
 };
 
 
@@ -144,7 +216,7 @@ export const ExitHandler = ( exiting, error ) => {
 		try { //try using our pretty output
 			Log.error( error );
 		}
-		catch( error ) { //looks like it's broken too so let's just do the old school thing
+		catch( error ) { //looks like it’s broken too so let’s just do the old school thing
 			console.error( error );
 		}
 	}
@@ -153,9 +225,6 @@ export const ExitHandler = ( exiting, error ) => {
 		process.exit( 0 ); //exit now
 	}
 
-	if( Log.output ) { //if we printed to cli at all
-		Log.space();     //adding some space
-	}
-
+	Log.space();     //adding some space
 	process.exit( 0 ); //now exit with a smile :)
 };
