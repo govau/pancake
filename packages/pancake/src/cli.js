@@ -15,16 +15,18 @@
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import Path from 'path';
-import Fs from 'fs';
+// import Fs from 'fs';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+import { ExitHandler, Cwd, Size, Spawning } from './helpers';
+import { Log, Style, Loading } from './logging';
 import { ParseArgs } from './parse-arguments';
-import { ExitHandler, Cwd, Size } from './helpers';
+import { CheckModules } from './conflicts';
+import { GetModules } from './modules';
 import { Settings } from './settings';
-import { Log, Style } from './logging';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,41 +40,79 @@ import { Log, Style } from './logging';
 export const init = ( argv = process.argv ) => {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Check npm version
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	let npmVersion = Spawning.sync( 'npm', ['-v'] );
+
+	if( npmVersion.error ) {
+		Log.error(`Pancake was unable to find an NPM version.`);
+		Log.error( error )
+
+		Log.space();
+		process.exit( 1 );
+	}
+	else {
+		npmVersion = parseInt( npmVersion.stdout.toString().replace('\n', '') ); //normalize some oddities npm gives us
+	}
+
+	Log.verbose(`NPM version ${ Style.yellow( npmVersion ) } detected`);
+
+	//npm 3 and higher is required as below will install dependencies inside each module folder
+	if( npmVersion < 3 ) {
+		Log.error(`Pancake only works with npm 3 and later.`);
+		Log.space();
+		process.exit( 1 );
+	}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Get global settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	let SETTINGS = Settings.get();
+	let SETTINGS = Settings.getGloabl();
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Parsing cli arguments
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	const ARGS = ParseArgs( SETTINGS );
+	const ARGS = ParseArgs( SETTINGS, argv );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Set global settings
+// Finding the current working directory
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	if( ARGS.version ) {
-		const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
+	const pkgPath = Cwd( ARGS.cwd );
 
-		console.log(`v${ pkg.version }`);
 
-		if( ARGS.verbose ) {
-			Log.space();
-		}
-
-		process.exit( 0 );
-	}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Get local settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	let SETTINGSlocal = Settings.getLocal( pkgPath );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Set global settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	if( ARGS.set.length > 0 ) {
-		SETTINGS = Settings.set( SETTINGS, ...ARGS.set );
+		SETTINGS = Settings.setGloabl( SETTINGS, ...ARGS.set );
 
 		Log.space();
-		process.exit( 0 );
+		process.exit( 0 ); //finish after
+	}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Display version
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	if( ARGS.version ) {
+		const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
+
+		console.log(`v${ pkg.version }`);
+
+		if( ARGS.verbose ) { //show some space if we had verbose enabled
+			Log.space();
+		}
+
+		process.exit( 0 ); //finish after
 	}
 
 
@@ -132,40 +172,81 @@ export const init = ( argv = process.argv ) => {
 		);
 
 		Log.space();
-		process.exit( 0 );
+		process.exit( 0 ); //finish after
 	}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Finding the current working directory
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	const pkgPath = Cwd( ARGS.cwd );
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// check for conflicts
+// Show banner
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	Log.info(`PANCAKE MIXING THE BATTER`);
 
-	//
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Get all modules data
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	Loading.start();
+
+	const allPackages = GetModules( pkgPath, SETTINGS.npmOrg )
+		.catch( error => {
+			Log.error( error );
+
+			process.exit( 1 );
+	});
+
+	allPackages
+		.catch( error => {
+			Loading.stop(); //stop loading animation
+
+			Log.error(`Reading all package.json files bumped into an error: ${ error }`, verbose);
+		})
+		.then( allModules => { //once we got all the content from all package.json files
+			Log.verbose(`Gathered all modules:\n${ Style.yellow( JSON.stringify( allModules ) ) }`);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Check for conflicts
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		if( allModules.length < 1 ) {
+			Loading.stop();
+
+			Log.info( `No modules found 😬` );
+		}
+		else {
+			const conflicts = CheckModules( allModules );
+
+			Loading.stop();
+
+			if( conflicts.conflicts ) {
+				Log.error( Style.red( conflicts.message ) );
+
+				process.exit( 1 ); //error out so npm knows things went wrong
+			}
+			else {
+				Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
+			}
+		}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Install all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	//
+		//
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Run all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	//
+		//
+
+
+	});
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adding some event handling to exit signals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	process.on( 'exit', ExitHandler.bind( null, { withoutSpace: false } ) );              //on closing
-	// process.on( 'SIGINT', ExitHandler.bind( null, { withoutSpace: false } ) );             //on [ctrl] + [c]
-	// process.on( 'uncaughtException', ExitHandler.bind( null, { withoutSpace: false } ) );  //on uncaught exceptions
+	process.on( 'SIGINT', ExitHandler.bind( null, { withoutSpace: false } ) );             //on [ctrl] + [c]
+	process.on( 'uncaughtException', ExitHandler.bind( null, { withoutSpace: false } ) );  //on uncaught exceptions
 }

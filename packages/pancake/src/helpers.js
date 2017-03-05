@@ -17,6 +17,7 @@
 import Spawn from 'child_process';
 import Path from 'path';
 import TTY from 'tty';
+import Fs from 'fs';
 import OS from 'os';
 
 
@@ -24,6 +25,36 @@ import OS from 'os';
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import { Log, Style } from './logging';
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Get all folders inside a folder
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Get all folders within a given path
+ *
+ * @param  {string}  thisPath - The path that contains the desired folders
+ *
+ * @return {array}            - An array of paths to each folder
+ */
+export const GetFolders = thisPath => {
+	Log.verbose(`Looking for folders in ${ Style.yellow( thisPath ) }`);
+
+	try {
+		return Fs
+			.readdirSync( thisPath )                                               //read the folders content
+			.filter(
+				thisFile => Fs.statSync(`${ thisPath }/${ thisFile }`).isDirectory() //only return directories
+			)
+			.map( path => Path.normalize(`${ thisPath }/${ path }`) );             //return with path
+	}
+	catch( error ) {
+		Log.verbose(`${ Style.yellow( thisPath ) } not found`);
+		// Log.error( error );
+
+		return [];
+	}
+};
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

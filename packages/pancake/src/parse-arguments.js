@@ -38,11 +38,11 @@ import { Log, Style } from './logging';
 export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 	Log.verbose(`Cli arguments: ${ Style.yellow( args.slice( 2 ).join(', ') ) }`);
 
-	const allowed = { //all allowed commands
-		'--version': {
-			name: 'version',
-			short: '-V',
-			options: 0,
+	const allowed = {     //all allowed commands
+		'--version': {      //the long version of the argument
+			name: 'version',  //the name of the argument to map to it’s defaults
+			short: '-V',      //the shortcut of this argument
+			options: 0,       //how many options may be passed to it
 		},
 		'--verbose': {
 			name: 'verbose',
@@ -87,7 +87,7 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 		help: false,
 	};
 
-	let index = 2;
+	let index = 2; //the first two arguments are always the path to node and the path to this app
 
 	if( args.length > 2 ) { //if there are even any arguments passed
 
@@ -95,7 +95,7 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 		if( !args[ 2 ].startsWith(`-`) ) {
 			defaults.cwd = args[ 2 ];
 
-			index = 3; //skip this one
+			index = 3; //move right along
 		}
 
 		//now parse each argument
@@ -106,7 +106,7 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 			if( allowed[ arg ] === undefined ) {
 				for( const key of Object.keys( allowed ) ) {
 					if( allowed[ key ].short === arg ) {
-						arg = key;
+						arg = key; //use long version from here on out
 						break;
 					}
 				};

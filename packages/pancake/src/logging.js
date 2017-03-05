@@ -45,7 +45,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	black: ( text ) => {
-		return `\u001B[30m${ text.replace( /\u001b\[39m/g, '\u001B[30m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[30m${ text.toString().replace( /\u001b\[39m/g, '\u001B[30m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -56,7 +61,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	red: ( text ) => {
-		return `\u001B[31m${ text.replace( /\u001b\[39m/g, '\u001B[31m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[31m${ text.toString().replace( /\u001b\[39m/g, '\u001B[31m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -67,7 +77,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	green: ( text ) => {
-		return `\u001B[32m${ text.replace( /\u001b\[39m/g, '\u001B[32m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[32m${ text.toString().replace( /\u001b\[39m/g, '\u001B[32m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -78,7 +93,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	yellow: ( text ) => {
-		return `\u001B[33m${ text.replace( /\u001b\[39m/g, '\u001B[33m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[33m${ text.toString().replace( /\u001b\[39m/g, '\u001B[33m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -89,7 +109,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	blue: ( text ) => {
-		return `\u001B[34m${ text.replace( /\u001b\[39m/g, '\u001B[34m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[34m${ text.toString().replace( /\u001b\[39m/g, '\u001B[34m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -100,7 +125,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	magenta: ( text ) => {
-		return `\u001B[35m${ text.replace( /\u001b\[39m/g, '\u001B[35m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[35m${ text.toString().replace( /\u001b\[39m/g, '\u001B[35m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -111,7 +141,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	cyan: ( text ) => {
-		return `\u001B[36m${ text.replace( /\u001b\[39m/g, '\u001B[36m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[36m${ text.toString().replace( /\u001b\[39m/g, '\u001B[36m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -122,7 +157,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	white: ( text ) => {
-		return `\u001B[37m${ text.replace( /\u001b\[39m/g, '\u001B[37m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[37m${ text.toString().replace( /\u001b\[39m/g, '\u001B[37m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -133,7 +173,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	gray: ( text ) => {
-		return `\u001B[90m${ text.replace( /\u001b\[39m/g, '\u001B[90m' ) }\u001b[39m`;
+		if( text !== undefined ) {
+			return `\u001B[90m${ text.toString().replace( /\u001b\[39m/g, '\u001B[90m' ) }\u001b[39m`;
+		}
+		else {
+			return '';
+		}
 	},
 
 	/**
@@ -144,7 +189,12 @@ export const Style = {
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
 	bold: ( text ) => {
-		return `\u001B[1m${ text }\u001b[22m`;
+		if( text !== undefined ) {
+			return `\u001B[1m${ text }\u001b[22m`;
+		}
+		else {
+			return '';
+		}
 	},
 };
 
@@ -172,7 +222,7 @@ export const Log = {
 		}
 
 		if( !Log.hasError ) {
-			// Loading().stop(); //stop any animations first
+			Loading.stop(); //stop any animations first
 
 			const messages = [ //because errors don’t have to be boring!
 				`Uh oh`,

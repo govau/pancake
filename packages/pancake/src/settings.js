@@ -38,7 +38,7 @@ export const Settings = {
 	 *
 	 * @return {object} - The settings object
 	 */
-	get: () => {
+	getGloabl: () => {
 		Log.verbose(`Getting global settings`);
 
 		let SETTINGS = {};
@@ -59,6 +59,38 @@ export const Settings = {
 
 
 	/**
+	 * Getting local setting from the host package.json file
+	 *
+	 * @param  {string} cwd - The path to our host package.json
+	 *
+	 * @return {object}     - The settings object
+	 */
+	getLocal: ( cwd ) => {
+		Log.verbose(`Getting local settings`);
+
+		let SETTINGS = {};
+
+		try {
+			SETTINGS = JSON.parse( Fs.readFileSync( Path.normalize(`${ cwd }/package.json`), `utf8` ) );
+		}
+		catch( error ) {
+			Log.error(`Couldn’t read settings :(`);
+			Log.error( error );
+
+			process.exit( 1 );
+		}
+
+		if( SETTINGS.pancake === undefined ) {
+			SETTINGS.pancake = {};
+		}
+
+		Log.verbose( Style.yellow( JSON.stringify( SETTINGS.pancake ) ) );
+
+		return SETTINGS.pancake;
+	},
+
+
+	/**
 	 * Writing new global settings to the settings.json file
 	 *
 	 * @param  {object} SETTINGS - The settings object so we don’t have to read it twice
@@ -66,7 +98,7 @@ export const Settings = {
 	 *
 	 * @return {object}          - The settings object with the new setting
 	 */
-	set: ( SETTINGS, ...items ) => {
+	setGloabl: ( SETTINGS, ...items ) => {
 		Log.info(`PANCAKE SAVING DEFAULT SETTING`);
 
 		const setting = items[ 0 ];
