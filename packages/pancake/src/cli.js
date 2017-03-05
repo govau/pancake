@@ -21,7 +21,7 @@ import Path from 'path';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { ExitHandler, Cwd, Size, Spawning } from './helpers';
+import { ExitHandler, CheckNPM, Cwd, Size, Spawning } from './helpers';
 import { Log, Style, Loading } from './logging';
 import { ParseArgs } from './parse-arguments';
 import { CheckModules } from './conflicts';
@@ -42,23 +42,10 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Check npm version
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	let npmVersion = Spawning.sync( 'npm', ['-v'] );
-
-	if( npmVersion.error ) {
-		Log.error(`Pancake was unable to find an NPM version.`);
-		Log.error( error )
-
-		Log.space();
-		process.exit( 1 );
-	}
-	else {
-		npmVersion = parseInt( npmVersion.stdout.toString().replace('\n', '') ); //normalize some oddities npm gives us
-	}
-
-	Log.verbose(`NPM version ${ Style.yellow( npmVersion ) } detected`);
+	const npmVersion = CheckNPM();
 
 	//npm 3 and higher is required as below will install dependencies inside each module folder
-	if( npmVersion < 3 ) {
+	if( !npmVersion ) {
 		Log.error(`Pancake only works with npm 3 and later.`);
 		Log.space();
 		process.exit( 1 );
@@ -189,16 +176,12 @@ export const init = ( argv = process.argv ) => {
 
 	const allPackages = GetModules( pkgPath, SETTINGS.npmOrg )
 		.catch( error => {
+			Loading.stop(); //stop loading animation
+
+			Log.error(`Reading all package.json files bumped into an error: ${ error }`);
 			Log.error( error );
 
 			process.exit( 1 );
-	});
-
-	allPackages
-		.catch( error => {
-			Loading.stop(); //stop loading animation
-
-			Log.error(`Reading all package.json files bumped into an error: ${ error }`, verbose);
 		})
 		.then( allModules => { //once we got all the content from all package.json files
 			Log.verbose(`Gathered all modules:\n${ Style.yellow( JSON.stringify( allModules ) ) }`);
@@ -207,37 +190,37 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Check for conflicts
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		if( allModules.length < 1 ) {
-			Loading.stop();
+			if( allModules.length < 1 ) {
+				Loading.stop();
 
-			Log.info( `No modules found 😬` );
-		}
-		else {
-			const conflicts = CheckModules( allModules );
-
-			Loading.stop();
-
-			if( conflicts.conflicts ) {
-				Log.error( Style.red( conflicts.message ) );
-
-				process.exit( 1 ); //error out so npm knows things went wrong
+				Log.info( `No modules found 😬` );
 			}
 			else {
-				Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
+				const conflicts = CheckModules( allModules );
+
+				Loading.stop();
+
+				if( conflicts.conflicts ) {
+					Log.error( Style.red( conflicts.message ) );
+
+					process.exit( 1 ); //error out so npm knows things went wrong
+				}
+				else {
+					Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
+				}
 			}
-		}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Install all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		//
+			//
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Run all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		//
+			//
 
 
 	});

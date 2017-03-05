@@ -28,6 +28,40 @@ import { Log, Style } from './logging';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Check npm version
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Check that npm used is 3 and above
+ *
+ * @return {boolean} - Whether npm version is satisfied
+ */
+export const CheckNPM = () => {
+	let npmVersion = Spawning.sync( 'npm', ['-v'] );
+
+	if( npmVersion.error ) {
+		Log.error(`Pancake was unable to find an NPM version.`);
+		Log.error( error )
+
+		Log.space();
+		process.exit( 1 );
+	}
+	else {
+		npmVersion = parseInt( npmVersion.stdout.toString().replace('\n', '') ); //normalize some oddities npm gives us
+	}
+
+	Log.verbose(`NPM version ${ Style.yellow( npmVersion ) } detected`);
+
+	//npm 3 and higher is required as below will install dependencies inside each module folder
+	if( npmVersion < 3 ) {
+		return false;
+	}
+	else {
+		return true;
+	}
+};
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Get all folders inside a folder
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
