@@ -288,3 +288,60 @@ export const Log = {
 		return Log.output;
 	},
 };
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Ansi loading animation
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Loading animation
+ *
+ * @method  start - Start spinner
+ * @method  stop  - Stop spinner
+ *
+ * @return {object} - Object with methods
+ */
+export const Loading = (() => {
+
+	const sequence = [ //the sequence of all animation frame
+		Style.gray(`            ${ Style.yellow('*') } • • • •`),
+		Style.gray(`            • ${ Style.yellow('*') } • • •`),
+		Style.gray(`            • • ${ Style.yellow('*') } • •`),
+		Style.gray(`            • • • ${ Style.yellow('*') } •`),
+		Style.gray(`            • • • • ${ Style.yellow('*') }`),
+		Style.gray(`            • • • ${ Style.yellow('*') } •`),
+		Style.gray(`            • • ${ Style.yellow('*') } • •`),
+		Style.gray(`            • ${ Style.yellow('*') } • • •`),
+		Style.gray(`            ${ Style.yellow('*') } • • • •`),
+	];
+
+	let index = 0;   //the current index of the animation
+	let timer = {};  //the setInterval object
+	let speed = 80;  //the speed in which to animate
+
+	return {
+		start: () => {
+			if( !verbose ) {
+				clearInterval( timer ); //stop any possible parallel loaders
+
+				process.stdout.write(`${ sequence[ index ] }`); //print the first frame
+
+				timer = setInterval(() => { //animate
+					process.stdout.write('\r\x1b[K'); //move cursor to beginning of line and clean line
+
+					index = ( index < sequence.length - 1 ) ? index + 1 : 0;
+
+					process.stdout.write( sequence[ index ] ); //print
+				}, speed );
+			}
+		},
+
+		stop: () => {
+			if( !verbose ) {
+				clearInterval( timer ); //stop interval
+
+				process.stdout.write('\r\r\x1b[K'); //clear screen
+			}
+		},
+	};
+})();
