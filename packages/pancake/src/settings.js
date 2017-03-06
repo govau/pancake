@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************************
  *
- * Get and set global settings
+ * Get and set global/local settings
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski
@@ -22,6 +22,7 @@ import Fs from 'fs';
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import { Log, Style } from './logging';
+import { WriteFile } from './files';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -199,19 +200,16 @@ export const Settings = {
 
 				PKG.pancake = SETTINGS; //set our settings
 
-				Fs.writeFile( PackagePath, JSON.stringify( PKG, null, indentation ), `utf8`, ( error ) => {
-					if( error ) {
-						Log.error(`Writing file failed for ${ Style.yellow( PackagePath ) }`);
-						Log.error( JSON.stringify( error ) );
+				WriteFile( PackagePath, JSON.stringify( PKG, null, indentation ) ) //write to package.json
+					.catch( error => {
+						Log.error( error );
 
 						reject( error );
-					}
-					else {
-						Log.verbose(`Successfully written ${ Style.yellow( PackagePath ) }`);
-
+					})
+					.then( written => {
 						resolve( SETTINGS );
-					}
 				});
+
 			}
 		});
 	},
