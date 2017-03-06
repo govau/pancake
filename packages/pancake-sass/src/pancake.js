@@ -28,7 +28,7 @@ import { Log, Style, Loading } from '@gov.au/pancake';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Default export
+// Plugin export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * The main pancake method for this plugin
@@ -40,8 +40,12 @@ import { Log, Style, Loading } from '@gov.au/pancake';
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( modules, settings, cwd ) => {
-	Log.info(`PANCAKE SASS PLUGIN`);
+	Log.info(`SASS PLUGIN STARTED`);
 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	let SETTINGS = {
 		css: {
 			minified: true,
@@ -57,11 +61,13 @@ export const pancake = ( modules, settings, cwd ) => {
 		},
 	};
 
+	//merging settings with host settings
 	Object.assign( SETTINGS.css, settings.css );
 	Object.assign( SETTINGS.sass, settings.sass );
 
-	return new Promise( ( resolve, reject ) => {
 
+	return new Promise( ( resolve, reject ) => {
+		//some housekeeping
 		if( typeof modules !== 'object' ) {
 			reject(
 				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
@@ -83,20 +89,10 @@ export const pancake = ( modules, settings, cwd ) => {
 			);
 		}
 
-		setTimeout(() => {
-			Log.ok('SASS PLUGIN DONE');
+		//
 
-			resolve( SETTINGS );
-		}, 5000);
-
-
-		// console.log(modules);
-		// console.log('-----');
-		// console.log(settings);
-		// console.log('-----');
-		// console.log(cwd);
-
-		// Log.ok('done');
+		Log.ok('SASS PLUGIN FINISHED');
+		resolve( SETTINGS );
 
 	});
 }

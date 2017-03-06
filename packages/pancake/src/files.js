@@ -61,6 +61,8 @@ export const GetFolders = thisPath => {
  * Create a path if it doesn’t exist
  *
  * @param  {string}  dir      - The path to be checked and created if not found
+ *
+ * @return {string}           - The path that was just worked at
  */
 export const CreateDir = ( dir ) => {
 	Log.verbose(`Creating path ${ Style.yellow( dir ) }`);
@@ -91,6 +93,8 @@ export const CreateDir = ( dir ) => {
 
 		return currentPath;
 	}, '');
+
+	return splitPath.join( Path.sep );
 };
 
 
@@ -163,27 +167,31 @@ export const ReadFile = location => {
  *
  * @param  {string} fromFile - The path to the source file
  * @param  {string} toFile   - The path to the destination
+ *
+ * @return {promise object}  - The content of the file
  */
 export const CopyFile = ( fromFile, toFile ) => {
+	CreateDir( Path.dirname( location ) );
+
 	return new Promise( ( resolve, reject ) => {
-		let stream2 = Fs.createWriteStream( toFile )
+		let writeStream = Fs.createWriteStream( toFile )
 			.on( 'error', handleError )
 			.on( 'finish', () => {
 				Log.verbose(`Successfully copied ${ Style.yellow( toFile ) }`);
 
 				resolve();
-			});
+		});
 
-		let stream1 = Fs.createReadStream( fromFile )
+		let readStream = Fs.createReadStream( fromFile )
 			.on( 'error', handleError )
-			.pipe( stream2 );
+			.pipe( writeStream );
 
 		function handleError( error ) {
 			Log.error(`Copying file failed for ${ Style.yellow( location ) }`);
 			Log.error( JSON.stringify( error ) );
 
-			stream1.destroy();
-			stream2.end();
+			readStream.destroy();
+			writeStream.end();
 			reject( error );
 		}
 	});
