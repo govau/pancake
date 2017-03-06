@@ -10,6 +10,7 @@ validation-report.json
 validation-status.json
 npm-debug.log
 yarn-error.log
+lerna-debug.log
 dist/
 lib/
 tests/*/pancake/

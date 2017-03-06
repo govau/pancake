@@ -221,9 +221,9 @@ export const Log = {
 			Log.space();      //only then we add an empty line on the top
 		}
 
-		if( !Log.hasError ) {
-			Loading.stop(); //stop any animations first
+		Loading.stop(); //stop any animations first
 
+		if( !Log.hasError ) {
 			const messages = [ //because errors don’t have to be boring!
 				`Uh oh`,
 				`Oh no`,
@@ -287,7 +287,10 @@ export const Log = {
 			Log.space();
 		}
 
+		Loading.stop();
 		console.info(`🔔  INFO:    ${ text }`);
+		Loading.start();
+
 		Log.output = true;
 	},
 
@@ -301,7 +304,10 @@ export const Log = {
 			Log.space();
 		}
 
+		Loading.stop();
 		console.info(`👍           ${ Style.green( text ) }`);
+		Loading.start();
+
 		Log.output = true;
 	},
 

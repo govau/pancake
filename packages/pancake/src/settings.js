@@ -38,7 +38,7 @@ export const Settings = {
 	 *
 	 * @return {object} - The settings object
 	 */
-	getGloabl: () => {
+	GetGlobal: () => {
 		Log.verbose(`Getting global settings`);
 
 		let SETTINGS = {};
@@ -65,7 +65,7 @@ export const Settings = {
 	 *
 	 * @return {object}     - The settings object
 	 */
-	getLocal: ( cwd ) => {
+	GetLocal: ( cwd ) => {
 		Log.verbose(`Getting local settings`);
 
 		let SETTINGS = {};
@@ -84,6 +84,23 @@ export const Settings = {
 			SETTINGS.pancake = {};
 		}
 
+		//default settings
+		let defaultSettings = {
+			'auto-save': true,
+			plugins: true,
+			ignore: [],
+			// svg: {
+			// 	modules: false,
+			// 	pngs: 'pancake/svg/png/',
+			// 	location: 'pancake/svg/',
+			// 	name: 'pancake.sprite.svg',
+			// },
+		}
+
+		//merging default settings with local package.json
+		SETTINGS.pancake = Object.assign( defaultSettings, SETTINGS.pancake );
+
+
 		Log.verbose( Style.yellow( JSON.stringify( SETTINGS.pancake ) ) );
 
 		return SETTINGS.pancake;
@@ -98,7 +115,7 @@ export const Settings = {
 	 *
 	 * @return {object}          - The settings object with the new setting
 	 */
-	setGloabl: ( SETTINGS, ...items ) => {
+	SetGlobal: ( SETTINGS, ...items ) => {
 		Log.info(`PANCAKE SAVING DEFAULT SETTING`);
 
 		const setting = items[ 0 ];
@@ -131,5 +148,71 @@ export const Settings = {
 		else {
 			Log.error(`Setting ${ Style.yellow( setting ) } not found`);
 		}
+	},
+
+
+	/**
+	 * Writing local settings to the package.json file
+	 *
+	 * @param  {object} SETTINGS - The settings object to be written
+	 * @param  {string} pkgPath  - The path to the package.json file
+	 *
+	 * @return {Promise object}  - The settings object with the new setting
+	 */
+	SetLocal: ( SETTINGS, pkgPath ) => {
+		Log.info(`PANCAKE SAVING LOCAL SETTINGS`);
+
+		return new Promise( ( resolve, reject ) => {
+
+			const PackagePath = Path.normalize(`${ pkgPath }/package.json`);
+			let PKGsource;
+			let PKG;
+
+			try {
+				PKGsource = Fs.readFileSync( PackagePath, `utf8` );
+				PKG = JSON.parse( PKGsource );
+
+				Log.verbose(`Read settings at ${ Style.yellow( PackagePath ) }`);
+			}
+			catch( error ) {
+				Log.verbose(`No package.json found at ${ Style.yellow( PackagePath ) }`);
+			}
+
+			//only save stuff if we have a package.json file to write to
+			if( PKGsource.length > 0 ) {
+
+				//detect indentation
+				let _isSpaces;
+
+				let indentation = 2; //default indentation even though you all should be using tabs for indentation!
+				try {
+					const PKGlines = PKGsource.split('\n');
+					_isSpaces = PKGlines[ 1 ].startsWith('  ');
+				}
+				catch( error ) {
+					_isSpaces = true; //buuuhhhhhh 👎
+				}
+
+				if( !_isSpaces ) {
+					indentation = '\t'; //here we go!
+				}
+
+				PKG.pancake = SETTINGS; //set our settings
+
+				Fs.writeFile( PackagePath, JSON.stringify( PKG, null, indentation ), `utf8`, ( error ) => {
+					if( error ) {
+						Log.error(`Writing file failed for ${ Style.yellow( PackagePath ) }`);
+						Log.error( JSON.stringify( error ) );
+
+						reject( error );
+					}
+					else {
+						Log.verbose(`Successfully written ${ Style.yellow( PackagePath ) }`);
+
+						resolve( SETTINGS );
+					}
+				});
+			}
+		});
 	},
 };

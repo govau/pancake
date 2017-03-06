@@ -21,11 +21,12 @@ import Path from 'path';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { ExitHandler, CheckNPM, Cwd, Size, Spawning } from './helpers';
+import { ExitHandler, CheckNPM, Cwd, Size } from './helpers';
+import { InstallPlugins, RunPlugins } from './plugins';
+import { GetModules, GetPlugins } from './modules';
 import { Log, Style, Loading } from './logging';
 import { ParseArgs } from './parse-arguments';
 import { CheckModules } from './conflicts';
-import { GetModules } from './modules';
 import { Settings } from './settings';
 
 
@@ -55,7 +56,7 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Get global settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	let SETTINGS = Settings.getGloabl();
+	let SETTINGS = Settings.GetGlobal();
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -73,14 +74,14 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Get local settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	let SETTINGSlocal = Settings.getLocal( pkgPath );
+	let SETTINGSlocal = Settings.GetLocal( pkgPath );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Set global settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	if( ARGS.set.length > 0 ) {
-		SETTINGS = Settings.setGloabl( SETTINGS, ...ARGS.set );
+		SETTINGS = Settings.SetGlobal( SETTINGS, ...ARGS.set );
 
 		Log.space();
 		process.exit( 0 ); //finish after
@@ -174,10 +175,8 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	Loading.start();
 
-	const allPackages = GetModules( pkgPath, SETTINGS.npmOrg )
+	GetModules( pkgPath, SETTINGS.npmOrg )
 		.catch( error => {
-			Loading.stop(); //stop loading animation
-
 			Log.error(`Reading all package.json files bumped into an error: ${ error }`);
 			Log.error( error );
 
@@ -191,14 +190,10 @@ export const init = ( argv = process.argv ) => {
 // Check for conflicts
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 			if( allModules.length < 1 ) {
-				Loading.stop();
-
 				Log.info( `No modules found 😬` );
 			}
 			else {
 				const conflicts = CheckModules( allModules );
-
-				Loading.stop();
 
 				if( conflicts.conflicts ) {
 					Log.error( Style.red( conflicts.message ) );
@@ -208,21 +203,64 @@ export const init = ( argv = process.argv ) => {
 				else {
 					Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
 				}
-			}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Install all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-			//
+				let plugins = [];
+
+				if( SETTINGSlocal.plugins === false || SETTINGS.plugins === false ) {
+					Log.verbose(`Skipping plugins`);
+				}
+				else {
+					plugins = GetPlugins( allModules );
+					const installed = InstallPlugins( plugins, pkgPath );
+				}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Run all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-			//
+				RunPlugins( plugins, pkgPath, allModules, SETTINGSlocal )
+					.catch( error => {
+						Loading.stop();
+
+						Log.error( error );
+					})
+					.then( ( settings ) => {
 
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Save local settings into host package.json
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+						if( SETTINGSlocal['auto-save'] ) {
+
+							//merge all plugin settings
+							settings.map( setting => {
+								Object.keys( setting ).map( key => {
+									SETTINGSlocal[ key ] = Object.assign( setting[ key ], SETTINGSlocal[ key ] );
+								});
+							});
+
+							Settings.SetLocal( SETTINGSlocal, pkgPath ) //let’s save all settings
+								.catch( error => {
+									Log.error(`Saving settings caused an error: ${ error }`);
+
+									process.exit( 1 );
+								})
+								.then( SETTINGSlocal => {
+									Log.ok(`SETTINGS SAVED`); //all done!
+
+									Loading.stop();
+							});
+						}
+						else {
+							Loading.stop();
+						}
+				});
+
+			}
 	});
 
 

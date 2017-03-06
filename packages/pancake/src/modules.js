@@ -113,3 +113,35 @@ export const GetModules = ( pkgPath, npmOrg = '' ) => {
 		return Promise.resolve([]); //no pancake modules found at all
 	}
 };
+
+
+/**
+ * Generate an object from the allModules object to filter out all plugins requested by all modules
+ *
+ * @param  {object} allModules - The object off all modules from GetModules()
+ *
+ * @return {array}             - An array of all plugins
+ */
+export const GetPlugins = allModules => {
+	let plugins = {};
+
+	allModules.map( module => {
+		if( module.pancake === undefined ) { //so we can pass the error message on to next block
+			module.pancake = {};
+		}
+
+		if( module.pancake['pancake-module'] === undefined ) {
+			Log.error(`The data passed to GetPlugins is missing the "${ Style.yellow(`pancake-module`) }" object.`);
+
+			return false;
+		}
+
+		module.pancake['pancake-module'].plugins.map( plugin => {
+			plugins[ plugin ] = 'yay!'; //we make them objects to filter out duplicates :)
+		});
+	});
+
+	Log.verbose(`Found the following plugins ${ Style.yellow( JSON.stringify( Object.keys( plugins ) ) ) }`);
+
+	return Object.keys( plugins );
+}

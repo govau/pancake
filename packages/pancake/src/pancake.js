@@ -32,7 +32,7 @@ export { ExitHandler, CheckNPM, Cwd, Size, Spawning, Log, Style, Loading, ParseA
 // Get batter object
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Running all the important bits to get us the data we need to run Pancake pragmatically
+ * Running all the important bits to get us the data we need to run Pancake programmatically
  *
  * @param  {array} argv     - The arguments passed to node
  *
