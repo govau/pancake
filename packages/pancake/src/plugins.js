@@ -51,7 +51,6 @@ export const InstallPlugins = ( plugins, cwd ) => {
 			result.found.push( plugin );
 		}
 		catch( error ) {
-			console.log(error);
 			result.installing.push( plugin );
 		}
 

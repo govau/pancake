@@ -305,8 +305,24 @@ export const Log = {
 		}
 
 		Loading.stop();
-		console.info(`👍           ${ Style.green( text ) }`);
+		console.info(`👍  ${ Style.green(`OK:`) }      ${ Style.green( text ) }`);
 		Loading.start();
+
+		Log.output = true;
+	},
+
+	/**
+	 * Log the final message
+	 *
+	 * @param  {string}  text - The text you want to log
+	 */
+	done: ( text ) => {
+		if( !Log.output ) {
+			Log.space();
+		}
+
+		Loading.stop();
+		console.info(`🚀           ${ Style.green( Style.bold( text ) ) }`);
 
 		Log.output = true;
 	},

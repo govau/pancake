@@ -252,11 +252,11 @@ export const init = ( argv = process.argv ) => {
 								.then( SETTINGSlocal => {
 									Log.ok(`SETTINGS SAVED`); //all done!
 
-									Loading.stop();
+									Log.done(`PANCAKE HAS FINISHED`); //all done!
 							});
 						}
 						else {
-							Loading.stop();
+							Log.done(`PANCAKE HAS FINISHED`); //all done!
 						}
 				});
 

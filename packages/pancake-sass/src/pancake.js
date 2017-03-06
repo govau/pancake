@@ -84,7 +84,7 @@ export const pancake = ( modules, settings, cwd ) => {
 		}
 
 		setTimeout(() => {
-			Log.ok('PANCAKE SASS PLUGIN DONE');
+			Log.ok('SASS PLUGIN DONE');
 
 			resolve( SETTINGS );
 		}, 5000);

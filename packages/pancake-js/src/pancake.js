@@ -77,7 +77,7 @@ export const pancake = ( modules, settings, cwd ) => {
 		}
 
 		setTimeout(() => {
-			Log.ok('PANCAKE JS PLUGIN DONE');
+			Log.ok('JS PLUGIN DONE');
 
 			resolve( SETTINGS );
 		}, 2000);
