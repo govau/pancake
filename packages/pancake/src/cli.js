@@ -110,6 +110,7 @@ export const init = ( argv = process.argv ) => {
 	if( ARGS.help ) {
 		if( Size().width > 110 ) { //only show if we have enough space
 			Log.info(`Pancake help`);
+			Loading.stop();
 
 			console.log( Style.yellow(`
                                                  ${ Style.white(`.,;+@@@@@@@@@#+;,
@@ -252,11 +253,11 @@ export const init = ( argv = process.argv ) => {
 								.then( SETTINGSlocal => {
 									Log.ok(`SETTINGS SAVED`); //all done!
 
-									Log.done(`PANCAKE HAS FINISHED`); //all done!
+									Log.done(`YOUR PANCAKE IS READY ( ˘▽˘)っ旦`); //all done!
 							});
 						}
 						else {
-							Log.done(`PANCAKE HAS FINISHED`); //all done!
+							Log.done(`YOUR PANCAKE IS READY ( ˘▽˘)っ旦`); //all done!
 						}
 				});
 

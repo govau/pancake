@@ -51,7 +51,7 @@ export const batter = ( argv = process.argv ) => {
 	}
 
 	// Get global settings
-	let SETTINGS = Settings.getGloabl();
+	let SETTINGS = Settings.getGlobal();
 
 	// Parsing cli arguments
 	const ARGS = ParseArgs( SETTINGS, argv );
@@ -65,7 +65,7 @@ export const batter = ( argv = process.argv ) => {
 	// Get all modules data
 	return new Promise( ( resolve, reject ) => {
 
-		const allPackages = GetModules( pkgPath, SETTINGS.npmOrg )
+		GetModules( pkgPath, SETTINGS.npmOrg )
 			.catch( error => {
 				reject(`Reading all package.json files bumped into an error: ${ error }`);
 				reject( error );
@@ -78,6 +78,9 @@ export const batter = ( argv = process.argv ) => {
 
 					if( conflicts.conflicts ) {
 						reject( conflicts );
+					}
+					else {
+						resolve( AllModules );
 					}
 				}
 				else {

@@ -7,8 +7,7 @@
 			"version": "1.0.0",
 			"plugins": [
 				"@gov.au/pancake-sass",
-				"@gov.au/pancake-js",
-				"@gov.au/pancake-svg"
+				"@gov.au/pancake-js"
 			]
 		}
 	},

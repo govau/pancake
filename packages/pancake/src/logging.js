@@ -263,7 +263,7 @@ export const Log = {
 				`Bugger`,
 			];
 
-			const message = messages.sort( () => 0.5 - Math.random() )[0];
+			const message = `(っ˘̩╭╮˘̩)っ  ` + messages.sort( () => 0.5 - Math.random() )[0];
 
 			console.log( Style.red(`             ${  `/`.repeat( message.length + 6 )  }`) );
 			console.log( Style.red(`            +${ `-`.repeat( message.length + 4 ) }+/`) );
@@ -376,20 +376,45 @@ export const Log = {
 export const Loading = (() => {
 
 	const sequence = [ //the sequence of all animation frame
-		Style.gray(`            ${ Style.yellow('*') } • • • •`),
-		Style.gray(`            • ${ Style.yellow('*') } • • •`),
-		Style.gray(`            • • ${ Style.yellow('*') } • •`),
-		Style.gray(`            • • • ${ Style.yellow('*') } •`),
-		Style.gray(`            • • • • ${ Style.yellow('*') }`),
-		Style.gray(`            • • • ${ Style.yellow('*') } •`),
-		Style.gray(`            • • ${ Style.yellow('*') } • •`),
-		Style.gray(`            • ${ Style.yellow('*') } • • •`),
-		Style.gray(`            ${ Style.yellow('*') } • • • •`),
+		//pancake loading animation
+		Style.gray(`            ( ^-^)${ Style.yellow(`旦`) }          `),
+		Style.gray(`             ( ^-^)${ Style.yellow(`旦`) }         `),
+		Style.gray(`              ( ^-^)${ Style.yellow(`旦`) }        `),
+		Style.gray(`               ( ^-^)${ Style.yellow(`旦`) }       `),
+		Style.gray(`                ( ^-^)${ Style.yellow(`旦`) }      `),
+		Style.gray(`                 ( ^-^)${ Style.yellow(`旦`) }     `),
+		Style.gray(`                  ( ^-^)${ Style.yellow(`旦`) }    `),
+		Style.gray(`                   ( ^-^)${ Style.yellow(`旦`) }   `),
+		Style.gray(`                    ( ^-^)${ Style.yellow(`旦`) }  `),
+		Style.gray(`                     ( ^-^)${ Style.yellow(`旦`) } `),
+		Style.gray(`                      ( ^-^)${ Style.yellow(`旦`) }`),
+		Style.gray(`                     ${ Style.yellow(`旦`) }(^-^ ) `),
+		Style.gray(`                    ${ Style.yellow(`旦`) }(^-^ )  `),
+		Style.gray(`                   ${ Style.yellow(`旦`) }(^-^ )   `),
+		Style.gray(`                  ${ Style.yellow(`旦`) }(^-^ )    `),
+		Style.gray(`                 ${ Style.yellow(`旦`) }(^-^ )     `),
+		Style.gray(`                ${ Style.yellow(`旦`) }(^-^ )      `),
+		Style.gray(`               ${ Style.yellow(`旦`) }(^-^ )       `),
+		Style.gray(`              ${ Style.yellow(`旦`) }(^-^ )        `),
+		Style.gray(`             ${ Style.yellow(`旦`) }(^-^ )         `),
+		Style.gray(`            ${ Style.yellow(`旦`) }(^-^ )          `),
+		Style.gray(`           ${ Style.yellow(`旦`) }(^-^ )           `),
+
+		//old style loading animation
+		// Style.gray(`            ${ Style.yellow('*') } • • • •`),
+		// Style.gray(`            • ${ Style.yellow('*') } • • •`),
+		// Style.gray(`            • • ${ Style.yellow('*') } • •`),
+		// Style.gray(`            • • • ${ Style.yellow('*') } •`),
+		// Style.gray(`            • • • • ${ Style.yellow('*') }`),
+		// Style.gray(`            • • • ${ Style.yellow('*') } •`),
+		// Style.gray(`            • • ${ Style.yellow('*') } • •`),
+		// Style.gray(`            • ${ Style.yellow('*') } • • •`),
+		// Style.gray(`            ${ Style.yellow('*') } • • • •`),
 	];
 
 	let index = 0;   //the current index of the animation
 	let timer = {};  //the setInterval object
-	let speed = 80;  //the speed in which to animate
+	let speed = 100;  //the speed in which to animate
 
 	return {
 		start: () => {
