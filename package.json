@@ -1,6 +1,9 @@
 {
 	"scripts": {
-		"test": "node tests/tester.js"
+		"pretest": "npm run build",
+		"test": "node tests/tester.js",
+
+		"build": "lerna bootstrap && lerna run build"
 	},
 	"dependencies": {},
 	"devDependencies": {
