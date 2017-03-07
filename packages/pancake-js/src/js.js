@@ -106,19 +106,22 @@ export const HandelJS = ( from, settings, to ) => {
 /**
  * Minify all js modules together once their promises have resolved
  *
+ * @param  {array}  version  - The version of mother pancake
  * @param  {array}  allJS    - An array of promise object for all js modules which will return their code
  * @param  {object} settings - The SettingsJS object
  * @param  {string} pkgPath  - The path to the current working directory
  *
  * @return {promise object}  - Returns true once the promise is resolved
  */
-export const MinifyAllJS = ( allJS, settings, pkgPath ) => {
+export const MinifyAllJS = ( version, allJS, settings, pkgPath ) => {
 	return new Promise( ( resolve, reject ) => {
 		Promise.all( allJS )
 			.catch( error => {
 				Log.error(`JS: Compiling JS ran into an error: ${ error }`);
 			})
 			.then( ( js ) => {
+				const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
+
 				const locationJS = Path.normalize(`${ pkgPath }/${ settings.location }/${ settings.name }`);
 				let code = '';
 
@@ -128,7 +131,7 @@ export const MinifyAllJS = ( allJS, settings, pkgPath ) => {
 					Log.verbose(`JS: Successfully uglified JS for ${ Style.yellow( locationJS ) }`);
 				}
 				else {
-					code = js.join(`\n\n`);
+					code = `/* PANCAKE v${ version } PANCAKE-JS v${ Package.version } */\n\n${ js.join(`\n\n`) }\n`;
 				}
 
 				WriteFile( locationJS, code ) //write file

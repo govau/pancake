@@ -26,7 +26,7 @@ import { GetModules } from './modules';
 import { Settings } from './settings';
 
 
-export {
+export { //here, take a sword; for you may need it
 	ExitHandler,
 	CheckNPM,
 	Cwd,
@@ -74,6 +74,12 @@ export const Batter = ( argv = process.argv ) => {
 
 	// Parsing cli arguments
 	const ARGS = ParseArgs( SETTINGS, argv );
+
+	//arg overwrites
+	SETTINGS.npmOrg = ARGS.org;
+	SETTINGS.creamJson = ARGS.json;
+	SETTINGS.plugins = ARGS.plugins;
+	SETTINGS.ignorePlugins = ARGS.ignorePlugins;
 
 	// Finding the current working directory
 	const pkgPath = Cwd( ARGS.cwd );

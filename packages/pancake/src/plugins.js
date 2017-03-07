@@ -92,14 +92,15 @@ export const InstallPlugins = ( plugins, cwd ) => {
 /**
  * Run a bunch of plugins
  *
+ * @param  {string} version       - The version of mother pancake
  * @param  {array}  plugins       - An array of plugin names
  * @param  {string} cwd           - The path to our working directory
- * @param  {array} allModules     - An array of all modules to be passed to plugin
+ * @param  {array}  allModules    - An array of all modules to be passed to plugin
  * @param  {object} SETTINGSlocal - The object of our local settings
  *
  * @return {promise object}       - Pass on what the plugins returned
  */
-export const RunPlugins = ( plugins, cwd, allModules, SETTINGSlocal ) => {
+export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal ) => {
 
 	let plugin;
 	let running = [];
@@ -112,7 +113,7 @@ export const RunPlugins = ( plugins, cwd, allModules, SETTINGSlocal ) => {
 
 			plugin = require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
 
-			return plugin.pancake( allModules, SETTINGSlocal, cwd ) //run ’em
+			return plugin.pancake( version, allModules, SETTINGSlocal, cwd ) //run ’em
 				.catch( error => {
 					reject( error );
 

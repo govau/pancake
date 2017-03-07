@@ -33,13 +33,14 @@ import { HandelJS, MinifyAllJS } from './js';
 /**
  * The main pancake method for this plugin
  *
+ * @param  {array}  version  - The version of mother pancake
  * @param  {array}  modules  - An array of all module objects
  * @param  {object} settings - An object of the host package.json file and it’s path
  * @param  {object} cwd      - The path to the working directory of our host package.json file
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( modules, settings, cwd ) => {
+export const pancake = ( version, modules, settings, cwd ) => {
 	Log.info(`ADDING SYRUP/JS TO YOUR PANCAKE`);
 
 
@@ -119,13 +120,13 @@ export const pancake = ( modules, settings, cwd ) => {
 		if( modules.length < 1 ) {
 			Loading.stop(); //stop loading animation
 
-			Log.info( `No pancake modules found 😬` );
+			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
 		}
 		else {
 			//write SETTINGS.js.name file
 			compiledAll.push(
-				MinifyAllJS( compiledAll, SETTINGS.js, cwd )
+				MinifyAllJS( version, compiledAll, SETTINGS.js, cwd )
 					.catch( error => {
 						Log.error( error );
 				})

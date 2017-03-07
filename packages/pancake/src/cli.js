@@ -39,6 +39,7 @@ import { Settings } from './settings';
  * @param  {array} argv - The arguments passed to node
  */
 export const init = ( argv = process.argv ) => {
+	const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Check npm version
@@ -63,6 +64,12 @@ export const init = ( argv = process.argv ) => {
 // Parsing cli arguments
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	const ARGS = ParseArgs( SETTINGS, argv );
+
+	//arg overwrites
+	SETTINGS.npmOrg = ARGS.org;
+	SETTINGS.creamJson = ARGS.json;
+	SETTINGS.plugins = ARGS.plugins;
+	SETTINGS.ignorePlugins = ARGS.ignorePlugins;
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -92,8 +99,6 @@ export const init = ( argv = process.argv ) => {
 // Display version
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	if( ARGS.version ) {
-		const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
-
 		console.log(`v${ pkg.version }`);
 
 		if( ARGS.verbose ) { //show some space if we had verbose enabled
@@ -191,7 +196,7 @@ export const init = ( argv = process.argv ) => {
 // Check for conflicts
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 			if( allModules.length < 1 ) {
-				Log.info( `No modules found 😬` );
+				Log.info(`No modules found 😬`);
 			}
 			else {
 				const conflicts = CheckModules( allModules );
@@ -202,7 +207,7 @@ export const init = ( argv = process.argv ) => {
 					process.exit( 1 ); //error out so npm knows things went wrong
 				}
 				else {
-					Log.ok( `All modules(${ allModules.length }) without conflict 💥` );
+					Log.ok(`All modules(${ allModules.length }) without conflict 💥`);
 				}
 
 
@@ -223,7 +228,7 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Run all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-				RunPlugins( plugins, pkgPath, allModules, SETTINGSlocal )
+				RunPlugins( pkg.version, plugins, pkgPath, allModules, SETTINGSlocal )
 					.catch( error => {
 						Loading.stop();
 

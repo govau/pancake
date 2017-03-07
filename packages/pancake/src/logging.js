@@ -263,15 +263,15 @@ export const Log = {
 				`Bugger`,
 			];
 
-			const message = `(っ˘̩╭╮˘̩)っ  ` + messages.sort( () => 0.5 - Math.random() )[0];
+			const message = messages.sort( () => 0.5 - Math.random() )[0];
 
-			console.log( Style.red(`             ${  `/`.repeat( message.length + 6 )  }`) );
-			console.log( Style.red(`            +${ `-`.repeat( message.length + 4 ) }+/`) );
-			console.log( Style.red(`            |  `) + Style.bold( Style.red( message ) ) + Style.red(`  |/`) ); //we need something big to help npms error system
-			console.log( Style.red(`            +${ `-`.repeat( message.length + 4 ) }+`) + `\n` );
+			console.log( Style.red(`                         ${  `/`.repeat( message.length + 6 )  }`) );
+			console.log( Style.red(`                        +${ `-`.repeat( message.length + 4 ) }+/`) );
+			console.log( Style.red(`            (っ˘̩╭╮˘̩)っ  |  `) + Style.bold( Style.red( message ) ) + Style.red(`  |/`) ); //we need something big to help npms error system
+			console.log( Style.red(`                        +${ `-`.repeat( message.length + 4 ) }+`) + `\n` );
 		}
 
-		console.error(`🔥  ${ Style.red( `ERROR:   ${ text }` ) } `);
+		console.error(`🔥  ${ Style.red(`ERROR:   ${ text }`) } `);
 
 		Log.output = true; //now we have written something out
 		Log.hasError = true;
@@ -339,7 +339,7 @@ export const Log = {
 				Log.space();
 			}
 
-			console.info(`😬  ${ Style.gray( `VERBOSE: ${ text }` ) }`);
+			console.info(`😬  ${ Style.gray(`VERBOSE: ${ text }`) }`);
 			Log.output = true;
 		}
 	},

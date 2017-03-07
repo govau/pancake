@@ -34,13 +34,14 @@ import { GenerateSass, Sassify } from './sass';
 /**
  * The main pancake method for this plugin
  *
+ * @param  {array}  version  - The version of mother pancake
  * @param  {array}  modules  - An array of all module objects
  * @param  {object} settings - An object of the host package.json file and it’s path
  * @param  {object} cwd      - The path to the working directory of our host package.json file
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( modules, settings, cwd ) => {
+export const pancake = ( version, modules, settings, cwd ) => {
 	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE`);
 
 
@@ -160,17 +161,17 @@ export const pancake = ( modules, settings, cwd ) => {
 		if( modules.length < 1 ) {
 			Loading.stop(); //stop loading animation
 
-			Log.info( `No pancake modules found 😬` );
+			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
 		}
 		else {
 
 			//write the SETTINGS.css.name file
 			const locationCSS = Path.normalize(`${ cwd }/${ SETTINGS.css.location }/${ SETTINGS.css.name }`);
-			const Package = require( Path.normalize(`${ __dirname }/../package.json`) ); //for displaying help and version
+			const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 			if( sassVersioning === true ) {
-				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+				allSass = `/* PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
 			}
 			else {
 				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
