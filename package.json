@@ -1,6 +1,5 @@
 {
 	"scripts": {
-		"pretest": "npm run build",
 		"test": "node tests/tester.js",
 
 		"build": "lerna bootstrap && lerna run build"
