@@ -16,19 +16,19 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Path } from 'path';
-import { Fs } from 'fs';
+import Path from 'path';
+import Fs from 'fs';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// import { ExitHandler } from "pancake";
-import { Log, Style, Loading } from '@gov.au/pancake';
+import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
+import { HandelJS, MinifyAllJS } from './js';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Default export
+// Plugin export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * The main pancake method for this plugin
@@ -40,8 +40,12 @@ import { Log, Style, Loading } from '@gov.au/pancake';
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( modules, settings, cwd ) => {
-	Log.info(`PANCAKE JS PLUGIN`);
+	Log.info(`ADDING SYRUP/JS TO YOUR PANCAKE`);
 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	let SETTINGS = {
 		js: {
 			minified: true,
@@ -51,10 +55,12 @@ export const pancake = ( modules, settings, cwd ) => {
 		},
 	};
 
+	//merging settings with host settings
 	Object.assign( SETTINGS.js, settings.js );
 
-	return new Promise( ( resolve, reject ) => {
 
+	return new Promise( ( resolve, reject ) => {
+		//some housekeeping
 		if( typeof modules !== 'object' ) {
 			reject(
 				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
@@ -76,20 +82,70 @@ export const pancake = ( modules, settings, cwd ) => {
 			);
 		}
 
-		setTimeout(() => {
-			Log.ok('JS PLUGIN DONE');
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		let compiledAll = [];      //for collect all promises
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Iterate over each module
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		for( const modulePackage of modules ) {
+			Log.verbose(`JS: Bulding ${ Style.yellow( modulePackage.name ) }`);
+
+			//check if there are sass files
+			const jsModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].js.path }`);
+
+			if( !Fs.existsSync( jsModulePath ) ) {
+				Log.verbose(`JS: No Sass found in ${ Style.yellow( jsModulePath ) }`)
+			}
+			else {
+				Log.verbose(`JS: ${ Style.green('⌘') } Found Sass in ${ Style.yellow( jsModulePath ) }`);
+
+				const jsModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.js.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
+
+				const jsPromise = HandelJS( jsModulePath, SETTINGS.js, jsModuleToPath ) //compile js and write to file depending on settings
+					.catch( error => {
+						Log.error( error );
+				});
+
+				compiledAll.push( jsPromise ); //collect all js promises so we can save the SETTINGS.js.name file later
+			}
+		}
+
+
+		if( modules.length < 1 ) {
+			Loading.stop(); //stop loading animation
+
+			Log.info( `No pancake modules found 😬` );
 			resolve( SETTINGS );
-		}, 2000);
+		}
+		else {
+			//write SETTINGS.js.name file
+			compiledAll.push(
+				MinifyAllJS( compiledAll, SETTINGS.js, cwd )
+					.catch( error => {
+						Log.error( error );
+				})
+			);
 
+			//after all files have been compiled and written
+			Promise.all( compiledAll )
+				.catch( error => {
+					Loading.stop(); //stop loading animation
 
-		// console.log(modules);
-		// console.log('-----');
-		// console.log(settings);
-		// console.log('-----');
-		// console.log(cwd);
+					Log.error(`Js plugin ran into an error: ${ error }`);
+				})
+				.then( () => {
+					Loading.stop(); //stop loading animation
 
-		// Log.ok('done');
+					Log.ok('JS PLUGIN FINISHED');
+					resolve( SETTINGS );
+			});
+
+		}
 
 	});
 }

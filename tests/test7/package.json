@@ -4,7 +4,7 @@
 		"css": {
 			"minified": true,
 			"modules": true,
-			"location": "pancake/css-files/",
+			"location": "pancake/css/",
 			"name": "uikit.min.css"
 		},
 		"sass": {

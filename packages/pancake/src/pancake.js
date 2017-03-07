@@ -17,6 +17,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Using this file to export the reusable items
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+import { GetFolders, CreateDir, WriteFile, ReadFile, CopyFile } from './files';
 import { ExitHandler, CheckNPM, Cwd, Size, Spawning } from './helpers';
 import { Log, Style, Loading } from './logging';
 import { ParseArgs } from './parse-arguments';
@@ -25,7 +26,25 @@ import { GetModules } from './modules';
 import { Settings } from './settings';
 
 
-export { ExitHandler, CheckNPM, Cwd, Size, Spawning, Log, Style, Loading, ParseArgs, CheckModules, GetModules, Settings };
+export {
+	ExitHandler,
+	CheckNPM,
+	Cwd,
+	Size,
+	Spawning,
+	Log,
+	Style,
+	Loading,
+	ParseArgs,
+	CheckModules,
+	GetModules,
+	Settings,
+	GetFolders,
+	CreateDir,
+	WriteFile,
+	ReadFile,
+	CopyFile
+};
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,7 +57,7 @@ export { ExitHandler, CheckNPM, Cwd, Size, Spawning, Log, Style, Loading, ParseA
  *
  * @return {Promise object} - The data object of the pancake modules
  */
-export const batter = ( argv = process.argv ) => {
+export const Batter = ( argv = process.argv ) => {
 
 	// Check npm version
 	const npmVersion = CheckNPM();
@@ -51,7 +70,7 @@ export const batter = ( argv = process.argv ) => {
 	}
 
 	// Get global settings
-	let SETTINGS = Settings.getGlobal();
+	let SETTINGS = Settings.GetGlobal();
 
 	// Parsing cli arguments
 	const ARGS = ParseArgs( SETTINGS, argv );
@@ -60,7 +79,7 @@ export const batter = ( argv = process.argv ) => {
 	const pkgPath = Cwd( ARGS.cwd );
 
 	// Get local settings
-	let SETTINGSlocal = Settings.getLocal( pkgPath );
+	let SETTINGSlocal = Settings.GetLocal( pkgPath );
 
 	// Get all modules data
 	return new Promise( ( resolve, reject ) => {
@@ -80,11 +99,19 @@ export const batter = ( argv = process.argv ) => {
 						reject( conflicts );
 					}
 					else {
-						resolve( AllModules );
+						resolve({
+							modules: allModules,
+							settings: SETTINGSlocal,
+							cwd: pkgPath,
+						});
 					}
 				}
 				else {
-					resolve( AllModules );
+					resolve({
+						modules: allModules,
+						settings: SETTINGSlocal,
+						cwd: pkgPath,
+					});
 				}
 		});
 

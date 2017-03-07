@@ -8,7 +8,14 @@
 			"plugins": [
 				"@gov.au/pancake-sass",
 				"@gov.au/pancake-js"
-			]
+			],
+			"sass": {
+				"path": "lib/sass/_module.scss",
+				"sass-versioning": true
+			},
+			"js": {
+				"path": "lib/js/module.js"
+			}
 		}
 	},
 	"scripts": {

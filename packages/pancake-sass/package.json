@@ -31,7 +31,11 @@
 		"lib/*"
 	],
 	"dependencies": {
-		"@gov.au/pancake": ">0.0.10"
+		"@gov.au/pancake": ">0.0.10",
+
+		"autoprefixer": "6.7.6",
+		"node-sass": "4.5.0",
+		"postcss": "5.2.15"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.22.2",
