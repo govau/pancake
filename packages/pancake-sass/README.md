@@ -4,7 +4,7 @@ Pancake SASS PLUGIN
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle sass files.
 
 
-## Content
+## Contentss
 
 * [Install](#install)
 * [Build](#build)
@@ -28,7 +28,7 @@ npm install @gov.au/pancake --save-dev
 ```
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ npm install @gov.au/pancake --save-dev
 To run the pancake build make sure you go to the monorepo this package came from and clone the source from there: https://github.com/govau/pancake
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ To run the pancake build make sure you go to the monorepo this package came from
 To run the tests make sure you go to the monorepo this package came from and clone the source from there: https://github.com/govau/pancake
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 * v1.0.3 - 💥 Initial version
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -73,6 +73,6 @@ Copyright (c) Commonwealth of Australia.
 Licensed under [MIT](https://raw.githubusercontent.com/govau/pancake/master/LICENSE).
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 # };
