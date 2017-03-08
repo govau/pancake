@@ -1,5 +1,8 @@
 {
   "pancake": {
+    "auto-save": true,
+    "plugins": true,
+    "ignore": [],
     "css": {
       "minified": true,
       "modules": false,
