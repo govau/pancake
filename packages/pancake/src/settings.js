@@ -40,7 +40,7 @@ export const Settings = {
 	 * @return {object} - The settings object
 	 */
 	GetGlobal: () => {
-		Log.verbose(`Getting global settings`);
+		Log.verbose(`Getting global settings from ${ Style.yellow( Path.normalize(`${ __dirname }/../settings.json`) ) }`);
 
 		let SETTINGS = {};
 

@@ -103,11 +103,11 @@ export const pancake = ( version, modules, settings, cwd ) => {
 		for( const modulePackage of modules ) {
 			Log.verbose(`JS: Bulding ${ Style.yellow( modulePackage.name ) }`);
 
-			//check if there are sass files
+			//check if there are js files
 			const jsModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].js.path }`);
 
 			if( !Fs.existsSync( jsModulePath ) ) {
-				Log.verbose(`JS: No Sass found in ${ Style.yellow( jsModulePath ) }`)
+				Log.verbose(`JS: No js found in ${ Style.yellow( jsModulePath ) }`)
 			}
 			else {
 				Log.verbose(`JS: ${ Style.green('⌘') } Found Javascript files in ${ Style.yellow( jsModulePath ) }`);

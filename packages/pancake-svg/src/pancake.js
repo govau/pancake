@@ -102,7 +102,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 		for( const modulePackage of modules ) {
 			Log.verbose(`SVG: Bulding ${ Style.yellow( modulePackage.name ) }`);
 
-			//check if there are sass files
+			//check if there are svg files
 			const sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].svg.path }`);
 
 			if( !Fs.existsSync( sassModulePath ) ) {

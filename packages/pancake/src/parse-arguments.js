@@ -49,15 +49,15 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 			short: '-v',
 			options: 0,
 		},
+		'--nosave': {
+			name: 'nosave',
+			short: '-n',
+			options: 0,
+		},
 		'--set': {
 			name: 'set',
 			short: '-s',
 			options: 2,
-		},
-		'--json': {
-			name: 'json',
-			short: '-j',
-			options: 1,
 		},
 		'--org': {
 			name: 'org',
@@ -85,8 +85,8 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 		cwd: undefined,
 		version: false,
 		verbose: false,
+		nosave: false,
 		set: [],
-		json: SETTINGS.creamJson,
 		org: SETTINGS.npmOrg,
 		plugins: true,
 		ignorePlugins: [],

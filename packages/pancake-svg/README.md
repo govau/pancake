@@ -70,7 +70,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 ## License
 
 Copyright (c) Commonwealth of Australia.
-Licensed under [MIT](https://raw.githubusercontent.com/govau/uikit/packages/core/master/LICENSE).
+Licensed under [MIT](https://raw.githubusercontent.com/govau/pancake/master/LICENSE).
 
 
 **[⬆ back to top](#content)**

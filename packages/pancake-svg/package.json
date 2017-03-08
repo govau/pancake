@@ -32,7 +32,8 @@
 		"lib/*"
 	],
 	"dependencies": {
-		"@gov.au/pancake": ">0.0.10"
+		"@gov.au/pancake": ">0.0.10",
+		"babel-runtime": "^6.23.0"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.22.2",

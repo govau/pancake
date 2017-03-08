@@ -67,21 +67,8 @@ export const init = ( argv = process.argv ) => {
 
 	//arg overwrites
 	SETTINGS.npmOrg = ARGS.org;
-	SETTINGS.creamJson = ARGS.json;
 	SETTINGS.plugins = ARGS.plugins;
-	SETTINGS.ignorePlugins = ARGS.ignorePlugins;
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Finding the current working directory
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	const pkgPath = Cwd( ARGS.cwd );
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Get local settings
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	let SETTINGSlocal = Settings.GetLocal( pkgPath );
+	SETTINGS.ignorePlugins = ARGS.ignorePlugins.length ? ARGS.ignorePlugins : SETTINGS.ignorePlugins;
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -90,21 +77,8 @@ export const init = ( argv = process.argv ) => {
 	if( ARGS.set.length > 0 ) {
 		SETTINGS = Settings.SetGlobal( SETTINGS, ...ARGS.set );
 
+		Loading.stop();
 		Log.space();
-		process.exit( 0 ); //finish after
-	}
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Display version
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	if( ARGS.version ) {
-		console.log(`v${ pkg.version }`);
-
-		if( ARGS.verbose ) { //show some space if we had verbose enabled
-			Log.space();
-		}
-
 		process.exit( 0 ); //finish after
 	}
 
@@ -171,6 +145,32 @@ export const init = ( argv = process.argv ) => {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Finding the current working directory
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	const pkgPath = Cwd( ARGS.cwd );
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Get local settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	let SETTINGSlocal = Settings.GetLocal( pkgPath );
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Display version
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	if( ARGS.version ) {
+		console.log(`v${ pkg.version }`);
+
+		if( ARGS.verbose ) { //show some space if we had verbose enabled
+			Log.space();
+		}
+
+		process.exit( 0 ); //finish after
+	}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Show banner
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	Log.info(`PANCAKE MIXING THE BATTER`);
@@ -197,6 +197,7 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 			if( allModules.length < 1 ) {
 				Log.info(`No modules found 😬`);
+				Loading.stop();
 			}
 			else {
 				const conflicts = CheckModules( allModules );
@@ -220,7 +221,17 @@ export const init = ( argv = process.argv ) => {
 					Log.verbose(`Skipping plugins`);
 				}
 				else {
-					plugins = GetPlugins( allModules );
+					const allPlugins = GetPlugins( allModules );
+
+					allPlugins.map( plugin => {
+						if(
+							SETTINGSlocal.ignore.filter( ignore => ignore === plugin ).length === 0 &&
+							SETTINGS.ignorePlugins.filter( ignore => ignore === plugin ).length === 0
+						) {
+							plugins.push( plugin );
+						}
+					});
+
 					const installed = InstallPlugins( plugins, pkgPath );
 				}
 
@@ -240,7 +251,7 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Save local settings into host package.json
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-						if( SETTINGSlocal['auto-save'] ) {
+						if( SETTINGSlocal['auto-save'] && !ARGS.nosave ) {
 
 							//merge all plugin settings
 							settings.map( setting => {

@@ -1,17 +1,15 @@
 Pancake
 =======
 
-> A tool to help the Gov.au UI-KIT installation through the npm ecosystem. Checking peerDependencies, writing compiled files and discovering new modules
+> Pancake is a tool to make working with npm on the front end easy and sweet.
 
 
 ## Content
 
 * [What’s inside?](#whats-inside)
 * [Requirements](#requirements)
-* [Pancake](#pancake)
-* [Batter](#batter)
-* [Syrup](#syrup)
-* [Cream](#cream)
+* [Settings](#settings)
+* [Command line interface](#cli)
 * [Creating your own Pancake modules](#creating-your-own-pancake-modules)
 * [Contributing](#contributing)
 * [Taste / Tests](#taste--tests)
@@ -24,25 +22,11 @@ Pancake
 
 ## What’s inside?
 
-![the Pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.jpg)
+![The Pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.png)
 
-This tool comes with three commands:
-* [Batter](#batter)
-* [Syrup](#syrup)
-* [Cream](#cream)
-
-> Pancakes needs batter. Can’t do no Pancakes without batter. This is essential!
-
-**Batter** will check the peerDependencies of all installed Pancake modules for conflicts and error out with a meaningful error message.
-
-> Eating Pancakes without Syrup is pretty dry. You could but it’s not really fun.
-
-**Syrup** will compile all assets and give you options as to where you might want those assets.
-
-> Putting cream on top makes this a sweet experience. This is why you want more.
-
-**Cream** will present you with options to upgrade your existing Pancake project or to start a new one. All that while checking conflicts, communicating what
-breaking changes might occur and what an easy way out might be.
+[Npm wrote about](http://blog.npmjs.org/post/101775448305/npm-and-front-end-packaging) the challenges frontend developers face when trying to use npm. Pancake
+is addressing those by embarrassing the idea of small individually versioned independent modules. Interdependencies is what npm does really well and Pancake
+will help you keep them flat and error out on conflicts.
 
 
 **[⬆ back to top](#content)**
@@ -67,7 +51,8 @@ Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 all node version
 - node `v7.5.0`
 - node `v7.6.0`
 
-_Dependencies have been fixed to specific versions to keep the dependency tree and security impact as low as possible. We also ship a `yarn.lock` file._
+_Pancake alone does not come with any dependencies while all plugins have fixed dependencies to specific versions to keep the security impact as low as
+possible. We also ship a `yarn.lock` file._
 
 
 **[⬆ back to top](#content)**
@@ -76,178 +61,83 @@ _Dependencies have been fixed to specific versions to keep the dependency tree a
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## Pancake
+## Settings
 
-![the batter command](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.png)
+Pancake comes with two different level of settings. Global settings can persist across projects and local settings that are project specific.
 
-### batter
-`batter`  
-Type: `[command]`  
+### Global settings
 
-The root command will display the help.
+To change global settings run pancake with the `--set` flag.
 
 ```shell
-pancake
+pancake --set [settingName] [value]
 ```
 
-You can also get help for each command.
+|     setting     |                 value                 |  default  |
+|-----------------|---------------------------------------|-----------|
+|     `npmOrg`    | This is the npm org scope             | `@gov.au` |
+|    `plugins`    | A switch to disable or enable plugins | `true`    |
+| `ignorePlugins` | An array of plugins to be ignored     | `[]`      |
+
+Example:
 
 ```shell
-pancake help batter
-```
-
-
-### settings
-`-s`, `--set`  
-Type: `<flag> [setting] [value]`  
-
-Save new global settings. Available settings are:
-
-|   setting   |                                 value                                 |
-|-------------|-----------------------------------------------------------------------|
-| `creamJson` | This is the [cream json](#the-json-file) with all your modules inside |
-|   `npmOrg`  | This is the npm org scope                                             |
-
-```shell
-pancake --set npmOrg "@gov.au"
+pancake --set npmOrg yourOrg
 ```
 
 
-**[⬆ back to top](#content)**
+### Local settings
 
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-## Batter
-
-![the batter command](https://raw.githubusercontent.com/govau/pancake/master/assets/batter.jpg)
-
-### batter
-`batter`  
-Type: `[command]`  
-Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `The path to the nearest package.json on this folder or below`
-
-To make sure all peerDependencies are resolved without conflicts this tool goes through your `node_modules` folder and reads each <sup>_(Only the ones
-in scope)_</sup> `package.json` in search for a Pancake module. If it finds one, identified by the tag `pancake-module` and org scope `gov.au`
-<sup>_(A [setting](#settings) you can change)_</sup>, it will record it’s peerDependencies and cross check against all other installed Pancake modules.
-
-```shell
-pancake batter
-```
-
-You can also pass it a path to the `node_modules` folder and overwrite the default:
-
-```shell
-pancake batter path/to/folder/of/your/project
-```
-
-Batter will also run [Syrup](#syrup) after a successful run.
-You can change that behavior by adding `"uikit": { "auto-syrup": false }` into your package.json or run batter with the `--dry` flag.
-
-
-### dry run
-`-d`, `--dry`  
-Type: `<flag>`  
-
-Run batter without syrup.
-
-```shell
-pancake batter --dry
-```
-
-
-### overwrite npm org name
-`-o`, `--org`  
-Type: `<flag> [setting]`  
-
-You can temporarily overwrite the npm org scope by suppling this flag. This can be useful for testing. Do make sure to use the [settings](#settings) for a
-permanent change.
-
-```shell
-pancake batter --org @otherOrg
-```
-
-
-### verbose output
-`-v`, `--verbose`  
-Type: `<flag>`  
-
-Run Pancake in verbose silly mode.
-
-```shell
-pancake batter --verbose
-```
-
-
-**[⬆ back to top](#content)**
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-## Syrup
-
-![the syrup command](https://raw.githubusercontent.com/govau/pancake/master/assets/syrup.jpg)
-
-### syrup
-`syrup`  
-Type: `[command]`  
-Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `The path to the nearest package.json on this folder or below`
-
-Syrup compiles your Pancake assets and writes them to disk. It comes with sane defaults that you can overwrite by adding the `pancake` object into your
-`package.json`. All settings are automatically saved into your `package.json` file unless you supply the `--nosave` flag.
-
-```shell
-pancake syrup
-```
-
-Below are all possible settings with default values.
+To change local settings all you have to do is include a `pancake` object into your `package.json` file. All possible settings are stated below:
 
 ```js
 {
 	"name": "your-name",
 	"version": "0.1.0",
-	"uikit": {
-		"auto-syrup": true,               //run syrup right after batter
-		"auto-save": true,                //save all settings into your package.json
-		"css": {
-			"minified": true,               //minify your CSS output?
-			"modules": false,               //save a css file per module?
-			"browsers": [                   //the browser support settings for autoprefixer
+	"pancake": {                         //the pancake config object
+		"auto-save": true,               //enable/disable auto saving the settings into your package.json after each run
+		"plugins": true,                 //enable/disable plugins
+		"ignore": [],                    //ignore specific plugins
+		"css": {                         //settings for the @gov.au/pancake-sass.sass plugin
+			"minified": true,            //minify the css?
+			"modules": false,            //save one css file per module?
+			"browsers": [                //autoprefixer browser matrix
 				"last 2 versions",
 				"ie 8",
 				"ie 9",
 				"ie 10"
 			],
-			"location": "uikit/css/",       //path where to save those files, relative to your package.json
-			"name": "uikit.min.css"         //name of your css file with all modules
+			"location": "pancake/css/",  //the location to save the css files to
+			"name": "pancake.min.css"    //the name of the css file that includes all modules; set this to false to disable it
 		},
-		"sass": {
-			"modules": false,               //save a Sass file per module?
-			"location": "uikit/sass/",      //path where to save those files, relative to your package.json
-			"name": "uikit.scss"            //name of the Sass file with all modules, set this to false if you don’t want the Sass files to be generated
+		"sass": {                        //settings for the @gov.au/pancake.sass plugin
+			"modules": false,            //save one Sass file per module?
+			"location": "pancake/sass/", //the location to save the Sass files to
+			"name": "pancake.scss"       //the name of the Sass file that includes all modules; set this to false to disable it
 		},
-		"js": {
-			"minified": true,               //minify js code?
-			"modules": false,               //save a js file per module?
-			"location": "uikit/js/",        //path where to save those files, relative to your package.json
-			"name": "uikit.min.js"          //name of the js file with all modules
-		},
-		"svg": {
-			"modules": false,               //save single svg files?
-			"pngs": "pancake/svg/png/",     //path where to save the fallback pngs, you can disable this by setting it to false
-			"location": "pancake/svg/",     //path where to save those svg files
-			"name": "pancake.sprite.svg"    //name of the svg sprite file with all svgs, set this to false if you don’t want the sprite to be created
+		"js": {                          //settings for the @gov.au/pancake-js.sass plugin
+			"minified": true,            //minify the js?
+			"modules": false,            //save one js file per module?
+			"location": "pancake/js/",   //the location to save the js files to
+			"name": "pancake.min.js"     //the name of the js file that includes all modules; set this to false to disable it
 		}
 	}
 }
 ```
 
 
-### don’t save to package.json
+**[⬆ back to top](#content)**
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+### CLI
+
+You can display the help with `pancake --help`.
+
+
+### Don’t save to package.json
 `-n`, `--nosave`  
 Type: `<flag>`  
 
@@ -256,19 +146,41 @@ This will sort-of shrink-wrap all settings in so you are completely reproducible
 You can also opt-out of this behavior by adding `"uikit": { "auto-save": false }` into your package.json.
 
 ```shell
-pancake syrup --nosave
+pancake --nosave
 ```
 
 
-### overwrite npm org name
+### Overwrite npm org name
 `-o`, `--org`  
-Type: `<flag> [setting]`  
+Type: `<flag> [value]`  
 
 You can temporarily overwrite the npm org scope by suppling this flag. This can be useful for testing. Do make sure to use the [settings](#settings) for a
 permanent change.
 
 ```shell
-pancake batter --org @otherOrg
+pancake --org @otherOrg
+```
+
+
+### Overwrite the plugin toggle
+`-p`, `--noplugins`  
+Type: `<flag>`  
+
+You can temporarily disable all plugins. This is great for ci integration.
+
+```shell
+pancake --noplugins
+```
+
+
+### Overwrite the plugin ignore list
+`-i`, `--ignore`  
+Type: `<flag> [comma separated list]`  
+
+You can temporarily overwrite the list of plugins to be disabled.
+
+```shell
+pancake --ignore @gov.au/pancake-svg,@gov.au/pancake-js
 ```
 
 
@@ -279,67 +191,7 @@ Type: `<flag>`
 Run Pancake in verbose silly mode.
 
 ```shell
-pancake syrup --verbose
-```
-
-
-**[⬆ back to top](#content)**
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-## Cream
-
-![the cream command](https://raw.githubusercontent.com/govau/pancake/master/assets/cream.jpg)
-
-### cream
-`cream`  
-Type: `[command]`  
-Option: `<path>` _(optional) overwrite where to look for the `node_modules` folder_  
-Default value: `The path to the nearest package.json on this folder or`  below 
-
-Cream will analyze your currently installed Pancake modules and show you in a user friendly interface what you can easily update and what update will entail
-breaking changes.
-
-```shell
-pancake cream
-```
-
-### temporarily overwrite cream json
-`-v`, `--verbose`  
-Type: `<flag>`  
-Default value: whatever is inside your `settings.json`
-
-To overwrite the cream json global settings URL needed by cream type:
-
-```shell
-pancake cream --json https://you.domain/to/json/file.json
-```
-
-_Note: You can make this change on a global level by using the [set flag](#settings)._
-
-
-### overwrite npm org name
-`-o`, `--org`  
-Type: `<flag> [setting]`  
-
-You can temporarily overwrite the npm org scope by suppling this flag. This can be useful for testing. Do make sure to use the [settings](#settings) for a
-permanent change.
-
-```shell
-pancake batter --org @otherOrg
-```
-
-
-### verbose output
-`-v`, `--verbose`  
-Type: `<flag>`  
-
-Run Pancake in verbose silly mode.
-
-```shell
-pancake syrup --verbose
+pancake --verbose
 ```
 
 
@@ -353,43 +205,37 @@ pancake syrup --verbose
 
 💡 You can use Pancake with your own modules. All you have to do in your modules is:
 
-1. keep a certain folder structure
-2. add one or two keywords to your `package.json` file
-3. add the Pancake script to your `package.json` file
-4. publish a json file which contains all modules, versions and dependencies
-5. and publish your module to npm.
+1. add the Pancake module object to your `package.json` file
+2. add the Pancake `postinstall` script and dependency to your `package.json` file
+3. and publish your module to npm.
 
-### 1. Folder structure
+### 1. Pancake module object
 
-```shell
-.
-├── CHANGELOG.md
-├── LICENSE
-├── README.md
-├── lib                   # this is the folder that Pancake with look into to compile your assets
-│   ├── js
-│   │   └── module.js     # (optional) your javascript goes in this folder and must be named module.js
-│   └── sass
-│       ├── _globals.scss # you can have other Sass partials in this folder but make sure they are imported inside the _module.scss file
-│       └── _module.scss  # your Sass partial goes in this folder and must be named _module.scss
-└── package.json          # your package.json file holds some Pancake magic described below
-```
+To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` object into your `pancake` object.
+Also don't forget to include pancake as a dependency.
 
-### 2. Keywords
-
-To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` keyword:
-
-```shell
+```diff
 {
 	"name": "your-module-name",
 	"version": "1.0.0",
 	"description": "Your description",
-	"keywords": [
-		"pancake-module",          # <------- This keyword
-		"pancake-sass-versioning"  # <------- This keyword
-	],
++	"pancake": {
++		"pancake-module": {                      //pancake is looking for this object to id your module as a pancake module
++			"version": "1.0.0",                  //the major version of pancake
++			"plugins": [                         //only state the plugins you need here
++				"@gov.au/pancake-sass"
++			],
++			"sass": {                            //sass plugin specific settings
++				"path": "lib/sass/_module.scss", //where is your sass
++				"sass-versioning": true          //enable sass-versioning. Read more here: https://github.com/dominikwilkowski/sass-versioning
++			},
++			"js": {                              //js plugin specific settings
++				"path": "lib/js/module.js"       //where is your js
++			}
++		}
++	},
 	"dependencies": {
-		"@gov.au/pancake": "latest",
++		"@gov.au/pancake": "~1",                 //pancake takes care of the rest
 	},
 	"peerDependencies": {},
 	"devDependencies": {},
@@ -401,14 +247,11 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 }
 ```
 
-You can also add the `pancake-sass-versioning` keyword to tell Pancake you are using [Sass-versioning](https://github.com/dominikwilkowski/sass-versioning)
-with your module so it can add the `versioning-check();` function at the end of each generated Sass file.
-
-### 3. The script
+### 2. The script
 
 The magic of Pancake lies within the `postinstall` script. To enable Pancake add it as a dependency and add the script:
 
-```shell
+```diff
 {
 	"name": "your-module-name",
 	"version": "1.0.0",
@@ -418,58 +261,27 @@ The magic of Pancake lies within the `postinstall` script. To enable Pancake add
 		"pancake-sass-versioning"
 	],
 	"dependencies": {
-		"@gov.au/pancake": "latest",  # <------- This dependency
++		"@gov.au/pancake": "latest",
 	},
 	"peerDependencies": {},
 	"devDependencies": {},
 	"scripts": {
-		"postinstall": "pancake batter ../"  # <------- This script
++		"postinstall": "pancake"
 	},
 	"author": "",
 	"license": "ISC"
 }
 ```
 
-This will run `batter` and `syrup` right after install and make sure Pancake is always up-to-date.
+This will run Pancake right after install and make sure you always get the latest version of the release 1.0.0.
 If you have to change settings (very likely) you don’t actually have to fork this project. You can set those settings globally before running it with your
 `postinstall` script.
 
 ```shell
-"postinstall": "pancake set creamJson \"https://yourjson.com\" && pancake set npmOrg \"yourOrg\" && pancake batter \"$(cd .. && npm prefix)\""
+"postinstall": "pancake --set npmOrg yourOrg && pancake"
 ```
 
-### 4. The json file
-
-Pancake cream requires a json file to look up what you can install and compare it against what is installed. The format of that json file can be seen below.
-
-```json
-{
-	"@gov.au/core": {
-		"name": "@gov.au/breadcrumbs",
-		"version": "1.0.2",
-		"peerDependencies": {}
-	},
-	"@gov.au/body": {
-		"name": "@gov.au/body",
-		"version": "1.1.0",
-		"peerDependencies": {
-			"@gov.au/core": "^1.0.0"
-		}
-	},
-	"@gov.au/button": {
-		"name": "@gov.au/button",
-		"version": "2.4.10",
-		"peerDependencies": {
-			"@gov.au/core": "^1.0.0",
-			"@gov.au/body": "^1.1.0"
-		}
-	}
-}
-```
-
-Make sure you [change the settings](#settings) for `creamJson` in Pancake to suit your module needs.
-
-### 5. Publish
+### 3. Publish
 
 You’re ready to publish your modules and start using Pancake.
 
@@ -493,9 +305,22 @@ To run the project install dependencies and devDependencies:
 yarn
 ```
 
-To run the transpiler watch that will transpile your ES2016 code into ES5:
+Let [lerna](https://lernajs.io/) handle the dependencies between plugins with:
 
 ```shell
+yarn run build
+```
+
+To run the transpiler on all modules run:
+
+```shell
+lerna run build
+```
+
+To develop in one of the modules run the watch inside of it:
+
+```shell
+cd packages/pancake/
 yarn watch
 ```
 
@@ -515,44 +340,20 @@ _Please look at the coding style and work with it, not against it. 🌴_
 We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
-- `v12.0.0`
-- `v12.0.1`
-- `v12.0.2`
-- `v12.1.0`
-- `v12.1.1`
-- `v12.2.0`
-- `v12.3.0`
-- `v13.0.0`
-- `v13.0.1`
+- `v14.0.1`
 
 **@gov.au/testmodule2**
-- `v14.0.0`  
-	- └── `@gov.au/testmodule1`: `^12.0.0`
-- `v14.0.1`  
-	- └── `@gov.au/testmodule1`: `^12.0.0`
-- `v15.0.0`  
-	- └── `@gov.au/testmodule1`: `^13.0.0`
-- `v16.0.0`  
-	- └── `@gov.au/testmodule1`: `^13.0.0`
-- `v17.0.0`  
-	- └── `@gov.au/testmodule1`: `^13.0.1`
+- `v18.0.0`  
+	- └── `@gov.au/testmodule1`: `^14.0.0`
 
 **@gov.au/testmodule3**
-- `v12.0.0`  
-	- ├── `@gov.au/testmodule1`: `^12.0.0`
-	- └── `@gov.au/testmodule2`: `^14.0.0`
-- `v12.0.1`  
-	- ├── `@gov.au/testmodule1`: `^12.1.0`
-	- └── `@gov.au/testmodule2`: `^14.0.0`
-- `v12.0.2`  
-	- ├── `@gov.au/testmodule1`: `^12.2.0`
-	- └── `@gov.au/testmodule2`: `^14.0.1`
-- `v12.1.0`  
-	- ├── `@gov.au/testmodule1`: `^12.3.0`
-	- └── `@gov.au/testmodule2`: `^14.0.1`
-- `v13.0.1`  
-	- ├── `@gov.au/testmodule1`: `^13.0.1`
-	- └── `@gov.au/testmodule2`: `^17.0.0`
+- `v14.0.0`  
+	- ├── `@gov.au/testmodule1`: `^14.0.0`
+	- └── `@gov.au/testmodule2`: `^18.0.0`
+
+**@gov.au/testmodule4**
+- `v1.0.0`  
+	- └── `@gov.au/testmodule1`: `^14.0.0`
 
 Pancake comes with automated end-to-end test that are run via the test command.
 
@@ -573,7 +374,7 @@ _(We will be adding unit tests as we progress.)_
 
 ## Release History
 
-* v0.1.0 - First Pancake
+* v1.0.0 - First Pancake
 * v0.0.X - Pre-releases of unstable, undercooked Pancakes
 
 
@@ -585,10 +386,10 @@ _(We will be adding unit tests as we progress.)_
 
 ## License
 
-Copyright (c) Commonwealth of Australia. Licensed under the [MIT](https://raw.githubusercontent.com/AusDTO/uikit-pancake/master/LICENSE).
+Copyright (c) Commonwealth of Australia.
+Licensed under [MIT](https://raw.githubusercontent.com/govau/pancake/master/LICENSE).
 
 
 **[⬆ back to top](#content)**
-
 
 # };

@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake",
-	"version": "1.0.0",
+	"version": "1.0.5",
 	"description": "Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly.",
 	"keywords": [
 		"npm",
@@ -32,9 +32,12 @@
 	},
 	"files": [
 		"bin/*",
-		"dist/*"
+		"dist/*",
+		"settings.json"
 	],
-	"dependencies": {},
+	"dependencies": {
+		"babel-runtime": "6.23.0"
+	},
 	"devDependencies": {
 		"babel-cli": "^6.22.2",
 		"babel-plugin-transform-runtime": "^6.22.0",

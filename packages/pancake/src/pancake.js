@@ -84,7 +84,6 @@ export const Batter = ( argv = process.argv ) => {
 
 	//arg overwrites
 	SETTINGS.npmOrg = ARGS.org;
-	SETTINGS.creamJson = ARGS.json;
 	SETTINGS.plugins = ARGS.plugins;
 	SETTINGS.ignorePlugins = ARGS.ignorePlugins;
 

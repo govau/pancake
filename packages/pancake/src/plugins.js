@@ -61,8 +61,10 @@ export const InstallPlugins = ( plugins, cwd ) => {
 		Log.verbose(`Trying to install: ${ Style.yellow( JSON.stringify( result.installing ) ) }`);
 
 		//checking if we got yarn installed
-		const command = Spawning.sync( 'yarn', [ '--version' ] );
-		const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+		// const command = Spawning.sync( 'yarn', [ '--version' ] );
+		// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+
+		const hasYarn = false; //disabled yarn as it has some issues
 
 		Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
 

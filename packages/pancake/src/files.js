@@ -39,15 +39,15 @@ export const GetFolders = thisPath => {
 
 	try {
 		return Fs
-			.readdirSync( thisPath )                                               //read the folders content
+			.readdirSync( Path.normalize( thisPath ) )                                               //read the folders content
 			.filter(
-				thisFile => Fs.statSync(`${ thisPath }/${ thisFile }`).isDirectory() //only return directories
+				thisFile => Fs.statSync( Path.normalize(`${ thisPath }/${ thisFile }`) ).isDirectory() //only return directories
 			)
 			.map( path => Path.normalize(`${ thisPath }/${ path }`) );             //return with path
 	}
 	catch( error ) {
 		Log.verbose(`${ Style.yellow( thisPath ) } not found`);
-		// Log.error( error );
+		Log.error( error );
 
 		return [];
 	}
