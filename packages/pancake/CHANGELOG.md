@@ -1,18 +1,18 @@
-@gov.au/breadcrumbs CHANGELOG
-======================
+Pancake
+=======
 
-> Part of the [gov.au UI-Kit](https://github.com/govau/uikit/) ecosystem.
+> Pancake is a tool to make working with npm on the front end easy and sweet.
 
 
 ## Versions
 
-* [v0.1.0 - 💥 Initial version](v010)
+* [v1.0.0 - 💥 Initial version](v100)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## v0.1.0
+## v1.0.0
 
 - 💥 Initial version
 

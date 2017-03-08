@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-js",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "A Pancake plugin to minify js files.",
 	"keywords": [
 		"npm",
@@ -31,7 +31,7 @@
 		"lib/*"
 	],
 	"dependencies": {
-		"@gov.au/pancake": ">0.0.10",
+		"@gov.au/pancake": "~1",
 		"uglify-js": "^2.8.7"
 	},
 	"devDependencies": {

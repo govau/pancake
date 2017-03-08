@@ -1,13 +1,12 @@
-@gov.au/breadcrumbs
-============
+Pancake JS PLUGIN
+=================
 
-> Breadcrumbs help users understand where they are in the service and how they got there.
+> This is a [Pancake](https://github.com/govau/pancake) plugin to handle js files.
 
 
 ## Content
 
 * [Install](#install)
-* [Dependency graph](#dependency-graph)
 * [Build](#build)
 * [Tests](#tests)
 * [Release History](#release-history)
@@ -21,29 +20,11 @@
 
 
 ```shell
-yarn add @gov.au/breadcrumbs
+yarn add @gov.au/pancake
 ```
 
 ```shell
-npm install @gov.au/breadcrumbs --save-dev
-```
-
-
-**[⬆ back to top](#content)**
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-## Dependency graph
-
-```shell
-breadcrumbs
-├─ core
-└─ link-list
-   ├─ core
-   └─ body
-      └─ core
+npm install @gov.au/pancake --save-dev
 ```
 
 
@@ -55,6 +36,8 @@ breadcrumbs
 
 ## Build
 
+To run the pancake build make sure you go to the monorepo this package came from and clone the source from there: https://github.com/govau/pancake
+
 
 **[⬆ back to top](#content)**
 
@@ -64,7 +47,7 @@ breadcrumbs
 
 ## Tests
 
-The visual test: http://uikit.apps.staging.digital.gov.au/packages/breadcrumbs/tests/site/
+To run the tests make sure you go to the monorepo this package came from and clone the source from there: https://github.com/govau/pancake
 
 
 **[⬆ back to top](#content)**
@@ -75,7 +58,7 @@ The visual test: http://uikit.apps.staging.digital.gov.au/packages/breadcrumbs/t
 
 ## Release History
 
-* v0.1.0 - 💥 Initial version
+* v1.0.0 - 💥 Initial version
 
 
 **[⬆ back to top](#content)**

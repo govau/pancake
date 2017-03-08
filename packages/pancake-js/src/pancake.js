@@ -62,10 +62,17 @@ export const pancake = ( version, modules, settings, cwd ) => {
 
 	return new Promise( ( resolve, reject ) => {
 		//some housekeeping
+		if( typeof version !== 'string' ) {
+			reject(
+				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
+				`but should have been ${ Style.yellow(`string`) }`
+			);
+		}
+
 		if( typeof modules !== 'object' ) {
 			reject(
 				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
-				`but should have been ${ Style.yellow(`array`) }`
+				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
@@ -103,7 +110,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				Log.verbose(`JS: No Sass found in ${ Style.yellow( jsModulePath ) }`)
 			}
 			else {
-				Log.verbose(`JS: ${ Style.green('⌘') } Found Sass in ${ Style.yellow( jsModulePath ) }`);
+				Log.verbose(`JS: ${ Style.green('⌘') } Found Javascript files in ${ Style.yellow( jsModulePath ) }`);
 
 				const jsModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.js.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
 

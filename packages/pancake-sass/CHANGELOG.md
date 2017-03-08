@@ -1,18 +1,18 @@
-@gov.au/breadcrumbs CHANGELOG
-======================
+Pancake SASS PLUGIN
+===================
 
-> Part of the [gov.au UI-Kit](https://github.com/govau/uikit/) ecosystem.
+> This is a [Pancake](https://github.com/govau/pancake) plugin to handle sass files.
 
 
 ## Versions
 
-* [v0.1.0 - 💥 Initial version](v010)
+* [v1.0.0 - 💥 Initial version](v100)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## v0.1.0
+## v1.0.0
 
 - 💥 Initial version
 

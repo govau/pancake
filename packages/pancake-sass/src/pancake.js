@@ -70,10 +70,17 @@ export const pancake = ( version, modules, settings, cwd ) => {
 
 	return new Promise( ( resolve, reject ) => {
 		//some housekeeping
+		if( typeof version !== 'string' ) {
+			reject(
+				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
+				`but should have been ${ Style.yellow(`string`) }`
+			);
+		}
+
 		if( typeof modules !== 'object' ) {
 			reject(
 				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
-				`but should have been ${ Style.yellow(`array`) }`
+				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
@@ -113,7 +120,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				Log.verbose(`Sass: No Sass found in ${ Style.yellow( sassModulePath ) }`)
 			}
 			else {
-				Log.verbose(`Sass: ${ Style.green('⌘') } Found Sass in ${ Style.yellow( sassModulePath ) }`);
+				Log.verbose(`Sass: ${ Style.green('⌘') } Found Sass files in ${ Style.yellow( sassModulePath ) }`);
 
 				//generate the import statements depending on dependencies
 				let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );

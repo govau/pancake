@@ -90,12 +90,6 @@ export const Settings = {
 			'auto-save': true,
 			plugins: true,
 			ignore: [],
-			// svg: {
-			// 	modules: false,
-			// 	pngs: 'pancake/svg/png/',
-			// 	location: 'pancake/svg/',
-			// 	name: 'pancake.sprite.svg',
-			// },
 		}
 
 		//merging default settings with local package.json

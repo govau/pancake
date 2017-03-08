@@ -15,6 +15,12 @@
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Dependencies
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+import Path from 'path';
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Using this file to export the reusable items
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import { GetFolders, CreateDir, WriteFile, ReadFile, CopyFile } from './files';
@@ -58,6 +64,7 @@ export { //here, take a sword; for you may need it
  * @return {Promise object} - The data object of the pancake modules
  */
 export const Batter = ( argv = process.argv ) => {
+	const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 	// Check npm version
 	const npmVersion = CheckNPM();
@@ -106,6 +113,7 @@ export const Batter = ( argv = process.argv ) => {
 					}
 					else {
 						resolve({
+							version: pkg.version,
 							modules: allModules,
 							settings: SETTINGSlocal,
 							cwd: pkgPath,
@@ -114,6 +122,7 @@ export const Batter = ( argv = process.argv ) => {
 				}
 				else {
 					resolve({
+						version: pkg.version,
 						modules: allModules,
 						settings: SETTINGSlocal,
 						cwd: pkgPath,
