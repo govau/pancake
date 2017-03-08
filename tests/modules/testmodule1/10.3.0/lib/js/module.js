@@ -1,1 +1,0 @@
-confirm('testmodule1:v10.3.0');

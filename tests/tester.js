@@ -58,7 +58,7 @@ const TESTER = (() => { //constructor factory
 		PASS: true,
 		UNITS: [
 			{
-				name: 'Batter/syrup test with two modules',
+				name: 'Compile test with two modules',
 				folder: 'test1',
 				script: {
 					command: 'batter',
@@ -68,7 +68,7 @@ const TESTER = (() => { //constructor factory
 				empty: false,
 			},
 			{
-				name: 'Batter/syrup test with five modules and modules enabled',
+				name: 'Compile test with five modules and modules enabled',
 				folder: 'test2',
 				script: {
 					command: 'batter',
@@ -78,7 +78,7 @@ const TESTER = (() => { //constructor factory
 				empty: false,
 			},
 			{
-				name: 'Batter/syrup test with orgName overwrite and minification off',
+				name: 'Compile test with orgName overwrite and minification off',
 				folder: 'test3',
 				script: {
 					command: 'batter',
@@ -88,17 +88,17 @@ const TESTER = (() => { //constructor factory
 				empty: false,
 			},
 			{
-				name: 'Syrup test with folder overwrite',
+				name: 'Compile test with folder overwrite',
 				folder: 'test4',
 				script: {
-					command: 'syrup',
+					command: 'batter',
 					options: [],
 				},
 				compare: 'testfolder/',
 				empty: false,
 			},
 			{
-				name: 'Batter test with conflict',
+				name: 'Compile test with conflict',
 				folder: 'test5',
 				script: {
 					command: 'batter',
@@ -201,10 +201,10 @@ const TESTER = (() => { //constructor factory
 			return new Promise( ( resolve, reject ) => {
 
 				// what the command would look like:
-				// console.log('node ', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ].join(' '));
+				// console.log('node ', [ Path.normalize(`${ path }/../../packages/pancake/bin/pancake`), settings.script.command, path, ...settings.script.options ].join(' '));
 
 				Spawn
-					.spawn( 'node', [ Path.normalize(`${ path }/../../bin/pancake.js`), settings.script.command, path, ...settings.script.options ])
+					.spawn( 'node', [ Path.normalize(`${ path }/../../packages/pancake/bin/pancake`), /*settings.script.command,*/ path, ...settings.script.options ] )
 					// .stdout.on('data', ( data ) => {
 					// 	console.log( data.toString() );
 					// })

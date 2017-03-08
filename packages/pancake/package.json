@@ -1,0 +1,71 @@
+{
+	"name": "@gov.au/pancake",
+	"version": "1.0.5",
+	"description": "Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly.",
+	"keywords": [
+		"npm",
+		"flat",
+		"peerDependencies",
+		"gov.au",
+		"uikit",
+		"Commonwealth of Australia",
+		"design guide",
+		"design system",
+		"cli",
+		"pancake-plugin"
+	],
+	"engines": {
+		"npm": ">=3.0.0"
+	},
+	"main": "./dist/pancake.js",
+	"bin": {
+		"pancake": "./bin/pancake"
+	},
+	"scripts": {
+		"prepublish": "npm run build && npm run test",
+
+		"test": "exit 0",
+
+		"build": "npm run build:js",
+		"build:js": "babel src --out-dir dist --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
+		"watch": "npm run build && onchange 'src/*.js' -- npm run build"
+	},
+	"files": [
+		"bin/*",
+		"dist/*",
+		"settings.json"
+	],
+	"dependencies": {
+		"babel-runtime": "6.23.0"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.22.2",
+		"babel-plugin-transform-runtime": "^6.22.0",
+		"babel-preset-es2015": "^6.22.0",
+		"del": "^2.2.2",
+		"dirsum": "^0.1.1",
+		"onchange": "^3.2.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/govau/pancake.git"
+	},
+	"homepage": "https://github.com/govau/pancake",
+	"bugs": {
+		"url": "https://github.com/govau/pancake/issues",
+		"email": "guides@digital.gov.au"
+	},
+	"author": {
+		"name": "Commonwealth of Australia, DTA",
+		"email": "guides@digital.gov.au",
+		"url": "https://www.dta.gov.au/"
+	},
+	"contributors": [
+		{
+			"name": "Dominik Wilkowski",
+			"email": "hi@dominik-wilkowski.com",
+			"url": "https://dominik-wilkowski.com/"
+		}
+	],
+	"license": "MIT"
+}

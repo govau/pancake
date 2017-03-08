@@ -1,0 +1,224 @@
+/***************************************************************************************************************************************************************
+ *
+ * Plug-in for Pancake
+ *
+ * Move and compile Sass partials.
+ *
+ * @repo    - https://github.com/govau/pancake
+ * @author  - Dominik Wilkowski
+ * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
+ *
+ **************************************************************************************************************************************************************/
+
+'use strict';
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Dependencies
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+import Path from 'path';
+import Fs from 'fs';
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Module imports
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
+import { StripDuplicateLines } from './helpers';
+import { GenerateSass, Sassify } from './sass';
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Plugin export
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * The main pancake method for this plugin
+ *
+ * @param  {array}  version  - The version of mother pancake
+ * @param  {array}  modules  - An array of all module objects
+ * @param  {object} settings - An object of the host package.json file and it’s path
+ * @param  {object} cwd      - The path to the working directory of our host package.json file
+ *
+ * @return {Promise object}  - Returns an object of the settings we want to save
+ */
+export const pancake = ( version, modules, settings, cwd ) => {
+	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE`);
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Settings
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	let SETTINGS = {
+		css: {
+			minified: true,
+			modules: false,
+			browsers: [ 'last 2 versions', 'ie 8', 'ie 9', 'ie 10' ],
+			location: 'pancake/css/',
+			name: 'pancake.min.css',
+		},
+		sass: {
+			modules: false,
+			location: 'pancake/sass/',
+			name: 'pancake.scss',
+		},
+	};
+
+	//merging settings with host settings
+	Object.assign( SETTINGS.css, settings.css );
+	Object.assign( SETTINGS.sass, settings.sass );
+
+
+	return new Promise( ( resolve, reject ) => {
+		//some housekeeping
+		if( typeof version !== 'string' ) {
+			reject(
+				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
+				`but should have been ${ Style.yellow(`string`) }`
+			);
+		}
+
+		if( typeof modules !== 'object' ) {
+			reject(
+				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
+				`but should have been ${ Style.yellow(`object`) }`
+			);
+		}
+
+		if( typeof settings !== 'object' ) {
+			reject(
+				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
+				`but should have been ${ Style.yellow(`object`) }`
+			);
+		}
+
+		if( typeof cwd !== 'string' ) {
+			reject(
+				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
+				`but should have been ${ Style.yellow(`string`) }`
+			);
+		}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Variables to be filled
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		let compiledAll = [];      //for collect all promises
+		let allSass = '';          //all modules to be collected for SETTINGS.css.name file
+		let sassVersioning = true; //let’s assume the pancake module was build with sass-versioning
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Iterate over each module
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+		for( const modulePackage of modules ) {
+			Log.verbose(`Sass: Bulding ${ Style.yellow( modulePackage.name ) }`);
+
+			//check if there are sass files
+			const sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].sass.path }`);
+
+			if( !Fs.existsSync( sassModulePath ) ) {
+				Log.verbose(`Sass: No Sass found in ${ Style.yellow( sassModulePath ) }`)
+			}
+			else {
+				Log.verbose(`Sass: ${ Style.green('⌘') } Found Sass files in ${ Style.yellow( sassModulePath ) }`);
+
+				//generate the import statements depending on dependencies
+				let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );
+				allSass += sass; //for SETTINGS.css.name file
+
+				// //adding banner and conditional sass-versioning
+				if( modulePackage.pancake['pancake-module'].sass['sass-versioning'] === true ) {
+					sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
+
+					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
+				}
+				else {
+					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;
+				}
+
+				//write css file
+				if( SETTINGS.css.modules ) {
+					const location = Path.normalize(`${ cwd }/${ SETTINGS.css.location }/${ modulePackage.name.split('/')[ 1 ] }.css`);
+
+					compiledAll.push(
+						Sassify( location, SETTINGS.css, sass ) //generate css and write file
+							.catch( error => {
+								Log.error( error );
+						})
+					);
+				}
+
+				//write sass file
+				if( SETTINGS.sass.modules ) {
+					const location = Path.normalize(`${ cwd }/${ SETTINGS.sass.location }/${ modulePackage.name.split('/')[ 1 ] }.scss`);
+
+					compiledAll.push(
+						WriteFile( location, sass ) //write file
+							.catch( error => {
+								Log.error( error );
+
+								process.exit( 1 );
+						})
+					);
+				}
+			}
+		}
+
+
+		if( modules.length < 1 ) {
+			Loading.stop(); //stop loading animation
+
+			Log.info(`No pancake modules found 😬`);
+			resolve( SETTINGS );
+		}
+		else {
+
+			//write the SETTINGS.css.name file
+			const locationCSS = Path.normalize(`${ cwd }/${ SETTINGS.css.location }/${ SETTINGS.css.name }`);
+			const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
+
+			if( sassVersioning === true ) {
+				allSass = `/* PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+			}
+			else {
+				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
+			}
+
+			compiledAll.push(
+				Sassify( locationCSS, SETTINGS.css, allSass ) //generate SETTINGS.css.name file
+					.catch( error => {
+						Log.error( error );
+				})
+			);
+
+			//write SETTINGS.sass.name file
+			if( SETTINGS.sass.name !== false ) {
+				const locationSASS = Path.normalize(`${ cwd }/${ SETTINGS.sass.location }/${ SETTINGS.sass.name }`);
+
+				compiledAll.push(
+					WriteFile( locationSASS, allSass ) //write file
+						.catch( error => {
+							Log.error( error );
+
+							process.exit( 1 );
+					})
+				);
+			}
+
+			//after all files have been compiled and written
+			Promise.all( compiledAll )
+				.catch( error => {
+					Loading.stop(); //stop loading animation
+
+					Log.error(`Sass plugin ran into an error: ${ error }`);
+				})
+				.then( () => {
+					Loading.stop(); //stop loading animation
+
+					Log.ok('SASS PLUGIN FINISHED');
+					resolve( SETTINGS );
+			});
+		}
+
+	});
+}
