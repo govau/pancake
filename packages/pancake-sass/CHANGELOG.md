@@ -17,7 +17,7 @@ Pancake SASS PLUGIN
 - 💥 Initial version
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 # };

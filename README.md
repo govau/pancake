@@ -4,7 +4,7 @@ Pancake
 > Pancake is a tool to make working with npm on the front end easy and sweet.
 
 
-## Content
+## Contentss
 
 * [What’s inside?](#whats-inside)
 * [Requirements](#requirements)
@@ -29,7 +29,7 @@ is addressing those by embarrassing the idea of small individually versioned ind
 will help you keep them flat and error out on conflicts.
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ _Pancake alone does not come with any dependencies while all plugins have fixed 
 possible. We also ship a `yarn.lock` file._
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ To change local settings all you have to do is include a `pancake` object into y
 ```
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ pancake --verbose
 ```
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ If you have to change settings (very likely) you don’t actually have to fork t
 You’re ready to publish your modules and start using Pancake.
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -329,7 +329,7 @@ yarn watch
 _Please look at the coding style and work with it, not against it. 🌴_
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -366,7 +366,7 @@ yarn test
 _(We will be adding unit tests as we progress.)_
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -378,7 +378,7 @@ _(We will be adding unit tests as we progress.)_
 * v0.0.X - Pre-releases of unstable, undercooked Pancakes
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -390,6 +390,6 @@ Copyright (c) Commonwealth of Australia.
 Licensed under [MIT](https://raw.githubusercontent.com/govau/pancake/master/LICENSE).
 
 
-**[⬆ back to top](#content)**
+**[⬆ back to top](#contents)**
 
 # };
