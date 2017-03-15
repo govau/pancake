@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"test": "node tests/tester.js && jest --coverage",
+		"test": "node tests/tester.js && jest",
 		"build": "lerna bootstrap && lerna run build"
 	},
 	"dependencies": {},
@@ -21,7 +21,7 @@
 		"collectCoverageFrom": [
 			"packages/pancake/src/*.js"
 		],
-		"globalThreshold": {
+		"coverageThreshold": {
 			"global": {
 				"branches": 0,
 				"functions": 0,
