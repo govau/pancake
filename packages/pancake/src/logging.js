@@ -261,6 +261,9 @@ export const Log = {
 				`Blimey`,
 				`Dagnabit`,
 				`Bugger`,
+				`Pillock`,
+				`Fudge`,
+				`Crickey`,
 			];
 
 			const message = messages.sort( () => 0.5 - Math.random() )[0];

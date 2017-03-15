@@ -61,7 +61,6 @@ const TESTER = (() => { //constructor factory
 				name: 'Compile test with two modules',
 				folder: 'test1',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
@@ -71,7 +70,6 @@ const TESTER = (() => { //constructor factory
 				name: 'Compile test with five modules and modules enabled',
 				folder: 'test2',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
@@ -81,7 +79,6 @@ const TESTER = (() => { //constructor factory
 				name: 'Compile test with orgName overwrite and minification off',
 				folder: 'test3',
 				script: {
-					command: 'batter',
 					options: [ '--org', '@other.org' ],
 				},
 				compare: 'pancake/',
@@ -91,7 +88,6 @@ const TESTER = (() => { //constructor factory
 				name: 'Compile test with folder overwrite',
 				folder: 'test4',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'testfolder/',
@@ -101,11 +97,37 @@ const TESTER = (() => { //constructor factory
 				name: 'Compile test with conflict',
 				folder: 'test5',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
 				empty: true,
+			},
+			{
+				name: 'Compile test for css only',
+				folder: 'test6',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
+			{
+				name: 'Compile test js only minified',
+				folder: 'test7',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
+			{
+				name: 'Compile test with deep dependencies',
+				folder: 'test8',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
 			},
 		],
 

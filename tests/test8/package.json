@@ -2,10 +2,13 @@
 	"pancake": {
 		"auto-save": false,
 		"css": {
-			"name": false
+			"minified": true,
+			"modules": true,
+			"location": "pancake/css/",
+			"name": "uikit.min.css"
 		},
 		"sass": {
-			"name": false
+			"modules": true
 		},
 		"js": {
 			"minified": true,
