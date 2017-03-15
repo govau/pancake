@@ -120,15 +120,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
-			{
-				name: 'Compile test with deep dependencies',
-				folder: 'test8',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
+			// {
+			// 	name: 'Compile test with deep dependencies',
+			// 	folder: 'test8',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
 		],
 
 
