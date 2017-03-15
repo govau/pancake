@@ -123,7 +123,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				Log.verbose(`Sass: ${ Style.green('⌘') } Found Sass files in ${ Style.yellow( sassModulePath ) }`);
 
 				//generate the import statements depending on dependencies
-				let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );
+				let sass = GenerateSass( modulePackage.path, modulePackage.name, modules );
 				allSass += sass; //for SETTINGS.css.name file
 
 				// //adding banner and conditional sass-versioning
