@@ -184,12 +184,15 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
 			}
 
-			compiledAll.push(
-				Sassify( locationCSS, SETTINGS.css, allSass ) //generate SETTINGS.css.name file
-					.catch( error => {
-						Log.error( error );
-				})
-			);
+			//generate SETTINGS.css.name file
+			if( SETTINGS.css.name !== false ) {
+				compiledAll.push(
+					Sassify( locationCSS, SETTINGS.css, allSass )
+						.catch( error => {
+							Log.error( error );
+					})
+				);
+			}
 
 			//write SETTINGS.sass.name file
 			if( SETTINGS.sass.name !== false ) {

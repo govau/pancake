@@ -131,13 +131,16 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			resolve( SETTINGS );
 		}
 		else {
+
 			//write SETTINGS.js.name file
-			compiledAll.push(
-				MinifyAllJS( version, compiledAll, SETTINGS.js, cwd )
-					.catch( error => {
-						Log.error( error );
-				})
-			);
+			if( SETTINGS.js.name !== false ) {
+				compiledAll.push(
+					MinifyAllJS( version, compiledAll, SETTINGS.js, cwd )
+						.catch( error => {
+							Log.error( error );
+					})
+				);
+			}
 
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
