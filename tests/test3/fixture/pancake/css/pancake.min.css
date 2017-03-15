@@ -1,5 +1,4 @@
 /* PANCAKE v1.0.6 PANCAKE-SASS v1.0.4 */
-/*! @gov.au/testmodule1 v11.0.1 */
 /**
  * Sass versioning
  *
@@ -9,6 +8,7 @@
  * @repository   https://github.com/dominikwilkowski/sass-versioning
  * @license      https://raw.githubusercontent.com/dominikwilkowski/sass-versioning/master/LICENSE GPL-3.0
  */
+/*! @gov.au/testmodule1 v11.0.1 */
 .test {
 		content: 'testmodule1:v11.0.1';
 }

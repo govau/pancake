@@ -130,7 +130,12 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				if( modulePackage.pancake['pancake-module'].sass['sass-versioning'] === true ) {
 					sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
 
-					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
+					const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
+
+					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n` +
+						`@import "${ sassVersioningPath }";\n\n` +
+						`${ sass }\n` +
+						`@include versioning-check();\n`;
 				}
 				else {
 					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;
@@ -178,7 +183,12 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 			if( sassVersioning === true ) {
-				allSass = `/* PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+				const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
+
+				allSass = `/* PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n` +
+					`@import "${ sassVersioningPath }";\n\n` +
+					`${ StripDuplicateLines( allSass ) }\n\n` +
+					`@include versioning-check();\n`;
 			}
 			else {
 				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;

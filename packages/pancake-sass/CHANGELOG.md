@@ -6,10 +6,17 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.0.5 - Made sass-versioning entirely optional](v105)
+* [v1.0.4 - Bug hunting](v104)
 * [v1.0.3 - 💥 Initial version](v103)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.5
+
+- Made [sass-versioning](https://github.com/dominikwilkowski/sass-versioning) entirely optional
 
 
 ## v1.0.4

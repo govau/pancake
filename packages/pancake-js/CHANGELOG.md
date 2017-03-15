@@ -6,6 +6,7 @@ Pancake JS PLUGIN
 
 ## Versions
 
+* [v1.0.4 - Bug hunting](v104)
 * [v1.0.3 - 💥 Initial version](v103)
 
 
@@ -14,7 +15,7 @@ Pancake JS PLUGIN
 
 ## v1.0.4
 
-- 💥 Fixed some bugs
+- Fixed some bugs
 
 
 ## v1.0.3

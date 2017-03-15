@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.0.6 - Bug hunting](v106)
 * [v1.0.5 - 💥 Initial version](v105)
 
 
