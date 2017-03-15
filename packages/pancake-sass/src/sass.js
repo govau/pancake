@@ -28,7 +28,16 @@ import { Log, Style, WriteFile } from '@gov.au/pancake';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Default export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-/**/
+/**
+ * Look up all dependencies of a module by calling yourself
+ *
+ * @param  {string}  module    - The name of the module
+ * @param  {object}  modules   - All modules in an object array
+ * @param  {string}  parent    - The name of the parent module, Defaults to the module argument
+ * @param  {integer} iteration - The depth of the iteration, defaults to 1
+ *
+ * @return {object}            - An object array of the dependencies that are needed for the module
+ */
 const GetDependencies = ( module, modules, parent = module, iteration = 1 ) => {
 	Log.verbose(`Sass: Looking up dependencies at level ${ Style.yellow( iteration ) }`);
 
