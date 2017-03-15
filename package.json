@@ -1,17 +1,21 @@
 {
 	"scripts": {
-		"test": "node tests/tester.js",
-
+		"test": "node tests/tester.js && jest",
 		"build": "lerna bootstrap && lerna run build"
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"lerna": "2.0.0-beta.36",
 		"browser-sync": "^2.18.6",
-		"npm-run-all": "^4.0.1",
 		"del": "^2.2.2",
 		"dirsum": "^0.1.1",
+		"jest-cli": "^19.0.2",
+		"lerna": "2.0.0-beta.36",
+		"npm-run-all": "^4.0.1",
 		"onchange": "^3.2.1"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"testRegex": "\\.spec\\.js$"
 	},
 	"repository": {
 		"type": "git",
