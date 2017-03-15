@@ -1,8 +1,5 @@
 export default example
 
-function example(
-  x,
-  y,
-) {
+function example (x, y) {
   return x + y
 }

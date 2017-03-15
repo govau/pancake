@@ -17,3 +17,4 @@ tests/*/pancake/
 tests/*/yarn.lock
 tests/*/testfolder/
 !tests/*/node_modules/
+coverage/
