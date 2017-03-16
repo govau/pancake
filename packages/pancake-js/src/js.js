@@ -39,6 +39,7 @@ export const MinifyJS = ( js, file ) => {
 	try {
 		const jsCode = UglifyJS.minify( js, {
 			fromString: true,
+			comments: /^\/*!/,
 		});
 
 		return jsCode.code;
@@ -59,10 +60,11 @@ export const MinifyJS = ( js, file ) => {
  * @param  {string} from     - Where is the module so we can read from there
  * @param  {object} settings - The SettingsJS object
  * @param  {string} to       - Where shall we write the module to if settings allow?
+ * @param  {string} tag      - The tag to be added to the top of the file
  *
  * @return {promise object}  - The js code either minified or bare bone
  */
-export const HandelJS = ( from, settings, to ) => {
+export const HandelJS = ( from, settings, to, tag ) => {
 	return new Promise( ( resolve, reject ) => {
 		ReadFile( from ) //read the module
 			.catch( error => {
@@ -81,8 +83,10 @@ export const HandelJS = ( from, settings, to ) => {
 					Log.verbose(`JS: Successfully uglified JS for ${ Style.yellow( from ) }`);
 				}
 				else { //no minification = just copy and rename
-					code = content;
+					code = `\n\n${ content }`;
 				}
+
+				code = `/*! ${ tag } */${ code }`
 
 				if( settings.modules ) { //are we saving modules?
 					WriteFile( to, code ) //write the generated content to file and return its promise
@@ -92,11 +96,11 @@ export const HandelJS = ( from, settings, to ) => {
 							reject( error );
 						})
 						.then( () => {
-							resolve( content );
+							resolve( code );
 					});
 				}
 				else {
-					resolve( content ); //just return the promise
+					resolve( code ); //just return the promise
 				}
 		});
 	});
@@ -131,8 +135,10 @@ export const MinifyAllJS = ( version, allJS, settings, pkgPath ) => {
 					Log.verbose(`JS: Successfully uglified JS for ${ Style.yellow( locationJS ) }`);
 				}
 				else {
-					code = `/* PANCAKE v${ version } PANCAKE-JS v${ Package.version } */\n\n${ js.join(`\n\n`) }\n`;
+					code = '\n\n' + js.join(`\n\n`);
 				}
+
+				code = `/* PANCAKE v${ version } PANCAKE-JS v${ Package.version } */${ code }\n`;
 
 				WriteFile( locationJS, code ) //write file
 					.catch( error => {

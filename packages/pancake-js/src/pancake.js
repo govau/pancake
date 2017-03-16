@@ -114,7 +114,8 @@ export const pancake = ( version, modules, settings, cwd ) => {
 
 				const jsModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.js.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
 
-				const jsPromise = HandelJS( jsModulePath, SETTINGS.js, jsModuleToPath ) //compile js and write to file depending on settings
+				//compile js and write to file depending on settings
+				const jsPromise = HandelJS( jsModulePath, SETTINGS.js, jsModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
 					.catch( error => {
 						Log.error( error );
 				});
