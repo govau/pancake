@@ -26,6 +26,8 @@ import Fs from 'fs';
 import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
 import { HandelJS, MinifyAllJS } from './js';
 
+Log.output = true; //this plugin assumes you run it through pancake
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Plugin export
@@ -42,6 +44,8 @@ import { HandelJS, MinifyAllJS } from './js';
  */
 export const pancake = ( version, modules, settings, cwd ) => {
 	Log.info(`ADDING SYRUP/JS TO YOUR PANCAKE`);
+
+	Loading.start();
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,9 +155,9 @@ export const pancake = ( version, modules, settings, cwd ) => {
 					Log.error(`Js plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
-					Loading.stop(); //stop loading animation
-
 					Log.ok('JS PLUGIN FINISHED');
+
+					Loading.stop(); //stop loading animation
 					resolve( SETTINGS );
 			});
 

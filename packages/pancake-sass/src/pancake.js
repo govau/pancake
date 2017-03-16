@@ -27,6 +27,8 @@ import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
 import { StripDuplicateLines } from './helpers';
 import { GenerateSass, Sassify } from './sass';
 
+Log.output = true; //this plugin assumes you run it through pancake
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Plugin export
@@ -42,7 +44,9 @@ import { GenerateSass, Sassify } from './sass';
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, cwd ) => {
-	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE`);
+	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE??`);
+
+	Loading.start();
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -226,9 +230,9 @@ export const pancake = ( version, modules, settings, cwd ) => {
 					Log.error(`Sass plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
-					Loading.stop(); //stop loading animation
-
 					Log.ok('SASS PLUGIN FINISHED');
+
+					Loading.stop(); //stop loading animation
 					resolve( SETTINGS );
 			});
 		}

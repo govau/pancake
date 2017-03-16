@@ -21,7 +21,7 @@ import Path from 'path';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style } from './logging';
+import { Log, Style, Loading } from './logging';
 import { Spawning } from './helpers';
 
 
@@ -104,6 +104,8 @@ export const InstallPlugins = ( plugins, cwd ) => {
  */
 export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal ) => {
 
+	Loading.stop();
+
 	let plugin;
 	let running = [];
 
@@ -124,7 +126,14 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal ) =
 		});
 
 		Promise.all( allPlugins )
+			.catch( error => {
+				reject( error );
+
+				process.exit( 1 );
+			})
 			.then( data => {
+				Loading.start();
+
 				return resolve( data ); //resolve only after all plugins have run
 		});
 	});

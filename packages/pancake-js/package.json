@@ -31,7 +31,6 @@
 		"lib/*"
 	],
 	"dependencies": {
-		"@gov.au/pancake": "~1",
 		"babel-runtime": "6.23.0",
 		"uglify-js": "2.8.7"
 	},
