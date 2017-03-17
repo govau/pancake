@@ -17,7 +17,7 @@
 	},
 	"jest": {
 		"testEnvironment": "node",
-		"testRegex": "\\.spec\\.js$",
+		"testRegex": "\\.spec.js$",
 		"collectCoverageFrom": [
 			"packages/pancake/src/*.js"
 		],

@@ -1,16 +1,19 @@
 /***************************************************************************************************************************************************************
  *
- * Ansi escape color codes
+ * Logging.js unit tests
  *
- * @file         - pancake/src/logging.js
- * @description  - This function adds colour to a string
+ * @file - pancake/src/logging.js
  *
  **************************************************************************************************************************************************************/
 
 import { Style } from '../src/logging';
 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Ansi escape color codes
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 //todo - can we refactor for DRY?
-test('undefined string in argument should return empty string', () => {
+test('Log.style - undefined argument should return empty string', () => {
 	expect(Style.black(undefined)).toBe('');
 	expect(Style.red(undefined)).toBe('');
 	expect(Style.green(undefined)).toBe('');
@@ -38,9 +41,6 @@ test('function should return correct string and colour', () => {
 
 
 test('should be able to combine multiple strings of varying colours', () => {
-	const red = Style.red('red text ')
-	const greenText = `green text ${ red }green text `
-	const green = Style.green(greenText)
-	const yellowText = `yellow text ${ green }yellow text`
-	expect(Style.yellow(yellowText)).toBe("\u001B[33myellow text \u001B[32mgreen text \u001B[31mred text \u001B[32mgreen text \u001B[33myellow text\u001b[39m")
+	const test = Style.yellow(`yellow text ${ Style.green(`green text ${ Style.red(`red text`) } green text`) } yellow text`);
+	expect(test).toBe("\u001B[33myellow text \u001B[32mgreen text \u001B[31mred text\u001B[32m green text\u001B[33m yellow text\u001b[39m")
 });
