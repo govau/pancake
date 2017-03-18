@@ -239,7 +239,7 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Run all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-				RunPlugins( pkg.version, plugins, pkgPath, allModules, SETTINGSlocal )
+				RunPlugins( pkg.version, plugins, pkgPath, allModules, SETTINGSlocal, SETTINGS )
 					.catch( error => {
 						Loading.stop();
 

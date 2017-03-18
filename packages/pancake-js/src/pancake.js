@@ -35,17 +35,18 @@ Log.output = true; //this plugin assumes you run it through pancake
 /**
  * The main pancake method for this plugin
  *
- * @param  {array}  version  - The version of mother pancake
- * @param  {array}  modules  - An array of all module objects
- * @param  {object} settings - An object of the host package.json file and it’s path
- * @param  {object} cwd      - The path to the working directory of our host package.json file
+ * @param  {array}  version        - The version of mother pancake
+ * @param  {array}  modules        - An array of all module objects
+ * @param  {object} settings       - An object of the host package.json file and it’s path
+ * @param  {object} GlobalSettings - An object of the global settings
+ * @param  {object} cwd            - The path to the working directory of our host package.json file
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( version, modules, settings, cwd ) => {
+export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Log.info(`ADDING SYRUP/JS TO YOUR PANCAKE`);
 
-	Loading.start();
+	Loading.start('pancake-js');
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -130,7 +131,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 
 
 		if( modules.length < 1 ) {
-			Loading.stop(); //stop loading animation
+			Loading.stop('pancake-js'); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
@@ -150,14 +151,14 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-js'); //stop loading animation
 
 					Log.error(`Js plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
 					Log.ok('JS PLUGIN FINISHED');
 
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-js'); //stop loading animation
 					resolve( SETTINGS );
 			});
 

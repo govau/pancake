@@ -6,6 +6,7 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.0.7 - Sass custom path, global settings](v107)
 * [v1.0.6 - Loading fixes](v106)
 * [v1.0.5 - Made sass-versioning entirely optional](v105)
 * [v1.0.4 - Bug hunting](v104)
@@ -13,6 +14,14 @@ Pancake SASS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.7
+
+- Fixed #16 sass with custom path
+- Receiving global settings from pancake now
+- Added version comment tag into pancake.min.css
+- Loading now separate from main module in case the main module is globally installed
 
 
 ## v1.0.6

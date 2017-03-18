@@ -36,17 +36,18 @@ Log.output = true; //this plugin assumes you run it through pancake
 /**
  * The main pancake method for this plugin
  *
- * @param  {array}  version  - The version of mother pancake
- * @param  {array}  modules  - An array of all module objects
- * @param  {object} settings - An object of the host package.json file and it’s path
- * @param  {object} cwd      - The path to the working directory of our host package.json file
+ * @param  {array}  version        - The version of mother pancake
+ * @param  {array}  modules        - An array of all module objects
+ * @param  {object} settings       - An object of the host package.json file and it’s path
+ * @param  {object} GlobalSettings - An object of the global settings
+ * @param  {object} cwd            - The path to the working directory of our host package.json file
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( version, modules, settings, cwd ) => {
-	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE??`);
+export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
+	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE`);
 
-	Loading.start();
+	Loading.start('pancake-sass');
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +128,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				Log.verbose(`Sass: ${ Style.green('⌘') } Found Sass files in ${ Style.yellow( sassModulePath ) }`);
 
 				//generate the import statements depending on dependencies
-				let sass = GenerateSass( modulePackage.path, modulePackage.name, modules );
+				let sass = GenerateSass( modulePackage.path, modulePackage.name, modules, GlobalSettings.npmOrg );
 				allSass += sass; //for SETTINGS.css.name file
 
 				// //adding banner and conditional sass-versioning
@@ -175,7 +176,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 
 
 		if( modules.length < 1 ) {
-			Loading.stop(); //stop loading animation
+			Loading.stop('pancake-sass'); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
@@ -189,13 +190,13 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			if( sassVersioning === true ) {
 				const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
 
-				allSass = `/* PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n` +
+				allSass = `/*! PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n` +
 					`@import "${ sassVersioningPath }";\n\n` +
 					`${ StripDuplicateLines( allSass ) }\n\n` +
 					`@include versioning-check();\n`;
 			}
 			else {
-				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
+				allSass = `/*! PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
 			}
 
 			//generate SETTINGS.css.name file
@@ -225,14 +226,14 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-sass'); //stop loading animation
 
 					Log.error(`Sass plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
 					Log.ok('SASS PLUGIN FINISHED');
 
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-sass'); //stop loading animation
 					resolve( SETTINGS );
 			});
 		}
