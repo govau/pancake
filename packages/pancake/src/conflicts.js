@@ -29,11 +29,11 @@ import Semver from './semver-5-3-0';
 // Default export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- * [description]
+ * Check modules for conflicts
  *
- * @param  {[type]} allModules [description]
+ * @param  {object} allModules - An object of all modules
  *
- * @return {[type]}            [description]
+ * @return {object}            - An object that can be used to generate an error message
  */
 export const CheckModules = allModules => {
 	const dependencies = new Map(); //a map we populate with the dependencies of our modules we found

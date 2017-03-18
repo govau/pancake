@@ -290,9 +290,9 @@ export const Log = {
 			Log.space();
 		}
 
-		Loading.stop();
+		Loading.pause();
 		console.info(`🔔  INFO:    ${ text }`);
-		Loading.start();
+		Loading.resume();
 
 		Log.output = true;
 	},
@@ -307,9 +307,9 @@ export const Log = {
 			Log.space();
 		}
 
-		Loading.stop();
+		Loading.pause();
 		console.info(`👍  ${ Style.green(`OK:`) }      ${ Style.green( text ) }`);
-		Loading.start();
+		Loading.resume();
 
 		Log.output = true;
 	},
@@ -415,14 +415,18 @@ export const Loading = (() => {
 		// Style.gray(`            ${ Style.yellow('*') } • • • •`),
 	];
 
-	let index = 0;   //the current index of the animation
-	let timer = {};  //the setInterval object
+	let index = 0;    //the current index of the animation
+	let timer = {};   //the setInterval object
 	let speed = 100;  //the speed in which to animate
 
 	return {
-		start: () => {
+		running: {},
+
+		start: ( plugin = 'pancake' ) => {
 			if( !verbose ) {
 				clearInterval( timer ); //stop any possible parallel loaders
+
+				Loading.running[ plugin ] = true;
 
 				process.stdout.write(`${ sequence[ index ] }`); //print the first frame
 
@@ -436,11 +440,36 @@ export const Loading = (() => {
 			}
 		},
 
-		stop: () => {
+		stop: ( plugin = 'pancake' ) => {
 			if( !verbose ) {
-				clearInterval( timer ); //stop interval
+				delete Loading.running[ plugin ];
 
+				if( Object.keys( Loading.running ).length === 0 ) {
+					clearInterval( timer );             //stop interval
+					process.stdout.write('\r\r\x1b[K'); //clear screen
+				}
+			}
+		},
+
+		pause: () => {
+			if( !verbose ) {
+				clearInterval( timer );             //stop interval
 				process.stdout.write('\r\r\x1b[K'); //clear screen
+			}
+		},
+
+		resume: () => {
+			if( !verbose ) {
+				if( Object.keys( Loading.running ).length > 0 ) {
+					clearInterval( timer ); //stop any possible parallel loaders
+
+					timer = setInterval(() => { //animate
+						process.stdout.write('\r\x1b[K'); //move cursor to beginning of line and clean line
+						index = ( index < sequence.length - 1 ) ? index + 1 : 0;
+						process.stdout.write( sequence[ index ] ); //print
+					}, speed );
+
+				}
 			}
 		},
 	};

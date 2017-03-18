@@ -1,1 +1,1 @@
-confirm("testmodule2:v11.0.0");
+/*! @gov.au/testmodule2 v11.0.0 */confirm("testmodule2:v11.0.0");

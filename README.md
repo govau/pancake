@@ -340,7 +340,7 @@ _Please look at the coding style and work with it, not against it. 🌴_
 We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
-- `v14.0.1`
+- `v14.0.2`
 
 **@gov.au/testmodule2**
 - `v18.0.0`  

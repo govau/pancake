@@ -29,6 +29,33 @@ import { Log, Style, WriteFile } from '@gov.au/pancake';
 // Default export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
+ * Get the include path for a sass partial
+ *
+ * @param  {string} module       - The module name
+ * @param  {object} modules      - An object of all modules and their settings
+ * @param  {string} baseLocation - The current base path
+ * @param  {string} npmOrg       - The npm org scope
+ *
+ * @return {string}              - The path to the sass partial
+ */
+const GetPath = ( module, modules, baseLocation, npmOrg ) => {
+	let modulePath = '';
+
+	for( const item of modules ) {
+		if( item.name === module ) {
+			const moduleName = module.replace(`${ npmOrg }/`, '');
+
+			modulePath = Path.normalize(`${ baseLocation }/${ moduleName }/${ item.pancake['pancake-module'].sass.path }`);
+
+			break;
+		}
+	}
+
+	return modulePath;
+}
+
+
+/**
  * Look up all dependencies of a module by calling yourself
  *
  * @param  {string}  module    - The name of the module
@@ -76,10 +103,11 @@ const GetDependencies = ( module, modules, parent = module, iteration = 1 ) => {
  * @param  {string} location - The location of the module to be compiled
  * @param  {object} name     - The name of the module
  * @param  {object} modules  - All modules and their dependencies
+ * @param  {object} npmOrg   - The name of the npm org scope
  *
  * @return {string}          - Sass code to tie dependencies and module together
  */
-export const GenerateSass = ( location, name, modules ) => {
+export const GenerateSass = ( location, name, modules, npmOrg ) => {
 	let sass = ``; //the code goes here
 
 	const baseLocation = Path.normalize(`${ location }/../`);
@@ -89,15 +117,14 @@ export const GenerateSass = ( location, name, modules ) => {
 
 	if( dependencies ) {
 		for( const dependency of Object.keys( dependencies ) ) {
-			const modulePath = dependency.split('/')[ 1 ];
+			const modulePath = GetPath( dependency, modules, baseLocation, npmOrg )
 
-			sass += `@import "${ Path.normalize(`${ baseLocation }/${ modulePath }/lib/sass/_module.scss`) }";\n`;
-			//TODO: change this to use the modulePackage.pancake['pancake-module'].sass.path value
+			sass += `@import "${ modulePath }";\n`;
 		}
 	}
 
-	sass += `@import "${ Path.normalize(`${ location }/lib/sass/_module.scss`) }";\n`;
-	//TODO: change this to use the modulePackage.pancake['pancake-module'].sass.path value
+	const modulePath = GetPath( name, modules, baseLocation, npmOrg )
+	sass += `@import "${ modulePath }";\n`;
 
 	return sass;
 };
