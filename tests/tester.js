@@ -58,54 +58,85 @@ const TESTER = (() => { //constructor factory
 		PASS: true,
 		UNITS: [
 			{
-				name: 'Compile test with two modules',
+				name: 'Test1: Compile test with two modules',
 				folder: 'test1',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
 				empty: false,
 			},
 			{
-				name: 'Compile test with five modules and modules enabled',
+				name: 'Test2: Compile test with five modules and modules enabled',
 				folder: 'test2',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
 				empty: false,
 			},
 			{
-				name: 'Compile test with orgName overwrite and minification off',
+				name: 'Test3: Compile test with orgName overwrite and minification off',
 				folder: 'test3',
 				script: {
-					command: 'batter',
 					options: [ '--org', '@other.org' ],
 				},
 				compare: 'pancake/',
 				empty: false,
 			},
 			{
-				name: 'Compile test with folder overwrite',
+				name: 'Test4: Compile test with folder overwrite',
 				folder: 'test4',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'testfolder/',
 				empty: false,
 			},
 			{
-				name: 'Compile test with conflict',
+				name: 'Test5: Compile test with conflict',
 				folder: 'test5',
 				script: {
-					command: 'batter',
 					options: [],
 				},
 				compare: 'pancake/',
 				empty: true,
+			},
+			{
+				name: 'Test6: Compile test for css only',
+				folder: 'test6',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
+			{
+				name: 'Test7: Compile test js only minified',
+				folder: 'test7',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
+			// {
+			// 	name: 'Compile test with deep dependencies',
+			// 	folder: 'test8',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			{
+				name: 'Test9: Compile test with different asset path',
+				folder: 'test9',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
 			},
 		],
 
@@ -129,7 +160,11 @@ const TESTER = (() => { //constructor factory
 						.then( () => TESTER.fixture( scriptFolder, unit ) )             //get hash for fixture
 						.then( result => TESTER.result( scriptFolder, unit, result ) )  //get hash for result of test
 						.then( result => TESTER.compare( unit, result ) )               //now compare both and detail errors
-						.then( () => TESTER.delete( scriptFolder, unit ) )              //cleaning up after ourself
+						.then( success => {                                             //cleaning up after ourself
+							if( success ) {
+								TESTER.delete( scriptFolder, unit );
+							}
+						})
 						.catch( error => TESTER.log.error(`Nooo: ${ error }`) )         //catch errors...
 				);
 			}
@@ -339,44 +374,50 @@ const TESTER = (() => { //constructor factory
 		 */
 		compare: ( settings, hashes ) => {
 
-			if( hashes.fixture.hash === hashes.result.hash ) {
-				TESTER.log.pass(`${ Chalk.bgWhite.black(` ${ settings.name } `) } passed`); //yay
-			}
-			else { //grr
-				TESTER.PASS = false;
-				TESTER.log.fail(`${ Chalk.bgWhite.black(` ${ settings.name } `) } failed`);
+			return new Promise( ( resolve, reject ) => {
+				if( hashes.fixture.hash === hashes.result.hash ) {
+					TESTER.log.pass(`${ Chalk.bgWhite.black(` ${ settings.name } `) } passed`); //yay
 
-				//flatten hash object
-				const fixture = flatten( hashes.fixture.files );
-				const result = flatten( hashes.result.files );
+					resolve( true );
+				}
+				else { //grr
+					TESTER.PASS = false;
+					TESTER.log.fail(`${ Chalk.bgWhite.black(` ${ settings.name } `) } failed`);
 
-				//iterate over fixture
-				for( const file of Object.keys( fixture ) ) {
-					const compare = result[ file ]; //get the hash from our result folder
-					delete result[ file ];          //remove this one so we can keep track of the ones that were not inside the fixture folder
+					//flatten hash object
+					const fixture = flatten( hashes.fixture.files );
+					const result = flatten( hashes.result.files );
 
-					if( compare === undefined ) {  //we couldn’t find this file inside the resulting folder
-						TESTER.log.error(`Missing ${ Chalk.yellow( file ) } file inside result folder`);
-					}
-					else {
-						const fileName = file.split('/');
+					//iterate over fixture
+					for( const file of Object.keys( fixture ) ) {
+						const compare = result[ file ]; //get the hash from our result folder
+						delete result[ file ];          //remove this one so we can keep track of the ones that were not inside the fixture folder
 
-						if( fixture[ file ] !== compare && fileName[ fileName.length - 1 ] !== 'hash' ) { //we don’t want to compare folders
-							TESTER.log.error(`Difference inside ${ Chalk.yellow( settings.folder + file ) } file`);
+						if( compare === undefined ) {  //we couldn’t find this file inside the resulting folder
+							TESTER.log.error(`Missing ${ Chalk.yellow( file ) } file inside result folder`);
+						}
+						else {
+							const fileName = file.split('/');
+
+							if( fixture[ file ] !== compare && fileName[ fileName.length - 1 ] !== 'hash' ) { //we don’t want to compare folders
+								TESTER.log.error(`Difference inside ${ Chalk.yellow( settings.folder + file ) } file`);
+							}
 						}
 					}
-				}
 
-				if( Object.keys( result ).length > 0 ) { //found files that have not been deleted yet
-					let files = [];
+					if( Object.keys( result ).length > 0 ) { //found files that have not been deleted yet
+						let files = [];
 
-					for( const file of Object.keys( result ) ) {
-						files.push( file ); //make ’em readable
+						for( const file of Object.keys( result ) ) {
+							files.push( file ); //make ’em readable
+						}
+
+						TESTER.log.error(`Some new files not accounted for: ${ Chalk.yellow( files.join(', ') ) } inside the fixture folder`);
 					}
 
-					TESTER.log.error(`Some new files not accounted for: ${ Chalk.yellow( files.join(', ') ) } inside the fixture folder`);
+					resolve( false );
 				}
-			}
+			});
 		},
 
 

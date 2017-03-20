@@ -115,6 +115,7 @@ export const Batter = ( argv = process.argv ) => {
 							version: pkg.version,
 							modules: allModules,
 							settings: SETTINGSlocal,
+							globalSettings: SETTINGS,
 							cwd: pkgPath,
 						});
 					}
@@ -124,6 +125,7 @@ export const Batter = ( argv = process.argv ) => {
 						version: pkg.version,
 						modules: allModules,
 						settings: SETTINGSlocal,
+						globalSettings: SETTINGS,
 						cwd: pkgPath,
 					});
 				}

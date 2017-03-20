@@ -32,14 +32,15 @@ import { Log, Style, Loading, CopyFile, ReadFile, WriteFile } from '@gov.au/panc
 /**
  * The main pancake method for this plugin
  *
- * @param  {array}  version  - The version of mother pancake
- * @param  {array}  modules  - An array of all module objects
- * @param  {object} settings - An object of the host package.json file and it’s path
- * @param  {object} cwd      - The path to the working directory of our host package.json file
+ * @param  {array}  version        - The version of mother pancake
+ * @param  {array}  modules        - An array of all module objects
+ * @param  {object} settings       - An object of the host package.json file and it’s path
+ * @param  {object} GlobalSettings - An object of the global settings
+ * @param  {object} cwd            - The path to the working directory of our host package.json file
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( version, modules, settings, cwd ) => {
+export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Log.info(`ADDING SYRUP/SVG TO YOUR PANCAKE`);
 
 
