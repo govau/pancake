@@ -19,10 +19,10 @@ const PancakeConfig = {
 		"version":"1.0.0",
 		"plugins":[
 			"@gov.au/pancake-sass",
-			"@gov.au/pancake-js"
+			"@gov.au/pancake-js",
 		],
-	}
-}
+	},
+};
 
 const AllModulesNoConflicts = [
 	{
@@ -31,13 +31,14 @@ const AllModulesNoConflicts = [
 		"peerDependencies": {},
 		"pancake": PancakeConfig,
 	},
-]
+];
 
 const ResultNoConflicts = [
 	"@gov.au/pancake-sass",
 	"@gov.au/pancake-js",
-]
+];
+
 
 test('GetPlugins should return array of plugins', () => {
-	expect(GetPlugins(AllModulesNoConflicts)).toMatchObject(ResultNoConflicts);
+	expect( GetPlugins( AllModulesNoConflicts ) ).toMatchObject( ResultNoConflicts );
 });

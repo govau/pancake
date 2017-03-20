@@ -20,33 +20,33 @@ const AllModulesNoConflicts = [
 	{
 		"name": "@gov.au/testmodule1",
 		"version": "11.0.1",
-		"peerDependencies": {}
+		"peerDependencies": {},
 	},
 	{
 		"name": "@gov.au/testmodule2",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^11.0.1",
 		},
 	},
 	{
 		"name": "@gov.au/testmodule3",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^11.0.1",
 		},
 	},
-]
+];
 
 const ResultNoConflicts = {
 	"conflicts": false,
-	"message": expect.any(String),
+	"message": expect.any( String ),
 	"module": "",
 	"dependencies": {},
-}
+};
 
 test('No conflicts between pancake modules should return correct result', () => {
-	expect(CheckModules(AllModulesNoConflicts)).toMatchObject(ResultNoConflicts);
+	expect( CheckModules( AllModulesNoConflicts ) ).toMatchObject( ResultNoConflicts );
 });
 
 
@@ -63,34 +63,34 @@ const AllModulesMinorConflict = [
 		"name": "@gov.au/testmodule2",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^11.0.1",
 		},
 	},
 	{
 		"name": "@gov.au/testmodule3",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.5.3"
+			"@gov.au/testmodule1": "^11.5.3",
 		},
-	}
-]
+	},
+];
 
 const ResultMinorConflict = {
 	"conflicts": true,
-	"message": expect.any(String),
+	"message": expect.any( String ),
 	"module": "@gov.au/testmodule1",
 	"dependencies": {
 		"^11.5.3": [
-			"@gov.au/testmodule3"
+			"@gov.au/testmodule3",
 		],
 		"^11.0.1": [
 			"@gov.au/testmodule2",
 		],
 	},
-}
+};
 
 test('Single minor conflict between pancake modules should return correct result', () => {
-	expect(CheckModules(AllModulesMinorConflict)).toMatchObject(ResultMinorConflict);
+	expect( CheckModules( AllModulesMinorConflict ) ).toMatchObject( ResultMinorConflict );
 });
 
 
@@ -107,34 +107,34 @@ const AllModulesMinorConflicts = [
 		"name": "@gov.au/testmodule2",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1":"^11.6.2"
+			"@gov.au/testmodule1":"^11.6.2",
 		},
 	},
 	{
 		"name": "@gov.au/testmodule3",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.5.3"
+			"@gov.au/testmodule1": "^11.5.3",
 		},
-	}
-]
+	},
+];
 
 const ResultMinorConflicts = {
 	"conflicts": true,
-	"message": expect.any(String),
+	"message": expect.any( String ),
 	"module": "@gov.au/testmodule1",
 	"dependencies": {
 		"^11.5.3": [
-			"@gov.au/testmodule3"
+			"@gov.au/testmodule3",
 		],
 		"^11.6.2": [
 			"@gov.au/testmodule2",
 		],
 	},
-}
+};
 
 test('Multiple minor conflicts between pancake modules should return correct result', () => {
-	expect(CheckModules(AllModulesMinorConflicts)).toMatchObject(ResultMinorConflicts);
+	expect( CheckModules( AllModulesMinorConflicts ) ).toMatchObject( ResultMinorConflicts );
 });
 
 
@@ -151,34 +151,34 @@ const AllModulesMajorConflict = [
 		"name": "@gov.au/testmodule2",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^11.0.1",
 		},
 	},
 	{
 		"name": "@gov.au/testmodule3",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^10.0.1"
+			"@gov.au/testmodule1": "^10.0.1",
 		},
 	},
-]
+];
 
 const ResultMajorConflict = {
 	"conflicts": true,
-	"message": expect.any(String),
+	"message": expect.any( String ),
 	"module": "@gov.au/testmodule1",
 	"dependencies": {
 		"^10.0.1": [
-			"@gov.au/testmodule3"
+			"@gov.au/testmodule3",
 		],
 		"^11.0.1": [
 			"@gov.au/testmodule2",
 		],
 	},
-}
+};
 
 test('Single major conflict between pancake modules should return correct result', () => {
-	expect(CheckModules(AllModulesMajorConflict)).toMatchObject(ResultMajorConflict);
+	expect( CheckModules( AllModulesMajorConflict ) ).toMatchObject( ResultMajorConflict );
 });
 
 
@@ -195,42 +195,42 @@ const AllModulesMajorConflicts = [
 		"name": "@gov.au/testmodule2",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^11.0.1"
+			"@gov.au/testmodule1": "^11.0.1",
 		},
 	},
 	{
 		"name": "@gov.au/testmodule3",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^10.0.1"
+			"@gov.au/testmodule1": "^10.0.1",
 		},
 	},
 	{
 		"name": "@gov.au/testmodule4",
 		"version": "11.0.0",
 		"peerDependencies": {
-			"@gov.au/testmodule1": "^9.0.1"
+			"@gov.au/testmodule1": "^9.0.1",
 		},
 	},
-]
+];
 
 const ResultMajorConflicts = {
 	"conflicts": true,
-	"message": expect.any(String),
+	"message": expect.any( String ),
 	"module": "@gov.au/testmodule1",
 	"dependencies": {
 		"^10.0.1": [
-			"@gov.au/testmodule3"
+			"@gov.au/testmodule3",
 		],
 		"^11.0.1": [
 			"@gov.au/testmodule2",
 		],
 		"^9.0.1": [
-			"@gov.au/testmodule4"
+			"@gov.au/testmodule4",
 		],
-	}
-}
+	},
+};
 
 test('Multiple major conflicts between pancake modules should return correct result', () => {
-	expect(CheckModules(AllModulesMajorConflicts)).toMatchObject(ResultMajorConflicts);
+	expect( CheckModules( AllModulesMajorConflicts ) ).toMatchObject( ResultMajorConflicts );
 });
