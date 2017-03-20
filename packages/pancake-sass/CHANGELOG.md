@@ -6,10 +6,38 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.0.7 - Sass custom path, global settings](v107)
+* [v1.0.6 - Loading fixes](v106)
+* [v1.0.5 - Made sass-versioning entirely optional](v105)
+* [v1.0.4 - Bug hunting](v104)
 * [v1.0.3 - 💥 Initial version](v103)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.7
+
+- Fixed #16 sass with custom path
+- Receiving global settings from pancake now
+- Added version comment tag into pancake.min.css
+- Loading now separate from main module in case the main module is globally installed
+
+
+## v1.0.6
+
+- Loading as a plugin is now fixed, even when you have pancake installed globally
+- Removed pancake as a dependency
+
+
+## v1.0.5
+
+- Made [sass-versioning](https://github.com/dominikwilkowski/sass-versioning) entirely optional
+
+
+## v1.0.4
+
+- Fixed some bugs
 
 
 ## v1.0.3

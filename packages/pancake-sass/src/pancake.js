@@ -27,6 +27,8 @@ import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
 import { StripDuplicateLines } from './helpers';
 import { GenerateSass, Sassify } from './sass';
 
+Log.output = true; //this plugin assumes you run it through pancake
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Plugin export
@@ -34,15 +36,18 @@ import { GenerateSass, Sassify } from './sass';
 /**
  * The main pancake method for this plugin
  *
- * @param  {array}  version  - The version of mother pancake
- * @param  {array}  modules  - An array of all module objects
- * @param  {object} settings - An object of the host package.json file and it’s path
- * @param  {object} cwd      - The path to the working directory of our host package.json file
+ * @param  {array}  version        - The version of mother pancake
+ * @param  {array}  modules        - An array of all module objects
+ * @param  {object} settings       - An object of the host package.json file and it’s path
+ * @param  {object} GlobalSettings - An object of the global settings
+ * @param  {object} cwd            - The path to the working directory of our host package.json file
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( version, modules, settings, cwd ) => {
+export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE`);
+
+	Loading.start('pancake-sass');
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -123,14 +128,19 @@ export const pancake = ( version, modules, settings, cwd ) => {
 				Log.verbose(`Sass: ${ Style.green('⌘') } Found Sass files in ${ Style.yellow( sassModulePath ) }`);
 
 				//generate the import statements depending on dependencies
-				let sass = GenerateSass( modulePackage.path, modulePackage.peerDependencies );
+				let sass = GenerateSass( modulePackage.path, modulePackage.name, modules, GlobalSettings.npmOrg );
 				allSass += sass; //for SETTINGS.css.name file
 
 				// //adding banner and conditional sass-versioning
 				if( modulePackage.pancake['pancake-module'].sass['sass-versioning'] === true ) {
 					sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
 
-					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n@include versioning-check();\n`;
+					const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
+
+					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n` +
+						`@import "${ sassVersioningPath }";\n\n` +
+						`${ sass }\n` +
+						`@include versioning-check();\n`;
 				}
 				else {
 					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;
@@ -166,7 +176,7 @@ export const pancake = ( version, modules, settings, cwd ) => {
 
 
 		if( modules.length < 1 ) {
-			Loading.stop(); //stop loading animation
+			Loading.stop('pancake-sass'); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
@@ -178,18 +188,26 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 			if( sassVersioning === true ) {
-				allSass = `/* PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n\n@include versioning-check();\n`;
+				const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
+
+				allSass = `/*! PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n` +
+					`@import "${ sassVersioningPath }";\n\n` +
+					`${ StripDuplicateLines( allSass ) }\n\n` +
+					`@include versioning-check();\n`;
 			}
 			else {
-				allSass = `/* PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
+				allSass = `/*! PANCAKE v${ Package.version } */\n\n${ StripDuplicateLines( allSass ) }\n`;
 			}
 
-			compiledAll.push(
-				Sassify( locationCSS, SETTINGS.css, allSass ) //generate SETTINGS.css.name file
-					.catch( error => {
-						Log.error( error );
-				})
-			);
+			//generate SETTINGS.css.name file
+			if( SETTINGS.css.name !== false ) {
+				compiledAll.push(
+					Sassify( locationCSS, SETTINGS.css, allSass )
+						.catch( error => {
+							Log.error( error );
+					})
+				);
+			}
 
 			//write SETTINGS.sass.name file
 			if( SETTINGS.sass.name !== false ) {
@@ -208,14 +226,14 @@ export const pancake = ( version, modules, settings, cwd ) => {
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-sass'); //stop loading animation
 
 					Log.error(`Sass plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
-					Loading.stop(); //stop loading animation
-
 					Log.ok('SASS PLUGIN FINISHED');
+
+					Loading.stop('pancake-sass'); //stop loading animation
 					resolve( SETTINGS );
 			});
 		}

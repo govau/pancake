@@ -23,7 +23,7 @@ Pancake.Batter([
 			.then( result => {
 				Pancake.Log.info(`SETTINGS RETURNED:\n\n${ JSON.stringify( result, null, '\t' ) }`);
 
-				Pancake.Loading.stop();
 				Pancake.Log.space();
+				Pancake.Loading.stop();
 		});
 });

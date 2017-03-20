@@ -21,7 +21,7 @@ import Path from 'path';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style } from './logging';
+import { Log, Style, Loading } from './logging';
 import { Spawning } from './helpers';
 
 
@@ -99,10 +99,13 @@ export const InstallPlugins = ( plugins, cwd ) => {
  * @param  {string} cwd           - The path to our working directory
  * @param  {array}  allModules    - An array of all modules to be passed to plugin
  * @param  {object} SETTINGSlocal - The object of our local settings
+ * @param  {object} SETTINGS      - The global settings object
  *
  * @return {promise object}       - Pass on what the plugins returned
  */
-export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal ) => {
+export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SETTINGS ) => {
+
+	Loading.stop();
 
 	let plugin;
 	let running = [];
@@ -115,16 +118,23 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal ) =
 
 			plugin = require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
 
-			return plugin.pancake( version, allModules, SETTINGSlocal, cwd ) //run ’em
+			return plugin.pancake( version, allModules, SETTINGSlocal, SETTINGS, cwd ) //run ’em
 				.catch( error => {
-					reject( error );
+					Log.error( error );
 
 					process.exit( 1 );
 			});
 		});
 
 		Promise.all( allPlugins )
+			.catch( error => {
+				Log.error( error );
+
+				process.exit( 1 );
+			})
 			.then( data => {
+				Loading.start();
+
 				return resolve( data ); //resolve only after all plugins have run
 		});
 	});

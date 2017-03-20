@@ -58,6 +58,10 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.7 - Sass custom path, global settings
+* v1.0.6 - Loading fixes
+* v1.0.5 - Made sass-versioning entirely optional
+* v1.0.4 - Fixed some bugs
 * v1.0.3 - 💥 Initial version
 
 
