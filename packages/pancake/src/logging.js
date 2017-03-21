@@ -19,15 +19,6 @@
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Verbose flag
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-let verbose = false;
-if( process.argv.indexOf('-v') !== -1 || process.argv.indexOf('--verbose') !== -1 ) {
-	verbose = true;
-}
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Ansi escape color codes
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -37,165 +28,117 @@ if( process.argv.indexOf('-v') !== -1 || process.argv.indexOf('--verbose') !== -
  * @type {Object}
  */
 export const Style = {
+
 	/**
-	 * Color a string with ansi escape codes
+	 * Parse ansi code while making sure we can nest colors
 	 *
-	 * @param  {string} text - The string to be wrapped
+	 * @param  {string} text  - The text to be enclosed with an ansi escape string
+	 * @param  {string} start - The color start code, defaults to the standard color reset code 39m
+	 * @param  {string} end   - The color end code
 	 *
-	 * @return {string}      - The string with opening and closing ansi escape color codes
+	 * @return {string}       - The escaped text
 	 */
-	black: ( text ) => {
+	parse: ( text, start, end = `39m` ) => {
 		if( text !== undefined ) {
-			return `\u001B[30m${ text.toString().replace( /\u001b\[39m/g, '\u001B[30m' ) }\u001b[39m`;
+			const replace = new RegExp( `\\u001b\\[${ end }`, 'g' ); //find any resets so we can nest styles
+
+			return `\u001B[${ start }${ text.toString().replace( replace, `\u001B[${ start }` ) }\u001b[${ end }`;
 		}
 		else {
-			return '';
+			return ``;
 		}
 	},
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	red: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[31m${ text.toString().replace( /\u001b\[39m/g, '\u001B[31m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	black: text => Style.parse( text, `30m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	green: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[32m${ text.toString().replace( /\u001b\[39m/g, '\u001B[32m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	red: text => Style.parse( text, `31m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	yellow: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[33m${ text.toString().replace( /\u001b\[39m/g, '\u001B[33m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	green: text => Style.parse( text, `32m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	blue: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[34m${ text.toString().replace( /\u001b\[39m/g, '\u001B[34m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	yellow: text => Style.parse( text, `33m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	magenta: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[35m${ text.toString().replace( /\u001b\[39m/g, '\u001B[35m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	blue: text => Style.parse( text, `34m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	cyan: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[36m${ text.toString().replace( /\u001b\[39m/g, '\u001B[36m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	magenta: text => Style.parse( text, `35m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	white: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[37m${ text.toString().replace( /\u001b\[39m/g, '\u001B[37m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	cyan: text => Style.parse( text, `36m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	gray: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[90m${ text.toString().replace( /\u001b\[39m/g, '\u001B[90m' ) }\u001b[39m`;
-		}
-		else {
-			return '';
-		}
-	},
+	white: text => Style.parse( text, `37m` ),
 
 	/**
-	 * Color a string with ansi escape codes
+	 * Style a string with ansi escape codes
 	 *
 	 * @param  {string} text - The string to be wrapped
 	 *
 	 * @return {string}      - The string with opening and closing ansi escape color codes
 	 */
-	bold: ( text ) => {
-		if( text !== undefined ) {
-			return `\u001B[1m${ text }\u001b[22m`;
-		}
-		else {
-			return '';
-		}
-	},
+	gray: text => Style.parse( text, `90m` ),
+
+	/**
+	 * Style a string with ansi escape codes
+	 *
+	 * @param  {string} text - The string to be wrapped
+	 *
+	 * @return {string}      - The string with opening and closing ansi escape color codes
+	 */
+	bold: text => Style.parse( text, `1m`, `22m` ),
+
 };
 
 
@@ -208,8 +151,9 @@ export const Style = {
  * @type {Object}
  */
 export const Log = {
-	output: false,   //have we outputted something yet?
-	hasError: false, //let’s assume the best
+	verboseMode: false, //verbose flag
+	output: false,      //have we outputted something yet?
+	hasError: false,    //let’s assume the best
 
 	/**
 	 * Log an error
@@ -274,7 +218,7 @@ export const Log = {
 			console.log( Style.red(`                        +${ `-`.repeat( message.length + 4 ) }+`) + `\n` );
 		}
 
-		console.error(`🔥  ${ Style.red(`ERROR:   ${ text }`) } `);
+		console.error(`🔥  ${ Style.red(`ERROR:   ${ text }`) }`);
 
 		Log.output = true; //now we have written something out
 		Log.hasError = true;
@@ -337,7 +281,7 @@ export const Log = {
 	 * @param  {boolean} verbose - Verbose flag either undefined or true
 	 */
 	verbose: ( text ) => {
-		if( verbose ) {
+		if( Log.verboseMode ) {
 			if( !Log.output ) {
 				Log.space();
 			}
@@ -352,15 +296,6 @@ export const Log = {
 	 */
 	space: () => {
 		console.log(`\n`);
-	},
-
-	/**
-	 * Return true if we printed a message already
-	 *
-	 * @return {boolean} - Whether or not we’ve outputted something yet
-	 */
-	hadOutput: () => {
-		return Log.output;
 	},
 };
 
@@ -423,7 +358,7 @@ export const Loading = (() => {
 		running: {},
 
 		start: ( plugin = 'pancake' ) => {
-			if( !verbose ) {
+			if( !Log.verboseMode ) {
 				clearInterval( timer ); //stop any possible parallel loaders
 
 				Loading.running[ plugin ] = true;
@@ -441,7 +376,7 @@ export const Loading = (() => {
 		},
 
 		stop: ( plugin = 'pancake' ) => {
-			if( !verbose ) {
+			if( !Log.verboseMode ) {
 				delete Loading.running[ plugin ];
 
 				if( Object.keys( Loading.running ).length === 0 ) {
@@ -452,14 +387,14 @@ export const Loading = (() => {
 		},
 
 		pause: () => {
-			if( !verbose ) {
+			if( !Log.verboseMode ) {
 				clearInterval( timer );             //stop interval
 				process.stdout.write('\r\r\x1b[K'); //clear screen
 			}
 		},
 
 		resume: () => {
-			if( !verbose ) {
+			if( !Log.verboseMode ) {
 				if( Object.keys( Loading.running ).length > 0 ) {
 					clearInterval( timer ); //stop any possible parallel loaders
 

@@ -6,25 +6,26 @@
  *
  **************************************************************************************************************************************************************/
 
-import { Style } from '../src/logging';
+import { Style, Log } from '../src/logging';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Ansi escape color codes
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//todo - can we refactor for DRY?
-test('Log.style - undefined argument should return empty string', () => {
-	expect( Style.black( undefined ) ).toBe('');
-	expect( Style.red( undefined ) ).toBe('');
-	expect( Style.green( undefined ) ).toBe('');
-	expect( Style.yellow( undefined ) ).toBe('');
-	expect( Style.blue( undefined ) ).toBe('');
-	expect( Style.magenta( undefined ) ).toBe('');
-	expect( Style.cyan( undefined ) ).toBe('');
-	expect( Style.white( undefined ) ).toBe('');
-	expect( Style.gray( undefined ) ).toBe('');
-	expect( Style.bold( undefined ) ).toBe('');
+test('Log.parse - undefined argument should return empty string', () => {
+	expect( Style.parse( undefined ) ).toBe('');
 });
+
+
+test('Log.parse - start and end ansi code is correctly added', () => {
+	expect( Style.parse( 'TEST', '666m', '777m' ) ).toBe('\u001B[666mTEST\u001b[777m');
+});
+
+
+test('Log.parse - start and end ansi code can be nested', () => {
+	expect( Style.parse( `TEST ${ Style.parse( 'SUBTEST', '666m', '777m' ) } STRING`, '666m', '777m' ) ).toBe('\u001B[666mTEST \u001B[666mSUBTEST\u001B[666m STRING\u001b[777m');
+});
+
 
 test('function should return correct string and colour', () => {
 	expect( Style.black('test black') ).toBe('\u001B[30mtest black\u001b[39m');
@@ -44,4 +45,107 @@ test('should be able to combine multiple strings of varying colours', () => {
 	const test = Style.yellow(`yellow text ${ Style.green(`green text ${ Style.red(`red text`) } green text`) } yellow text`);
 
 	expect( test ).toBe("\u001B[33myellow text \u001B[32mgreen text \u001B[31mred text\u001B[32m green text\u001B[33m yellow text\u001b[39m");
+});
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Log test
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+test('Log.space - Log.space should output a space', () => {
+	console.log = jest.fn();
+	console.info = jest.fn();
+
+	Log.space();
+
+	expect( console.log.mock.calls[0][0] ).toBe(`\n`);
+});
+
+
+test('Log.info - Log.space should only be called the first time a Log function is run', () => {
+	console.log = jest.fn();
+	console.info = jest.fn();
+
+	Log.info(`test`);
+	Log.info(`test2`);
+
+	expect( console.log.mock.calls.length ).toBe( 1 );
+	expect( console.log.mock.calls[0][0] ).toBe(`\n`);
+	expect( console.info.mock.calls[0][0] ).toBe(`🔔  INFO:    test`);
+	expect( console.info.mock.calls[1][0] ).toBe(`🔔  INFO:    test2`);
+});
+
+
+test('Log.ok - Log.space should only be called the first time a Log function is run', () => {
+	console.log = jest.fn();
+	console.info = jest.fn();
+
+	Log.output = false;
+	Log.ok(`test`);
+	Log.ok(`test2`);
+
+	expect( console.log.mock.calls.length ).toBe( 1 );
+	expect( console.log.mock.calls[0][0] ).toBe(`\n`);
+	expect( console.info.mock.calls[0][0] ).toBe(`👍  \u001B[32mOK:\u001b[39m      \u001B[32mtest\u001b[39m`);
+	expect( console.info.mock.calls[1][0] ).toBe(`👍  \u001B[32mOK:\u001b[39m      \u001B[32mtest2\u001b[39m`);
+});
+
+
+test('Log.done - Log.space should only be called the first time a Log function is run', () => {
+	console.log = jest.fn();
+	console.info = jest.fn();
+
+	Log.output = false;
+	Log.done(`test`);
+	Log.done(`test2`);
+
+	expect( console.log.mock.calls.length ).toBe( 1 );
+	expect( console.log.mock.calls[0][0] ).toBe(`\n`);
+	expect( console.info.mock.calls[0][0] ).toBe(`🚀           \u001B[32m\u001B[1mtest\u001b[22m\u001b[39m`);
+	expect( console.info.mock.calls[1][0] ).toBe(`🚀           \u001B[32m\u001B[1mtest2\u001b[22m\u001b[39m`);
+});
+
+
+test('Log.verbose - Log.space should only be called the first time a Log function is run', () => {
+	console.log = jest.fn();
+	console.info = jest.fn();
+
+	Log.output = false;
+	Log.verboseMode = true;
+	Log.verbose(`test`);
+	Log.verbose(`test2`);
+
+	expect( console.log.mock.calls.length ).toBe( 1 );
+	expect( console.log.mock.calls[0][0] ).toBe(`\n`);
+	expect( console.info.mock.calls[0][0] ).toBe(`😬  \u001B[90mVERBOSE: test\u001b[39m`);
+	expect( console.info.mock.calls[1][0] ).toBe(`😬  \u001B[90mVERBOSE: test2\u001b[39m`);
+});
+
+
+test('Log.verbose - Log.verbose should log nothing with verboseMode false', () => {
+	console.log = jest.fn();
+	console.info = jest.fn();
+
+	Log.output = false;
+	Log.verboseMode = false;
+	Log.verbose(`test`);
+	Log.verbose(`test2`);
+
+	expect( console.log.mock.calls.length ).toBe( 0 );
+	expect( console.info.mock.calls.length ).toBe( 0 );
+});
+
+
+test('Log.error - Log.space should only be called the first time a Log function is run', () => {
+	console.log = jest.fn();
+	console.error = jest.fn();
+
+	Log.output = false;
+	Log.verboseMode = true;
+	Log.error(`test`);
+	Log.error(`test2`);
+
+	expect( console.log.mock.calls.length ).toBe( 5 );
+	expect( console.log.mock.calls[0][0] ).toBe(`\n`);
+	expect( console.error.mock.calls[0][0] ).toBe(`🔥  \u001B[31mERROR:   test\u001b[39m`);
+	expect( console.error.mock.calls[1][0] ).toBe(`🔥  \u001B[31mERROR:   test2\u001b[39m`);
 });
