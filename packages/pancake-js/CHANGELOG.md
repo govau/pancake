@@ -6,6 +6,7 @@ Pancake JS PLUGIN
 
 ## Versions
 
+* [v1.0.7 - TODO](v107)
 * [v1.0.6 - Receiving global settings from pancake now](v106)
 * [v1.0.5 - Loading fixes](v105)
 * [v1.0.4 - Bug hunting](v104)
@@ -13,6 +14,11 @@ Pancake JS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.7
+
+- Made pancake a dependency
 
 
 ## v1.0.6

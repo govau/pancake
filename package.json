@@ -1,6 +1,10 @@
 {
 	"scripts": {
-		"test": "node tests/tester.js && jest",
+		"test:watch": "jest --watch --coverage",
+		"test:unit-test": "jest",
+		"test:end-to-end": "node tests/tester.js",
+		"test": "npm run test:end-to-end && npm run test:unit-test",
+
 		"build": "lerna bootstrap && lerna run build"
 	},
 	"dependencies": {},
@@ -19,7 +23,7 @@
 		"testEnvironment": "node",
 		"testRegex": "\\.spec.js$",
 		"collectCoverageFrom": [
-			"packages/pancake/src/*.js"
+			"packages/*/src/*.js"
 		],
 		"coverageThreshold": {
 			"global": {

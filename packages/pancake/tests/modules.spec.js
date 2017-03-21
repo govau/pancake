@@ -176,7 +176,7 @@ const AllModules = [
 			}
 		},
 	},
-]
+];
 
 const Result = [
 	"@gov.au/pancake-sass",

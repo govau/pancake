@@ -14,7 +14,7 @@ import { CheckNPM, Size } from '../src/helpers';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 test('CheckNPM should always return true or false', () => {
-	expect(CheckNPM()).toBeDefined();
+	expect( CheckNPM() ).toBeDefined();
 });
 
 
@@ -23,10 +23,10 @@ test('CheckNPM should always return true or false', () => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const sizeOutput = {
-	"height": expect.any(Number),
-	"width": expect.any(Number)
-}
+	"height": expect.any( Number ),
+	"width": expect.any( Number ),
+};
 
 test('Size should always return value for height and width', () => {
-	expect(Size()).toMatchObject(sizeOutput);
+	expect( Size() ).toMatchObject( sizeOutput );
 });
