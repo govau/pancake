@@ -43,7 +43,7 @@ export const GetFolders = thisPath => {
 			.filter(
 				thisFile => Fs.statSync( Path.normalize(`${ thisPath }/${ thisFile }`) ).isDirectory() //only return directories
 			)
-			.map( path => Path.normalize(`${ thisPath }/${ path }`) );             //return with path
+			.map( path => Path.normalize(`${ thisPath }/${ path }`) );                               //return with path
 	}
 	catch( error ) {
 		Log.verbose(`${ Style.yellow( thisPath ) } not found`);
