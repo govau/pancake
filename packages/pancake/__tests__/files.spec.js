@@ -18,12 +18,15 @@ import Path from 'path';
 /**
  * Test that correct array is returned when function runs
  */
-const ModulePath = Path.normalize(`${ __dirname }/../../../tests/test2`);
+const ModulePath = Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au`);
 
 const Result = [
-	Path.normalize(`${ __dirname }/../../../tests/test2/fixture`),
-	Path.normalize(`${ __dirname }/../../../tests/test2/node_modules`),
-	Path.normalize(`${ __dirname }/../../../tests/test2/pancake`),
+	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/pancake`),
+	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/pancake-js`),
+	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/pancake-sass`),
+	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/testmodule1`),
+	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/testmodule2`),
+	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/testmodule3`),
 ]
 
 test('ModulePath should return array of all folders in path', () => {
