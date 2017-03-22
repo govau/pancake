@@ -21,9 +21,9 @@ import Path from 'path';
 const ModulePath = Path.normalize(`${ __dirname }/../../../tests/test2`);
 
 const Result = [
-	"/Users/dtomac2/pancake/tests/test2/fixture",
-	"/Users/dtomac2/pancake/tests/test2/node_modules",
-	"/Users/dtomac2/pancake/tests/test2/pancake"
+	Path.normalize(`${ __dirname }/../../../tests/test2/fixture`),
+	Path.normalize(`${ __dirname }/../../../tests/test2/node_modules`),
+	Path.normalize(`${ __dirname }/../../../tests/test2/pancake`),
 ]
 
 test('ModulePath should return array of all folders in path', () => {
