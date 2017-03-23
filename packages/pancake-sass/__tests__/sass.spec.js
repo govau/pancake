@@ -89,8 +89,10 @@ test('GetDependencies should return object of all dependencies', () => {
 // GenerateSass function
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-const ResultGenerateSass = '@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";\n' +
-'@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss";\n'
+const SassPath = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/`);
+
+const ResultGenerateSass = '@import "' + SassPath + '@gov.au/testmodule1/lib/sass/_module.scss";\n' +
+'@import "' + SassPath + '@gov.au/testmodule2/lib/sass/_module.scss";\n'
 
 const Location = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/testmodule2`);
 
@@ -117,8 +119,6 @@ const Settings = {
 	"location": "pancake/css/",
 	"name": "pancake.min.css"
 }
-
-const SassPath = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/`);
 
 const Sass = '/*! PANCAKE v1.0.8 PANCAKE-SASS v1.0.8 */\n\n' +
 '@import "' + SassPath + 'sass-versioning/dist/_index.scss";\n\n' +
