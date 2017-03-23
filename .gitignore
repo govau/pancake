@@ -19,4 +19,5 @@ tests/*/testfolder/
 !tests/*/node_modules/
 !tests/*/node_modules/*/*/lib/
 !tests/*/node_modules/*/dist/
+!tests/modules/*/lib/
 coverage/
