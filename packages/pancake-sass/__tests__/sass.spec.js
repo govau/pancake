@@ -13,11 +13,6 @@ import Path from 'path';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // GetPath function
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-/**
- * Test for no conflicts
- */
-
 const Modules = [
 	{
 		"name": "@gov.au/testmodule1",
@@ -70,12 +65,16 @@ const Modules = [
 const Module = '@gov.au/testmodule2';
 const BaseLocation = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/`);
 const npmOrg = '@gov.au';
-const Result = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss`);
+const ResultPath = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss`);
 
 test('GetPath should return path for sass partial', () => {
-	expect( GetPath( Module, Modules, BaseLocation, npmOrg ) ).toBe(Result);
+	expect( GetPath( Module, Modules, BaseLocation, npmOrg ) ).toBe(ResultPath);
 });
 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// GetDependencies function
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const ResultDependencies = {
 	"@gov.au/testmodule1": "^11.0.1"
@@ -85,25 +84,27 @@ test('GetDependencies should return object of all dependencies', () => {
 	expect( GetDependencies( Module, Modules ) ).toMatchObject(ResultDependencies);
 });
 
-'@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";\n' +
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// GenerateSass function
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+const ResultGenerateSass = '@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";\n' +
 '@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss";\n'
 
-const ResultGenerateSass =
-`@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
-@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss";
-`
 const Location = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/testmodule2`);
 
 test('GenerateSass should return path to sass partial import', () => {
 	expect( GenerateSass( Location, Module, Modules, npmOrg ) ).toBe(ResultGenerateSass);
 });
 
-test('Sassify should return path to sass partial import', () => {
-	expect( GenerateSass( Location, Module, Modules, npmOrg ) ).toBe(ResultGenerateSass);
-});
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Sassify function
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const CSSLocation = Path.normalize(`${ __dirname }/../../../tests/test1/pancake/css/pancake.min.css`);
+
 const Settings = {
 	"minified": true,
 	"modules": false,
@@ -116,20 +117,16 @@ const Settings = {
 	"location": "pancake/css/",
 	"name": "pancake.min.css"
 }
-""
-const Sass =
-`
-/*! PANCAKE v1.0.8 PANCAKE-SASS v1.0.8 */
 
-@import "/Users/dtomac2/pancake/tests/test1/node_modules/sass-versioning/dist/_index.scss";
+const SassPath = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/`);
 
-@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
-@import "/Users/dtomac2/pancake/tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss";
+const Sass = '/*! PANCAKE v1.0.8 PANCAKE-SASS v1.0.8 */\n\n' +
+'@import "' + SassPath + 'sass-versioning/dist/_index.scss";\n\n' +
+'@import "' + SassPath + '@gov.au/testmodule1/lib/sass/_module.scss";\n' +
+'@import "' + SassPath + '@gov.au/testmodule2/lib/sass/_module.scss";\n\n'
+'@include versioning-check();\n'
 
-@include versioning-check();
-`
-
-test('Sassify should should resolve promise', () => {
+test('Sassify should resolve promise', () => {
 	return Sassify( CSSLocation, Settings, Sass ).then( data => {
 		expect( data ).toBe( true );
 	});
