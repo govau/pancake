@@ -1,33 +1,74 @@
 {
 	"name": "@gov.au/testmodule1",
-	"version": "14.0.2",
-	"description": "Testing module for uikit",
+	"version": "14.0.3",
+	"description": "The core module all UI-Kit modules depend on",
+	"keywords": [
+	],
+	"scripts": {
+		"postinstall": "pancake",
+
+		"test": "node ../../scripts/a11y.js",
+
+		"build": "node ../../scripts/helper.js precompile compile",
+		"watch:sass": "npm run build && onchange 'src/sass/*.scss' 'tests/site/*.scss' -- npm run build",
+		"serve": "browser-sync start --server --startPath 'tests/site' --files 'tests/site/*.html, tests/site/*.css, tests/site/*.js'",
+		"watch": "npm-run-all --parallel serve watch:*"
+	},
 	"pancake": {
 		"pancake-module": {
 			"version": "1.0.0",
 			"plugins": [
-				"@gov.au/pancake-sass",
-				"@gov.au/pancake-js"
+				"@gov.au/pancake-sass"
 			],
 			"sass": {
 				"path": "lib/sass/_module.scss",
 				"sass-versioning": true
-			},
-			"js": {
-				"path": "lib/js/module.js"
 			}
 		}
-	},
-	"scripts": {
-		"postinstall": "pancake"
 	},
 	"dependencies": {
 		"@gov.au/pancake": "~1",
 
 		"sass-versioning": "^0.2.2"
 	},
-	"peerDependencies": {
+	"peerDependencies": {},
+	"devDependencies": {
+		"browser-sync": "^2.18.6",
+		"npm-run-all": "^4.0.1",
+		"onchange": "^3.2.1"
 	},
-	"author": "TODO",
+	"files": [
+		"lib/*"
+	],
+	"engines": {
+		"node": ">=0.12.0",
+		"npm": "^3.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/govau/uikit.git"
+	},
+	"homepage": "http://guides.service.gov.au/design-guide/",
+	"bugs": {
+		"url": "https://github.com/govau/uikit/issues",
+		"email": "guides@digital.gov.au"
+	},
+	"author": {
+		"name": "Commonwealth of Australia, DTA",
+		"email": "guides@digital.gov.au",
+		"url": "https://www.dta.gov.au/"
+	},
+	"contributors": [
+		{
+			"name": "Dominik Wilkowski",
+			"email": "hi@dominik-wilkowski.com",
+			"url": "https://dominik-wilkowski.com/"
+		},
+		{
+			"name": "Simon Pascal Klein",
+			"email": "klepas@klepas.org",
+			"url": "http://klepas.org/"
+		}
+	],
 	"license": "MIT"
 }

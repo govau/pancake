@@ -6,6 +6,7 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.0.8 - Dependencies and tests](v108)
 * [v1.0.7 - Sass custom path, global settings](v107)
 * [v1.0.6 - Loading fixes](v106)
 * [v1.0.5 - Made sass-versioning entirely optional](v105)
@@ -14,6 +15,12 @@ Pancake SASS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.8
+
+- Made pancake a dependency
+- Added jest unit tests
 
 
 ## v1.0.7
