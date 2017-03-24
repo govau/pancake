@@ -4,7 +4,7 @@ Pancake
 > Pancake is a tool to make working with npm on the front end easy and sweet.
 
 
-## Contentss
+## Contents
 
 * [What’s inside?](#whats-inside)
 * [Requirements](#requirements)
@@ -340,10 +340,10 @@ _Please look at the coding style and work with it, not against it. 🌴_
 We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
-- `v14.0.2`
+- `v14.0.3`
 
 **@gov.au/testmodule2**
-- `v18.0.0`  
+- `v18.0.1`  
 	- └── `@gov.au/testmodule1`: `^14.0.0`
 
 **@gov.au/testmodule3**
