@@ -6,6 +6,7 @@
  *
  **************************************************************************************************************************************************************/
 
+
 import { ParseArgs } from '../src/parse-arguments';
 
 
@@ -15,127 +16,123 @@ import { ParseArgs } from '../src/parse-arguments';
 /**
  * Test for running a single command
  */
+const settings = {
+	'npmOrg': '@gov.au',
+	'plugins': true,
+	'ignorePlugins': [],
+};
 
-const Settings = {
-	"npmOrg": "@gov.au",
-	"plugins": true,
-	"ignorePlugins": []
-}
+const argsSingleCommand = [
+	'node',
+	'pancake',
+	'--help',
+];
 
-const ArgsSingleCommand = [
-	"node",
-	"pancake",
-	"--help"
-]
-
-const ResultSingleComand = {
+const resultSingleComand = {
 	cwd: undefined,
 	version: false,
 	verbose: false,
 	nosave: false,
 	set: [],
-	org: Settings.npmOrg,
+	org: settings.npmOrg,
 	plugins: true,
 	ignorePlugins: [],
 	help: true,
 };
 
 test('Parse args should return correct object for a single command', () => {
-	expect(ParseArgs( Settings, ArgsSingleCommand )).toMatchObject(ResultSingleComand);
+	expect( ParseArgs( settings, argsSingleCommand ) ).toMatchObject( resultSingleComand );
 });
 
 
 /**
  * Test for running two commands
  */
+const argsTwoCommands = [
+	'node',
+	'pancake',
+	'--help',
+	'--noplugins',
+];
 
-const ArgsTwoCommands = [
-	"node",
-	"pancake",
-	"--help",
-	"--noplugins"
-]
-
-const ResultTwoComands = {
+const resultTwoComands = {
 	cwd: undefined,
 	version: false,
 	verbose: false,
 	nosave: false,
 	set: [],
-	org: Settings.npmOrg,
+	org: settings.npmOrg,
 	plugins: false,
 	ignorePlugins: [],
 	help: true,
 };
 
 test('Parse args should return correct object for a single command', () => {
-	expect(ParseArgs( Settings, ArgsTwoCommands )).toMatchObject(ResultTwoComands);
+	expect( ParseArgs( settings, argsTwoCommands ) ).toMatchObject( resultTwoComands );
 });
 
 
 /**
  * Test for running all commands
  */
+const argsMultiple = [
+	'node',
+	'pancake',
+	'path/file',
+	'--set',
+	'npmOrg',
+	'@yourOrg',
+	'--verbose',
+	'--version',
+	'--nosave',
+	'--noplugins',
+	'--ignore',
+	'@gov.au/pancake-js,@gov.au/pancake-sass',
+	'--help',
+];
 
-const ArgsMultiple = [
-	"node",
-	"pancake",
-	"path/file",
-	"--set",
-	"npmOrg",
-	"@yourOrg",
-	"--verbose",
-	"--version",
-	"--nosave",
-	"--noplugins",
-	"--ignore",
-	"@gov.au/pancake-js,@gov.au/pancake-sass",
-	"--help",
-]
-
-const ResultMultiple = {
-	cwd: "path/file",
+const resultMultiple = {
+	cwd: 'path/file',
 	version: true,
 	verbose: true,
 	nosave: true,
 	set: [
-		"npmOrg",
-		"@yourOrg"
+		'npmOrg',
+		'@yourOrg',
 	],
-	org: Settings.npmOrg,
+	org: settings.npmOrg,
 	plugins: false,
 	ignorePlugins: [
-		"@gov.au/pancake-js",
-		"@gov.au/pancake-sass",
+		'@gov.au/pancake-js',
+		'@gov.au/pancake-sass',
 	],
 	help: true,
 };
 
 test('Parse args should return correct object for a single command', () => {
-	expect(ParseArgs( Settings, ArgsMultiple )).toMatchObject(ResultMultiple);
+	expect( ParseArgs( settings, argsMultiple ) ).toMatchObject( resultMultiple );
 });
 
 
 /**
  * Test for running all commands as shortcuts
  */
-
-const ArgsMultipleShort = [
-	"node",
-	"pancake",
-	"path/file",
-	"-s",
-	"npmOrg",
-	"@yourOrg",
-	"-v",
-	"-V",
-	"-n",
-	"-p",
-	"-i",
-	"@gov.au/pancake-js,@gov.au/pancake-sass",
-	"-h",
+const argsMultipleShort = [
+	'node',
+	'pancake',
+	'path/file',
+	'-s',
+	'npmOrg',
+	'@yourOrg',
+	'-v',
+	'-V',
+	'-n',
+	'-p',
+	'-i',
+	'@gov.au/pancake-js,@gov.au/pancake-sass',
+	'-h',
 ]
 
 test('Parse args should return correct object for a single command', () => {
-	expect(ParseArgs( Settings, ArgsMultipleShort )).toMatchObject(ResultMultiple);
+	expect( ParseArgs( settings, argsMultipleShort ) ).toMatchObject( resultMultiple );
 });

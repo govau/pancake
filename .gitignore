@@ -16,6 +16,8 @@ lib/
 tests/*/pancake/
 tests/*/yarn.lock
 tests/*/testfolder/
+!tests/*/fixture/pancake/
+!tests/*/fixture/testfolder/
 !tests/*/node_modules/
 !tests/*/node_modules/*/*/lib/
 !tests/*/node_modules/*/dist/

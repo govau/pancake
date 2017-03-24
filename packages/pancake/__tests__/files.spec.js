@@ -7,7 +7,6 @@
  **************************************************************************************************************************************************************/
 
 
-//jest.mock('fs');
 import { GetFolders, ReadFile, CreateDir } from '../src/files';
 import Path from 'path';
 
@@ -18,9 +17,9 @@ import Path from 'path';
 /**
  * Test that correct array is returned when function runs
  */
-const ModulePath = Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au`);
+const modulePath = Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au`);
 
-const Result = [
+const result = [
 	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/pancake`),
 	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/pancake-js`),
 	Path.normalize(`${ __dirname }/../../../tests/test5/node_modules/@gov.au/pancake-sass`),
@@ -30,7 +29,7 @@ const Result = [
 ]
 
 test('ModulePath should return array of all folders in path', () => {
-	expect( GetFolders(ModulePath) ).toMatchObject(Result);
+	expect( GetFolders( modulePath ) ).toMatchObject( result );
 });
 
 
@@ -40,39 +39,39 @@ test('ModulePath should return array of all folders in path', () => {
 /**
  * Test that ReadFile correctly returns file content
  */
-const Location = Path.normalize(`${ __dirname }/../../../tests/test2/package.json`);
+const location = Path.normalize(`${ __dirname }/../../../tests/test2/package.json`);
 
-const Data = {
-	"pancake": {
-		"auto-save": false,
-		"css": {
-			"minified": true,
-			"modules": true,
-			"browsers": [
-				"last 2 versions",
-				"ie 8",
-				"ie 9",
-				"ie 10"
+const data = {
+	'pancake': {
+		'auto-save': false,
+		'css': {
+			'minified': true,
+			'modules': true,
+			'browsers': [
+				'last 2 versions',
+				'ie 8',
+				'ie 9',
+				'ie 10',
 			],
-			"location": "pancake/css/",
-			"name": "pancake.min.css"
+			'location': 'pancake/css/',
+			'name': 'pancake.min.css',
 		},
-		"sass": {
-			"name": false
+		'sass': {
+			'name': false,
 		},
-		"js": {
-			"minified": true,
-			"modules": true,
-			"location": "pancake/js/",
-			"name": "pancake.min.js"
-		}
-	}
+		'js': {
+			'minified': true,
+			'modules': true,
+			'location': 'pancake/js/',
+			'name': 'pancake.min.js',
+		},
+	},
 }
 
-const Content = JSON.stringify(Data, null, '\t')+'\n'
+const content = `${ JSON.stringify( data, null, '\t' ) }\n`;
 
 test('ReadFile should return correct information', () => {
-	return ReadFile(Location).then( data => {
-		expect( data ).toBe( Content );
+	return ReadFile( location ).then( data => {
+		expect( data ).toBe( content );
 	});
 });

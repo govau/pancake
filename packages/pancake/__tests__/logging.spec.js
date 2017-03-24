@@ -1,10 +1,11 @@
 /***************************************************************************************************************************************************************
  *
- * Logging.js unit tests
+ * logging.js unit tests
  *
  * @file - pancake/src/logging.js
  *
  **************************************************************************************************************************************************************/
+
 
 import { Style, Log } from '../src/logging';
 
@@ -23,7 +24,8 @@ test('Log.parse - start and end ansi code is correctly added', () => {
 
 
 test('Log.parse - start and end ansi code can be nested', () => {
-	expect( Style.parse( `TEST ${ Style.parse( 'SUBTEST', '666m', '777m' ) } STRING`, '666m', '777m' ) ).toBe('\u001B[666mTEST \u001B[666mSUBTEST\u001B[666m STRING\u001b[777m');
+	expect( Style.parse( `TEST ${ Style.parse( 'SUBTEST', '666m', '777m' ) } STRING`, '666m', '777m' ) )
+		.toBe('\u001B[666mTEST \u001B[666mSUBTEST\u001B[666m STRING\u001b[777m');
 });
 
 
@@ -44,7 +46,7 @@ test('function should return correct string and colour', () => {
 test('should be able to combine multiple strings of varying colours', () => {
 	const test = Style.yellow(`yellow text ${ Style.green(`green text ${ Style.red(`red text`) } green text`) } yellow text`);
 
-	expect( test ).toBe("\u001B[33myellow text \u001B[32mgreen text \u001B[31mred text\u001B[32m green text\u001B[33m yellow text\u001b[39m");
+	expect( test ).toBe('\u001B[33myellow text \u001B[32mgreen text \u001B[31mred text\u001B[32m green text\u001B[33m yellow text\u001b[39m');
 });
 
 
