@@ -45,8 +45,6 @@ Log.output = true; //this plugin assumes you run it through pancake
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
-	Log.info(`ADDING SYRUP/SASS TO YOUR PANCAKE`);
-
 	Loading.start('pancake-sass');
 
 
