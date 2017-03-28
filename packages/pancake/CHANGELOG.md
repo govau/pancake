@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.0.9 - Improving plugin install](v109)
 * [v1.0.8 - Pause and resume, plugins and tests](v108)
 * [v1.0.7 - Loading fixes](v107)
 * [v1.0.6 - Bug hunting](v106)
@@ -13,6 +14,12 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.9
+
+- Get loading working inside child.process ([#21](https://github.com/govau/pancake/issues/21))
+- Increase speed in which the plugins are installed ([#20](https://github.com/govau/pancake/issues/20))
 
 
 ## v1.0.8

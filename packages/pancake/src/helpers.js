@@ -198,17 +198,35 @@ export const Spawning = {
 	 * @param  {array}   options - the flags and options we pass to it
 	 * @param  {object}  param   - Parameters we pass to child_process
 	 *
-	 * @return {Promise object}  - The object returned from child_process.spawn
+	 * @return {Promise object}  - The error code returned from child_process.spawn
 	 */
 	async: ( command, options, param = {} ) => {
-		Log.verbose(`Spawning async ${ Style.yellow(`${ command } ${ [ ...options ].join(' ') } `) } with ${ Style.yellow( JSON.stringify( param ) ) }` );
+		Log.verbose(`Spawning async ${ Style.yellow(`${ command } ${ [ ...options ].join(' ') }`) } with ${ Style.yellow( JSON.stringify( param ) ) }` );
 
-		if( Spawning.isWin ) {
-			return Spawn.spawn( 'cmd.exe', [ '/s', '/c', command, ...options ], param );
-		}
-		else {
-			return Spawn.spawn( command, [ ...options ], param );
-		}
+		return new Promise( ( resolve, reject ) => {
+			let operation;
+			let error = ``; //gather errors
+
+			if( Spawning.isWin ) {
+				operation = Spawn.spawn( 'cmd.exe', [ '/s', '/c', command, ...options ], param );
+			}
+			else {
+				operation = Spawn.spawn( command, [ ...options ], param );
+			}
+
+			operation.stderr.on('data', error => {
+				error += error; //add to error object
+			});
+
+			operation.on('close', code => {
+				if( code !== 0 ) {
+					reject( error.toString() ); //ignore warnings
+				}
+				else {
+					resolve( code );
+				}
+			});
+		});
 	},
 
 	/**
@@ -218,7 +236,7 @@ export const Spawning = {
 	 * @param  {array}   options - the flags and options we pass to it
 	 * @param  {object}  param   - Parameters we pass to child_process
 	 *
-	 * @return {Promise object}  - The object returned from child_process.spawnSync
+	 * @return {object}          - The object returned from child_process.spawnSync
 	 */
 	sync: ( command, options, param = {} ) => {
 

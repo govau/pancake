@@ -34,7 +34,7 @@ import { Spawning } from './helpers';
  * @param  {array}  plugins  - An array of plugin names
  * @param  {string} cwd      - The path to our working directory
  *
- * @return {object}          - Return an object listing plugins installed and plugins found
+ * @return {promise object}  - Return an object listing plugins installed and plugins found
  */
 export const InstallPlugins = ( plugins, cwd ) => {
 	const result = {
@@ -42,52 +42,67 @@ export const InstallPlugins = ( plugins, cwd ) => {
 		installing: [],
 	};
 
-	//go through all plugins
-	plugins.map( plugin => {
+	return new Promise( ( resolve, reject ) => {
 
-		try {
-			require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
+		//go through all plugins
+		plugins.map( plugin => {
 
-			result.found.push( plugin );
-		}
-		catch( error ) {
-			result.installing.push( plugin );
-		}
+			try {
+				require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
 
-	});
+				result.found.push( plugin );
+			}
+			catch( error ) {
+				result.installing.push( plugin );
+			}
+
+		});
 
 
-	if( result.installing.length > 0 ) {
-		Log.verbose(`Trying to install: ${ Style.yellow( JSON.stringify( result.installing ) ) }`);
+		if( result.installing.length > 0 ) {
+			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
+			Loading.start();
 
-		//checking if we got yarn installed
-		// const command = Spawning.sync( 'yarn', [ '--version' ] );
-		// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+			//checking if we got yarn installed
+			// const command = Spawning.sync( 'yarn', [ '--version' ] );
+			// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
 
-		const hasYarn = false; //disabled yarn as it has some issues
+			const hasYarn = false; //disabled yarn as it has some issues
 
-		Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
+			Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
 
-		let installing; //for spawning our install process
+			let installing; //for spawning our install process
 
-		//installing modules
-		if( hasYarn ) {
-			installing = Spawning.sync( 'yarn', [ 'add', ...result.installing ], { cwd: cwd } );
+			//installing modules
+			if( hasYarn ) {
+				Spawning.async( 'yarn', [ 'add', ...result.installing ], { cwd: cwd } )
+					.catch( error => {
+						Loading.stop();
+
+						Log.error(`Installing plugins failed`);
+						reject( error );
+					})
+					.then( data => {
+						resolve( result );
+				});
+			}
+			else {
+				Spawning.async( 'npm', [ 'install', ...result.installing ], { cwd: cwd } )
+					.catch( error => {
+						Loading.stop();
+
+						Log.error(`Installing plugins failed`);
+						reject( error );
+					})
+					.then( data => {
+						resolve( result );
+				});
+			}
 		}
 		else {
-			installing = Spawning.sync( 'npm', [ 'install', ...result.installing ], { cwd: cwd } );
+			resolve( result );
 		}
-
-		//install has failed :(
-		if( installing.status !== 0 ) {
-			Log.error(`Installing plugins failed`);
-			Log.error( installing.stderr.toString() );
-
-			process.exit( 1 );
-		}
-	}
-
-	return result;
+	});
 };
 
 
@@ -114,7 +129,7 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SE
 
 		//go through all plugins
 		const allPlugins = plugins.map( plugin => {
-			Log.verbose(`Shooting off ${ Style.yellow( plugin ) }`);
+			Log.info(`ADDING SWEET SYRUP TO YOUR PANCAKE VIA ${ plugin }`);
 
 			plugin = require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
 
