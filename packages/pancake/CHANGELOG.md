@@ -6,14 +6,26 @@ Pancake
 
 ## Versions
 
-* [v1.0.9 - Improving plugin install](v109)
-* [v1.0.8 - Pause and resume, plugins and tests](v108)
-* [v1.0.7 - Loading fixes](v107)
-* [v1.0.6 - Bug hunting](v106)
-* [v1.0.5 - 💥 Initial version](v105)
+* [v1.0.11 - Fixed lag in plugin install](v1011)
+* [v1.0.10 - WIP, working on speed improvements](v1010)
+* [v1.0.9  - Improving plugin install](v109)
+* [v1.0.8  - Pause and resume, plugins and tests](v108)
+* [v1.0.7  - Loading fixes](v107)
+* [v1.0.6  - Bug hunting](v106)
+* [v1.0.5  - 💥 Initial version](v105)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.11
+
+- Fixed npm waiting for lock files inside the plugin install ([#21](https://github.com/govau/pancake/issues/21))
+
+
+## v1.0.10
+
+- Working on making the plugin install faster ([#20](https://github.com/govau/pancake/issues/20))
 
 
 ## v1.0.9

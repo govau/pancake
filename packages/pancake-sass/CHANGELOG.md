@@ -6,6 +6,7 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.0.9 - Cleaned logs](v109)
 * [v1.0.8 - Dependencies and tests](v108)
 * [v1.0.7 - Sass custom path, global settings](v107)
 * [v1.0.6 - Loading fixes](v106)
@@ -15,6 +16,11 @@ Pancake SASS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.9
+
+- Cleaned log so now pancake will announce plugins just when it tries to run them
 
 
 ## v1.0.8

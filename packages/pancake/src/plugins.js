@@ -63,10 +63,19 @@ export const InstallPlugins = ( plugins, cwd ) => {
 			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
 			Loading.start();
 
+			//get the config so we can return them to what they were
+			const cacheLockStale = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-stale' ] ).stdout.toString().trim();
+			const cacheLockWait = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-wait' ] ).stdout.toString().trim();
+
+			Log.verbose(`Npm config was cache-lock-stale: ${ Style.yellow( cacheLockStale ) } cache-lock-wait: ${ Style.yellow( cacheLockWait ) }`);
+
+			//setting new config for just this install to not wait too long for the lockfiles
+			Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', '10' ] );
+			Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', '10' ] );
+
 			//checking if we got yarn installed
 			// const command = Spawning.sync( 'yarn', [ '--version' ] );
 			// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
-
 			const hasYarn = false; //disabled yarn as it has some issues
 
 			Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
@@ -75,26 +84,42 @@ export const InstallPlugins = ( plugins, cwd ) => {
 
 			//installing modules
 			if( hasYarn ) {
-				Spawning.async( 'yarn', [ 'add', ...result.installing ], { cwd: cwd } )
+				Spawning.async( 'yarn', [ 'add', ...result.installing ], { cwd: cwd/*, stdio: 'inherit'*/ } )
 					.catch( error => {
 						Loading.stop();
+
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
 
 						Log.error(`Installing plugins failed`);
 						reject( error );
 					})
 					.then( data => {
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
+
 						resolve( result );
 				});
 			}
 			else {
-				Spawning.async( 'npm', [ 'install', ...result.installing ], { cwd: cwd } )
+				Spawning.async( 'npm', [ 'install', '--no-progress', ...result.installing ], { cwd: cwd/*, stdio: 'inherit'*/ } )
 					.catch( error => {
 						Loading.stop();
+
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
 
 						Log.error(`Installing plugins failed`);
 						reject( error );
 					})
 					.then( data => {
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
+
 						resolve( result );
 				});
 			}

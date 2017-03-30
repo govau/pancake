@@ -214,9 +214,11 @@ export const Spawning = {
 				operation = Spawn.spawn( command, [ ...options ], param );
 			}
 
-			operation.stderr.on('data', error => {
-				error += error; //add to error object
-			});
+			if( operation.stderr ) { //if we even have an output
+				operation.stderr.on('data', error => {
+					error += error; //add to error object
+				});
+			}
 
 			operation.on('close', code => {
 				if( code !== 0 ) {

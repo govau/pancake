@@ -58,11 +58,13 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
-* v1.0.9 - Improving plugin install
-* v1.0.8 - Pause and resume, plugins and tests
-* v1.0.7 - Loading fixes
-* v1.0.6 - Fixed some bugs
-* v1.0.5 - 💥 Initial version
+* v1.0.11 - Fixed lag in plugin install
+* v1.0.10 - WIP, working on speed improvements
+* v1.0.9  - Improving plugin install
+* v1.0.8  - Pause and resume, plugins and tests
+* v1.0.7  - Loading fixes
+* v1.0.6  - Fixed some bugs
+* v1.0.5  - 💥 Initial version
 
 
 **[⬆ back to top](#contents)**
