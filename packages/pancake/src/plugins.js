@@ -60,9 +60,6 @@ export const InstallPlugins = ( plugins, cwd ) => {
 
 
 		if( result.installing.length > 0 ) {
-			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
-			Loading.start();
-
 			//get the config so we can return them to what they were
 			const cacheLockStale = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-stale' ] ).stdout.toString().trim();
 			const cacheLockWait = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-wait' ] ).stdout.toString().trim();
@@ -78,13 +75,19 @@ export const InstallPlugins = ( plugins, cwd ) => {
 			// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
 			const hasYarn = false; //disabled yarn as it has some issues
 
+			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
+			// Loading.start();
+
 			Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
 
 			let installing; //for spawning our install process
 
+			Loading.stop();
+			Log.space();
+
 			//installing modules
 			if( hasYarn ) {
-				Spawning.async( 'yarn', [ 'add', ...result.installing ], { cwd: cwd/*, stdio: 'inherit'*/ } )
+				Spawning.async( 'yarn', [ 'add', ...result.installing ], { cwd: cwd, stdio: 'inherit' } )
 					.catch( error => {
 						Loading.stop();
 
@@ -104,7 +107,7 @@ export const InstallPlugins = ( plugins, cwd ) => {
 				});
 			}
 			else {
-				Spawning.async( 'npm', [ 'install', '--no-progress', ...result.installing ], { cwd: cwd/*, stdio: 'inherit'*/ } )
+				Spawning.async( 'npm', [ 'install', '--no-progress', ...result.installing ], { cwd: cwd, stdio: 'inherit' } )
 					.catch( error => {
 						Loading.stop();
 
@@ -116,6 +119,8 @@ export const InstallPlugins = ( plugins, cwd ) => {
 						reject( error );
 					})
 					.then( data => {
+						Log.space();
+
 						//return npm config to what it was before
 						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
 						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );

@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.0.12 - Enabled plugin install console logging](v1012)
 * [v1.0.11 - Fixed lag in plugin install](v1011)
 * [v1.0.10 - WIP, working on speed improvements](v1010)
 * [v1.0.9  - Improving plugin install](v109)
@@ -16,6 +17,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.12
+
+- stdio output to inherit so we can debug why plugin install is hanging ([#21](https://github.com/govau/pancake/issues/21))
 
 
 ## v1.0.11
