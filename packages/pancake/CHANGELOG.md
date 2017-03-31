@@ -22,17 +22,17 @@ Pancake
 
 ## v1.0.13
 
-- Enabled loading animation for plugin install ([#21](https://github.com/govau/pancake/issues/21))
+- Enabled loading animation for plugin install ([#20](https://github.com/govau/pancake/issues/20))
 
 
 ## v1.0.12
 
-- stdio output to inherit so we can debug why plugin install is hanging ([#21](https://github.com/govau/pancake/issues/21))
+- stdio output to inherit so we can debug why plugin install is hanging ([#20](https://github.com/govau/pancake/issues/20))
 
 
 ## v1.0.11
 
-- Fixed npm waiting for lock files inside the plugin install ([#21](https://github.com/govau/pancake/issues/21))
+- Fixed npm waiting for lock files inside the plugin install ([#20](https://github.com/govau/pancake/issues/20))
 
 
 ## v1.0.10
