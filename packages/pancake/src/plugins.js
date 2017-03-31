@@ -120,7 +120,7 @@ export const InstallPlugins = ( plugins, cwd ) => {
 				});
 			}
 			else {
-				Spawning.async( 'npm', [ 'install', '--no-progress', ...result.installing ], spawnOpt )
+				Spawning.async( 'npm', [ 'install', '--no-progress', '--save', ...result.installing ], spawnOpt )
 					.catch( error => {
 						Loading.stop();
 
