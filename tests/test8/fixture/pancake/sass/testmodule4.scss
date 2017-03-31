@@ -1,9 +1,9 @@
 /* @gov.au/testmodule4 v11.0.0 */
 
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/sass-versioning/dist/_index.scss";
+@import "[path]/tests/test8/node_modules/sass-versioning/dist/_index.scss";
 
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule3/lib/sass/_module.scss";
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule4/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule3/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule4/lib/sass/_module.scss";
 
 @include versioning-check();

@@ -1,10 +1,10 @@
-/*! PANCAKE v1.0.8 PANCAKE-SASS v1.0.9 */
+/*! PANCAKE v[version] PANCAKE-SASS v[sass-version] */
 
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/sass-versioning/dist/_index.scss";
+@import "[path]/tests/test8/node_modules/sass-versioning/dist/_index.scss";
 
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule3/lib/sass/_module.scss";
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule4/lib/sass/_module.scss";
-@import "/Users/dominikwilkowski/Sites/DTA/pancake/tests/test8/node_modules/@gov.au/testmodule2/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule1/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule3/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule4/lib/sass/_module.scss";
+@import "[path]/tests/test8/node_modules/@gov.au/testmodule2/lib/sass/_module.scss";
 
 @include versioning-check();
