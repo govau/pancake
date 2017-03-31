@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.13 - Loading animation
 * v1.0.12 - Enabled plugin install console logging
 * v1.0.11 - Fixed lag in plugin install
 * v1.0.10 - WIP, working on speed improvements

@@ -42,6 +42,8 @@ export const InstallPlugins = ( plugins, cwd ) => {
 		installing: [],
 	};
 
+	const output = false; //switch output of child process to stdout
+
 	return new Promise( ( resolve, reject ) => {
 
 		//go through all plugins
@@ -60,6 +62,8 @@ export const InstallPlugins = ( plugins, cwd ) => {
 
 
 		if( result.installing.length > 0 ) {
+			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
+
 			//get the config so we can return them to what they were
 			const cacheLockStale = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-stale' ] ).stdout.toString().trim();
 			const cacheLockWait = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-wait' ] ).stdout.toString().trim();
@@ -75,19 +79,28 @@ export const InstallPlugins = ( plugins, cwd ) => {
 			// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
 			const hasYarn = false; //disabled yarn as it has some issues
 
-			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
-			// Loading.start();
+			if( !output ) {
+				Loading.start(); //waiting with loading to after the blocking child processes
+			}
 
 			Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
 
 			let installing; //for spawning our install process
 
-			Loading.stop();
-			Log.space();
+			if( output ) {
+				Loading.stop();
+				Log.space();
+			}
+
+			//options for our child process
+			let spawnOpt = { cwd: cwd };
+			if( output ) {
+				spawnOpt = { cwd: cwd, stdio: 'inherit' };
+			}
 
 			//installing modules
 			if( hasYarn ) {
-				Spawning.async( 'yarn', [ 'add', ...result.installing ], { cwd: cwd, stdio: 'inherit' } )
+				Spawning.async( 'yarn', [ 'add', ...result.installing ], spawnOpt )
 					.catch( error => {
 						Loading.stop();
 
@@ -107,7 +120,7 @@ export const InstallPlugins = ( plugins, cwd ) => {
 				});
 			}
 			else {
-				Spawning.async( 'npm', [ 'install', '--no-progress', ...result.installing ], { cwd: cwd, stdio: 'inherit' } )
+				Spawning.async( 'npm', [ 'install', '--no-progress', ...result.installing ], spawnOpt )
 					.catch( error => {
 						Loading.stop();
 
@@ -119,7 +132,9 @@ export const InstallPlugins = ( plugins, cwd ) => {
 						reject( error );
 					})
 					.then( data => {
-						Log.space();
+						if( output ) {
+							Log.space();
+						}
 
 						//return npm config to what it was before
 						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
