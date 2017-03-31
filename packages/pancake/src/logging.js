@@ -315,28 +315,42 @@ export const Loading = (() => {
 
 	const sequence = [ //the sequence of all animation frame
 		//pancake loading animation
-		Style.gray(`            ( ^-^)${ Style.yellow(`旦`) }          `),
-		Style.gray(`             ( ^-^)${ Style.yellow(`旦`) }         `),
-		Style.gray(`              ( ^-^)${ Style.yellow(`旦`) }        `),
-		Style.gray(`               ( ^-^)${ Style.yellow(`旦`) }       `),
-		Style.gray(`                ( ^-^)${ Style.yellow(`旦`) }      `),
-		Style.gray(`                 ( ^-^)${ Style.yellow(`旦`) }     `),
-		Style.gray(`                  ( ^-^)${ Style.yellow(`旦`) }    `),
-		Style.gray(`                   ( ^-^)${ Style.yellow(`旦`) }   `),
-		Style.gray(`                    ( ^-^)${ Style.yellow(`旦`) }  `),
-		Style.gray(`                     ( ^-^)${ Style.yellow(`旦`) } `),
-		Style.gray(`                      ( ^-^)${ Style.yellow(`旦`) }`),
-		Style.gray(`                     ${ Style.yellow(`旦`) }(^-^ ) `),
-		Style.gray(`                    ${ Style.yellow(`旦`) }(^-^ )  `),
-		Style.gray(`                   ${ Style.yellow(`旦`) }(^-^ )   `),
-		Style.gray(`                  ${ Style.yellow(`旦`) }(^-^ )    `),
-		Style.gray(`                 ${ Style.yellow(`旦`) }(^-^ )     `),
-		Style.gray(`                ${ Style.yellow(`旦`) }(^-^ )      `),
-		Style.gray(`               ${ Style.yellow(`旦`) }(^-^ )       `),
-		Style.gray(`              ${ Style.yellow(`旦`) }(^-^ )        `),
-		Style.gray(`             ${ Style.yellow(`旦`) }(^-^ )         `),
-		Style.gray(`            ${ Style.yellow(`旦`) }(^-^ )          `),
-		Style.gray(`           ${ Style.yellow(`旦`) }(^-^ )           `),
+		Style.gray(`            ( ^-^)${ Style.yellow(`旦`) }                 `),
+		Style.gray(`             ( ^-^)${ Style.yellow(`旦`) }                `),
+		Style.gray(`              ( ^-^)${ Style.yellow(`旦`) }               `),
+		Style.gray(`               ( ^-^)${ Style.yellow(`旦`) }              `),
+		Style.gray(`                ( ^-^)${ Style.yellow(`旦`) }             `),
+		Style.gray(`                 ( ^-^)${ Style.yellow(`旦`) }            `),
+		Style.gray(`                  ( ^-^)${ Style.yellow(`旦`) }           `),
+		Style.gray(`                   ( ^-^)${ Style.yellow(`旦`) }          `),
+		Style.gray(`                    ( ^-^)${ Style.yellow(`旦`) }         `),
+		Style.gray(`                     ( ^-^)${ Style.yellow(`旦`) }        `),
+		Style.gray(`                      ( ^-^)${ Style.yellow(`旦`) }       `),
+		Style.gray(`                       ( ^-^)${ Style.yellow(`旦`) }      `),
+		Style.gray(`                        ( ^-^)${ Style.yellow(`旦`) }     `),
+		Style.gray(`                         ( ^-^)${ Style.yellow(`旦`) }    `),
+		Style.gray(`                          ( ^-^)${ Style.yellow(`旦`) }   `),
+		Style.gray(`                           ( ^-^)${ Style.yellow(`旦`) }  `),
+		Style.gray(`                            ( ^-^)${ Style.yellow(`旦`) } `),
+		Style.gray(`                            ( ^-^)${ Style.yellow(`旦`) } `),
+		Style.gray(`                             ( ^-^)${ Style.yellow(`旦`) }`),
+		Style.gray(`                            ${ Style.yellow(`旦`) }(^-^ ) `),
+		Style.gray(`                           ${ Style.yellow(`旦`) }(^-^ )  `),
+		Style.gray(`                          ${ Style.yellow(`旦`) }(^-^ )   `),
+		Style.gray(`                         ${ Style.yellow(`旦`) }(^-^ )    `),
+		Style.gray(`                        ${ Style.yellow(`旦`) }(^-^ )     `),
+		Style.gray(`                       ${ Style.yellow(`旦`) }(^-^ )      `),
+		Style.gray(`                      ${ Style.yellow(`旦`) }(^-^ )       `),
+		Style.gray(`                     ${ Style.yellow(`旦`) }(^-^ )        `),
+		Style.gray(`                    ${ Style.yellow(`旦`) }(^-^ )         `),
+		Style.gray(`                   ${ Style.yellow(`旦`) }(^-^ )          `),
+		Style.gray(`                  ${ Style.yellow(`旦`) }(^-^ )           `),
+		Style.gray(`                 ${ Style.yellow(`旦`) }(^-^ )            `),
+		Style.gray(`                ${ Style.yellow(`旦`) }(^-^ )             `),
+		Style.gray(`               ${ Style.yellow(`旦`) }(^-^ )              `),
+		Style.gray(`              ${ Style.yellow(`旦`) }(^-^ )               `),
+		Style.gray(`             ${ Style.yellow(`旦`) }(^-^ )                `),
+		Style.gray(`            ${ Style.yellow(`旦`) }(^-^ )                 `),
 
 		//old style loading animation
 		// Style.gray(`            ${ Style.yellow('*') } • • • •`),
@@ -352,7 +366,7 @@ export const Loading = (() => {
 
 	let index = 0;    //the current index of the animation
 	let timer = {};   //the setInterval object
-	let speed = 100;  //the speed in which to animate
+	let speed = 80;  //the speed in which to animate
 
 	return {
 		running: {},

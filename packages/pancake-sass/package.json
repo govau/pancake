@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-sass",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"description": "A Pancake plugin to compile sass files.",
 	"keywords": [
 		"npm",
@@ -24,7 +24,7 @@
 		"test": "exit 0",
 
 		"build": "npm run build:js",
-		"build:watch": "jest --coverage && npm run build:js",
+		"build:watch": "npm run build:js && jest --coverage",
 		"build:js": "babel src --out-dir lib --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
 		"watch": "npm run build:watch && onchange 'src/*.js' 'tests/*.js' -- npm run build:watch"
 	},

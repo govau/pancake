@@ -34,7 +34,7 @@ import { Spawning } from './helpers';
  * @param  {array}  plugins  - An array of plugin names
  * @param  {string} cwd      - The path to our working directory
  *
- * @return {object}          - Return an object listing plugins installed and plugins found
+ * @return {promise object}  - Return an object listing plugins installed and plugins found
  */
 export const InstallPlugins = ( plugins, cwd ) => {
 	const result = {
@@ -42,52 +42,112 @@ export const InstallPlugins = ( plugins, cwd ) => {
 		installing: [],
 	};
 
-	//go through all plugins
-	plugins.map( plugin => {
+	const output = false; //switch output of child process to stdout
 
-		try {
-			require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
+	return new Promise( ( resolve, reject ) => {
 
-			result.found.push( plugin );
-		}
-		catch( error ) {
-			result.installing.push( plugin );
-		}
+		//go through all plugins
+		plugins.map( plugin => {
 
-	});
+			try {
+				require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
+
+				result.found.push( plugin );
+			}
+			catch( error ) {
+				result.installing.push( plugin );
+			}
+
+		});
 
 
-	if( result.installing.length > 0 ) {
-		Log.verbose(`Trying to install: ${ Style.yellow( JSON.stringify( result.installing ) ) }`);
+		if( result.installing.length > 0 ) {
+			Log.info(`INSTALLING ${ result.installing.join(', ') }`);
 
-		//checking if we got yarn installed
-		// const command = Spawning.sync( 'yarn', [ '--version' ] );
-		// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+			//get the config so we can return them to what they were
+			const cacheLockStale = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-stale' ] ).stdout.toString().trim();
+			const cacheLockWait = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-wait' ] ).stdout.toString().trim();
 
-		const hasYarn = false; //disabled yarn as it has some issues
+			Log.verbose(`Npm config was cache-lock-stale: ${ Style.yellow( cacheLockStale ) } cache-lock-wait: ${ Style.yellow( cacheLockWait ) }`);
 
-		Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
+			//setting new config for just this install to not wait too long for the lockfiles
+			Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', '10' ] );
+			Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', '10' ] );
 
-		let installing; //for spawning our install process
+			//checking if we got yarn installed
+			// const command = Spawning.sync( 'yarn', [ '--version' ] );
+			// const hasYarn = command.stdout && command.stdout.toString().trim() ? true : false;
+			const hasYarn = false; //disabled yarn as it has some issues
 
-		//installing modules
-		if( hasYarn ) {
-			installing = Spawning.sync( 'yarn', [ 'add', ...result.installing ], { cwd: cwd } );
+			if( !output ) {
+				Loading.start(); //waiting with loading to after the blocking child processes
+			}
+
+			Log.verbose(`Yarn ${ Style.yellow( hasYarn ? 'was' : 'was not' ) } detected`);
+
+			let installing; //for spawning our install process
+
+			if( output ) {
+				Loading.stop();
+				Log.space();
+			}
+
+			//options for our child process
+			let spawnOpt = { cwd: cwd };
+			if( output ) {
+				spawnOpt = { cwd: cwd, stdio: 'inherit' };
+			}
+
+			//installing modules
+			if( hasYarn ) {
+				Spawning.async( 'yarn', [ 'add', ...result.installing ], spawnOpt )
+					.catch( error => {
+						Loading.stop();
+
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
+
+						Log.error(`Installing plugins failed`);
+						reject( error );
+					})
+					.then( data => {
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
+
+						resolve( result );
+				});
+			}
+			else {
+				Spawning.async( 'npm', [ 'install', '--no-progress', '--save', ...result.installing ], spawnOpt )
+					.catch( error => {
+						Loading.stop();
+
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
+
+						Log.error(`Installing plugins failed`);
+						reject( error );
+					})
+					.then( data => {
+						if( output ) {
+							Log.space();
+						}
+
+						//return npm config to what it was before
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', cacheLockStale ] );
+						Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-wait', cacheLockWait ] );
+
+						resolve( result );
+				});
+			}
 		}
 		else {
-			installing = Spawning.sync( 'npm', [ 'install', ...result.installing ], { cwd: cwd } );
+			resolve( result );
 		}
-
-		//install has failed :(
-		if( installing.status !== 0 ) {
-			Log.error(`Installing plugins failed`);
-			Log.error( installing.stderr.toString() );
-
-			process.exit( 1 );
-		}
-	}
-
-	return result;
+	});
 };
 
 
@@ -114,7 +174,7 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SE
 
 		//go through all plugins
 		const allPlugins = plugins.map( plugin => {
-			Log.verbose(`Shooting off ${ Style.yellow( plugin ) }`);
+			Log.info(`ADDING SWEET SYRUP TO YOUR PANCAKE VIA ${ plugin }`);
 
 			plugin = require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
 

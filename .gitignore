@@ -13,6 +13,7 @@ yarn-error.log
 lerna-debug.log
 dist/
 lib/
+_fixture/
 tests/*/pancake/
 tests/*/yarn.lock
 tests/*/testfolder/

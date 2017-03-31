@@ -224,7 +224,8 @@ export const init = ( argv = process.argv ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Install all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-				let plugins = [];
+				let plugins = [];   //gather all plugins we have to run later
+				let installed = []; //an array to be filled with a promise from InstallPlugins
 
 				if( SETTINGSlocal.plugins === false || SETTINGS.plugins === false ) {
 					Log.verbose(`Skipping plugins`);
@@ -232,7 +233,7 @@ export const init = ( argv = process.argv ) => {
 				else {
 					const allPlugins = GetPlugins( allModules );
 
-					allPlugins.map( plugin => {
+					allPlugins.map( plugin => { //filtering out ignored plugins
 						if(
 							SETTINGSlocal.ignore.filter( ignore => ignore === plugin ).length === 0 &&
 							SETTINGS.ignorePlugins.filter( ignore => ignore === plugin ).length === 0
@@ -241,50 +242,60 @@ export const init = ( argv = process.argv ) => {
 						}
 					});
 
-					const installed = InstallPlugins( plugins, pkgPath );
+					installed.push( InstallPlugins( plugins, pkgPath ) ); //add the promise to the installed array
 				}
+
+				Promise.all( installed ) //if we had plugins installed, wait until they are finished
+					.catch( error => {
+						Log.error( error );
+
+						process.exit( 1 );
+					})
+					.then( data => {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Run all plugins
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-				RunPlugins( pkg.version, plugins, pkgPath, allModules, SETTINGSlocal, SETTINGS )
-					.catch( error => {
-						Loading.stop();
+					RunPlugins( pkg.version, plugins, pkgPath, allModules, SETTINGSlocal, SETTINGS )
+						.catch( error => {
+							Loading.stop();
 
-						Log.error( error );
-					})
-					.then( ( settings ) => {
-						Loading.start();
+							Log.error( error );
+						})
+						.then( ( settings ) => {
+							Loading.start();
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Save local settings into host package.json
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-						if( SETTINGSlocal['auto-save'] && !ARGS.nosave ) {
+							if( SETTINGSlocal['auto-save'] && !ARGS.nosave ) {
 
-							//merge all plugin settings
-							settings.map( setting => {
-								Object.keys( setting ).map( key => {
-									SETTINGSlocal[ key ] = Object.assign( setting[ key ], SETTINGSlocal[ key ] );
+								//merge all plugin settings
+								settings.map( setting => {
+									Object.keys( setting ).map( key => {
+										SETTINGSlocal[ key ] = Object.assign( setting[ key ], SETTINGSlocal[ key ] );
+									});
 								});
-							});
 
-							Settings.SetLocal( SETTINGSlocal, pkgPath ) //let’s save all settings
-								.catch( error => {
-									Log.error(`Saving settings caused an error: ${ error }`);
+								Settings.SetLocal( SETTINGSlocal, pkgPath ) //let’s save all settings
+									.catch( error => {
+										Log.error(`Saving settings caused an error: ${ error }`);
 
-									process.exit( 1 );
-								})
-								.then( SETTINGSlocal => {
-									Log.ok(`SETTINGS SAVED`); //all done!
+										process.exit( 1 );
+									})
+									.then( SETTINGSlocal => {
+										Log.ok(`SETTINGS SAVED`); //all done!
 
-									Log.done(`YOUR PANCAKE IS READY ( ˘▽˘)っ旦`); //all done!
-							});
-						}
-						else {
-							Log.done(`YOUR PANCAKE IS READY ( ˘▽˘)っ旦`); //all done!
-						}
+										Log.done(`YOUR PANCAKE IS READY ( ˘▽˘)っ旦`); //all done!
+								});
+							}
+							else {
+								Log.done(`YOUR PANCAKE IS READY ( ˘▽˘)っ旦`); //all done!
+							}
+					});
+
 				});
 
 			}

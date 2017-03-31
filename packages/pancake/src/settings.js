@@ -48,8 +48,9 @@ export const Settings = {
 			SETTINGS = JSON.parse( Fs.readFileSync( Path.normalize(`${ __dirname }/../settings.json`), `utf8` ) );
 		}
 		catch( error ) {
-			Log.error(`Couldn’t read settings :(`);
+			Log.error(`Couldn’t read global settings :(`);
 
+			Log.space();
 			process.exit( 1 );
 		}
 
@@ -75,9 +76,11 @@ export const Settings = {
 			SETTINGS = JSON.parse( Fs.readFileSync( Path.normalize(`${ cwd }/package.json`), `utf8` ) );
 		}
 		catch( error ) {
-			Log.error(`Couldn’t read settings :(`);
+			Log.error(`Couldn’t read local settings :(`);
+			Log.error(`Make sure you have a package.json file availabe in the root of your project.`);
 			Log.error( error );
 
+			Log.space();
 			process.exit( 1 );
 		}
 

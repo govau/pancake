@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.9 - Cleaned logs
 * v1.0.8 - Dependencies and tests
 * v1.0.7 - Sass custom path, global settings
 * v1.0.6 - Loading fixes

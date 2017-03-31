@@ -12,7 +12,9 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+const Replace = require('replace-in-file');
 const Spawn = require('child_process');
+const Copydir = require('copy-dir');
 const Dirsum = require('dirsum');
 const Chalk = require('chalk');
 const Path = require('path');
@@ -120,15 +122,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
-			// {
-			// 	name: 'Compile test with deep dependencies',
-			// 	folder: 'test8',
-			// 	script: {
-			// 		options: [],
-			// 	},
-			// 	compare: 'pancake/',
-			// 	empty: false,
-			// },
+			{
+				name: 'Test8: Compile test with deep dependencies',
+				folder: 'test8',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
 			{
 				name: 'Test9: Compile test with different asset path',
 				folder: 'test9',
@@ -156,6 +158,8 @@ const TESTER = (() => { //constructor factory
 				allTasks.push(
 					TESTER
 						.delete( scriptFolder, unit )                                   //delete trash first
+						.then( () => TESTER.copyFixtures( scriptFolder, unit ) )        //copy fixtures
+						.then( () => TESTER.replaceFixtures( scriptFolder, unit ) )     //compile fixtures
 						.then( () => TESTER.run( scriptFolder, unit ) )                 //now run script
 						.then( () => TESTER.fixture( scriptFolder, unit ) )             //get hash for fixture
 						.then( result => TESTER.result( scriptFolder, unit, result ) )  //get hash for result of test
@@ -208,6 +212,7 @@ const TESTER = (() => { //constructor factory
 				Path.normalize(`${ path }/*.log.*`),
 				Path.normalize(`${ path }/fixture/.DS_Store`),
 				Path.normalize(`${ path }/fixture/*/.DS_Store`),
+				Path.normalize(`${ path }/_fixture/`),
 			];
 
 			return new Promise( ( resolve, reject ) => {
@@ -220,6 +225,81 @@ const TESTER = (() => { //constructor factory
 
 						resolve();
 				});
+			});
+		},
+
+
+		/**
+		 * Copy fixture files into a temp folder for later processing
+		 *
+		 * @param  {string} path     - The path to the folder that needs cleaning
+		 * @param  {object} settings - The settings object for this test
+		 *
+		 * @return {Promise object}
+		 */
+		copyFixtures: ( path, settings ) => {
+			return new Promise( ( resolve, reject ) => {
+				if( settings.empty ) {
+					resolve();
+				}
+				else {
+					Copydir( Path.normalize(`${ path }/fixture/`) , Path.normalize(`${ path }/_fixture/`), error => {
+						if( error ) {
+							reject( error );
+						}
+						else {
+							resolve();
+						}
+					});
+				}
+			});
+		},
+
+
+		/**
+		 * Replace placeholders in temp fixtures
+		 *
+		 * @param  {string} path     - The path to the folder that needs cleaning
+		 * @param  {object} settings - The settings object for this test
+		 *
+		 * @return {Promise object}
+		 */
+		replaceFixtures: ( path, settings ) => {
+			return new Promise( ( resolve, reject ) => {
+				if( settings.empty ) {
+					resolve();
+				}
+				else {
+					const version = require('../packages/pancake/package.json').version;
+					const sassVersion = require('../packages/pancake-sass/package.json').version;
+					const jsVersion = require('../packages/pancake-js/package.json').version;
+
+					Replace({
+							files: [
+								Path.normalize(`${ path }/_fixture/**`),
+							],
+							from: [
+								/\[version\]/g,
+								/\[sass-version\]/g,
+								/\[js-version\]/g,
+								/\[path\]/g,
+							],
+							to: [
+								version,
+								sassVersion,
+								jsVersion,
+								Path.normalize(`${ __dirname }/..`),
+							],
+							allowEmptyPaths: true,
+							encoding: 'utf8',
+						})
+						.catch( error => {
+							reject( error );
+						})
+						.then( changedFiles => {
+							resolve();
+					});
+				}
 			});
 		},
 
@@ -270,7 +350,7 @@ const TESTER = (() => { //constructor factory
 		fixture: ( path, settings ) => {
 			return new Promise( ( resolve, reject ) => {
 				if( !settings.empty ) {
-					Dirsum.digest( Path.normalize(`${ path }/fixture/${ settings.compare }/`), 'sha256', ( error, hashes ) => {
+					Dirsum.digest( Path.normalize(`${ path }/_fixture/${ settings.compare }/`), 'sha256', ( error, hashes ) => {
 						if( error ) {
 							TESTER.log.pass( error );
 

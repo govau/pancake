@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake",
-	"version": "1.0.8",
+	"version": "1.0.13",
 	"description": "Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly.",
 	"keywords": [
 		"npm",
@@ -27,7 +27,7 @@
 		"test": "exit 0",
 
 		"build": "npm run build:js",
-		"build:watch": "jest --coverage && npm run build:js",
+		"build:watch": "npm run build:js && jest --coverage",
 		"build:js": "babel src --out-dir dist --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
 		"watch": "npm run build:watch && onchange 'src/*.js' 'tests/*.js' -- npm run build:watch"
 	},
