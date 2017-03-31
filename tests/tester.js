@@ -158,8 +158,8 @@ const TESTER = (() => { //constructor factory
 				allTasks.push(
 					TESTER
 						.delete( scriptFolder, unit )                                   //delete trash first
-						.then( () => TESTER.copyFixtures( scriptFolder ) )        //copy fixtures
-						.then( () => TESTER.replaceFixtures( scriptFolder ) )     //compile fixtures
+						.then( () => TESTER.copyFixtures( scriptFolder, unit ) )        //copy fixtures
+						.then( () => TESTER.replaceFixtures( scriptFolder, unit ) )     //compile fixtures
 						.then( () => TESTER.run( scriptFolder, unit ) )                 //now run script
 						.then( () => TESTER.fixture( scriptFolder, unit ) )             //get hash for fixture
 						.then( result => TESTER.result( scriptFolder, unit, result ) )  //get hash for result of test
@@ -232,20 +232,26 @@ const TESTER = (() => { //constructor factory
 		/**
 		 * Copy fixture files into a temp folder for later processing
 		 *
-		 * @param  {string} path - The path to the folder that needs cleaning
+		 * @param  {string} path     - The path to the folder that needs cleaning
+		 * @param  {object} settings - The settings object for this test
 		 *
 		 * @return {Promise object}
 		 */
-		copyFixtures: path => {
+		copyFixtures: ( path, settings ) => {
 			return new Promise( ( resolve, reject ) => {
-				Copydir( Path.normalize(`${ path }/fixture/`) , Path.normalize(`${ path }/_fixture/`), error => {
-					if( error ) {
-						reject( error );
-					}
-					else {
-						resolve();
-					}
-				});
+				if( settings.empty ) {
+					resolve();
+				}
+				else {
+					Copydir( Path.normalize(`${ path }/fixture/`) , Path.normalize(`${ path }/_fixture/`), error => {
+						if( error ) {
+							reject( error );
+						}
+						else {
+							resolve();
+						}
+					});
+				}
 			});
 		},
 
@@ -253,41 +259,47 @@ const TESTER = (() => { //constructor factory
 		/**
 		 * Replace placeholders in temp fixtures
 		 *
-		 * @param  {string} path - The path to the folder that needs cleaning
+		 * @param  {string} path     - The path to the folder that needs cleaning
+		 * @param  {object} settings - The settings object for this test
 		 *
 		 * @return {Promise object}
 		 */
-		replaceFixtures: path => {
+		replaceFixtures: ( path, settings ) => {
 			return new Promise( ( resolve, reject ) => {
-				const version = require('../packages/pancake/package.json').version;
-				const sassVersion = require('../packages/pancake-sass/package.json').version;
-				const jsVersion = require('../packages/pancake-js/package.json').version;
+				if( settings.empty ) {
+					resolve();
+				}
+				else {
+					const version = require('../packages/pancake/package.json').version;
+					const sassVersion = require('../packages/pancake-sass/package.json').version;
+					const jsVersion = require('../packages/pancake-js/package.json').version;
 
-				Replace({
-						files: [
-							Path.normalize(`${ path }/_fixture/**`),
-						],
-						from: [
-							/\[version\]/g,
-							/\[sass-version\]/g,
-							/\[js-version\]/g,
-							/\[path\]/g,
-						],
-						to: [
-							version,
-							sassVersion,
-							jsVersion,
-							Path.normalize(`${ __dirname }/..`),
-						],
-						allowEmptyPaths: true,
-						encoding: 'utf8',
-					})
-					.catch( error => {
-						reject( error );
-					})
-					.then( changedFiles => {
-						resolve();
-				});
+					Replace({
+							files: [
+								Path.normalize(`${ path }/_fixture/**`),
+							],
+							from: [
+								/\[version\]/g,
+								/\[sass-version\]/g,
+								/\[js-version\]/g,
+								/\[path\]/g,
+							],
+							to: [
+								version,
+								sassVersion,
+								jsVersion,
+								Path.normalize(`${ __dirname }/..`),
+							],
+							allowEmptyPaths: true,
+							encoding: 'utf8',
+						})
+						.catch( error => {
+							reject( error );
+						})
+						.then( changedFiles => {
+							resolve();
+					});
+				}
 			});
 		},
 
