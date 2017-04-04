@@ -174,7 +174,7 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SE
 
 		//go through all plugins
 		const allPlugins = plugins.map( plugin => {
-			Log.info(`ADDING SWEET SYRUP TO YOUR PANCAKE VIA ${ plugin }`);
+			Log.info(`ADDING TOPPINGS TO YOUR PANCAKE VIA ${ plugin }`);
 
 			plugin = require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
 
