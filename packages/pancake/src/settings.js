@@ -39,13 +39,13 @@ export const Settings = {
 	 *
 	 * @return {object} - The settings object
 	 */
-	GetGlobal: () => {
-		Log.verbose(`Getting global settings from ${ Style.yellow( Path.normalize(`${ __dirname }/../settings.json`) ) }`);
+	GetGlobal: ( root = __dirname ) => {
+		Log.verbose(`Getting global settings from ${ Style.yellow( Path.normalize(`${ root }/../settings.json`) ) }`);
 
 		let SETTINGS = {};
 
 		try {
-			SETTINGS = JSON.parse( Fs.readFileSync( Path.normalize(`${ __dirname }/../settings.json`), `utf8` ) );
+			SETTINGS = JSON.parse( Fs.readFileSync( Path.normalize(`${ root }/../settings.json`), `utf8` ) );
 		}
 		catch( error ) {
 			Log.error(`Couldn’t read global settings :(`);
@@ -113,7 +113,7 @@ export const Settings = {
 	 *
 	 * @return {object}          - The settings object with the new setting
 	 */
-	SetGlobal: ( SETTINGS, ...items ) => {
+	SetGlobal: ( root, SETTINGS, ...items ) => {
 		Log.info(`PANCAKE SAVING DEFAULT SETTING`);
 
 		const setting = items[ 0 ];
@@ -134,7 +134,7 @@ export const Settings = {
 			}
 
 			try {
-				Fs.writeFileSync( Path.normalize(`${ __dirname }/../settings.json`), JSON.stringify( SETTINGS, null, '\t' ), 'utf8' );
+				Fs.writeFileSync( Path.normalize(`${ root }/../settings.json`), JSON.stringify( SETTINGS, null, '\t' ), 'utf8' );
 
 				Log.ok(`Value for ${ Style.yellow( setting ) } saved`);
 			}

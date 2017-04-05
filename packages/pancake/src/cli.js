@@ -84,7 +84,7 @@ export const init = ( argv = process.argv ) => {
 // Set global settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	if( ARGS.set.length > 0 ) {
-		SETTINGS = Settings.SetGlobal( SETTINGS, ...ARGS.set );
+		SETTINGS = Settings.SetGlobal( __dirname, SETTINGS, ...ARGS.set );
 
 		Loading.stop();
 		Log.space();
@@ -96,10 +96,10 @@ export const init = ( argv = process.argv ) => {
 // Display help
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	if( ARGS.help ) {
-		if( Size().width > 110 ) { //only show if we have enough space
-			Log.info(`Pancake help`);
-			Loading.stop();
+		Log.info(`Pancake help`);
+		Loading.stop();
 
+		if( Size().width > 110 ) { //only show if we have enough space
 			console.log( Style.yellow(`
                                                  ${ Style.white(`.,;+@@@@@@@@@#+;,
                                               #+':               .+@@;
@@ -131,21 +131,26 @@ export const init = ( argv = process.argv ) => {
 			`  🥞  Pancake is an utility to make working with npm modules for the frontend sweet and seamlessly.\n\n` +
 			`  It will check your peerDependencies for conflicts and comes with plugins to compile the contents\n` +
 			`  for you and lists all available modules for you to select and install.\n\n` +
-			`  ${ Style.gray(`-------------------------------------------------------------------------------------------------\n\n`) }` +
+			`  ${ Style.gray(`${ String.repeat(`-`, Size().width > 114 ? 110 : Size().width - 4 ) }\n\n`) }` +
 			`  ${ Style.bold(`PATH`) }            - Run pancake in a specific path and look for pancake modules there.\n` +
-			`    $ ${ Style.gray(`pancake /Users/you/project/folder`) }\n\n` +
+			`    $ ${ Style.yellow(`pancake /Users/you/project/folder`) }\n\n` +
 			`  ${ Style.bold(`SETTINGS`) }        - Set global settings. Available settings are: ${ Style.yellow( Object.keys( SETTINGS ).join(', ') ) }.\n` +
-			`    $ ${ Style.gray(`pancake --set npmOrg "@yourOrg"`) }\n\n` +
-			`  ${ Style.bold(`JSON`) }            - Temporarily overwrite the address to the json file of all your pancake modules.\n` +
-			`    $ ${ Style.gray(`pancake --json https://domain.tld/pancake-modules.json`) }\n\n` +
+			`    $ ${ Style.yellow(`pancake --set npmOrg "@yourOrg"`) }\n` +
+			`    $ ${ Style.yellow(`pancake --set ignorePlugins @gov.au/pancake-sass,@gov.au/pancake-svg`) }\n\n` +
+			`  ${ Style.bold(`ORG`) }             - Change the org scope of the pancake modules you like to use.\n` +
+			`    $ ${ Style.yellow(`pancake --org "@your.org"`) }\n\n` +
 			`  ${ Style.bold(`PLUGINS`) }         - Temporarily turn off all plugins.\n` +
-			`    $ ${ Style.gray(`pancake --plugins`) }\n\n` +
+			`    $ ${ Style.yellow(`pancake --noplugins`) }\n\n` +
 			`  ${ Style.bold(`IGNORED PLUGINS`) } - Prevent a certain plugin(s) from being installed and run.\n` +
-			`    $ ${ Style.gray(`pancake --ignore @gov.au/pancake-js,@gov.au/pancake-sass`) }\n\n` +
+			`    $ ${ Style.yellow(`pancake --ignore @gov.au/pancake-js,@gov.au/pancake-sass`) }\n\n` +
+			`  ${ Style.bold(`DON’T SAVE`) }      - Prevent pancake to save it’s settings into your package.json.\n` +
+			`    $ ${ Style.yellow(`pancake --nosave`) }\n\n` +
 			`  ${ Style.bold(`HELP`) }            - Display the help (this screen).\n` +
-			`    $ ${ Style.gray(`pancake --help`) }\n\n` +
+			`    $ ${ Style.yellow(`pancake --help`) }\n\n` +
+			`  ${ Style.bold(`VERSION`) }         - Display the version of pancake.\n` +
+			`    $ ${ Style.yellow(`pancake --version`) }\n\n` +
 			`  ${ Style.bold(`VERBOSE`) }         - Run pancake in verbose silly mode\n` +
-			`    $ ${ Style.gray(`pancake --verbose`) }`
+			`    $ ${ Style.yellow(`pancake --verbose`) }`
 		);
 
 		Log.space();
@@ -306,6 +311,6 @@ export const init = ( argv = process.argv ) => {
 // Adding some event handling to exit signals
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	process.on( 'exit', ExitHandler.bind( null, { withoutSpace: false } ) );              //on closing
-	process.on( 'SIGINT', ExitHandler.bind( null, { withoutSpace: false } ) );             //on [ctrl] + [c]
-	process.on( 'uncaughtException', ExitHandler.bind( null, { withoutSpace: false } ) );  //on uncaught exceptions
+	process.on( 'SIGINT', ExitHandler.bind( null, { withoutSpace: false } ) );            //on [ctrl] + [c]
+	process.on( 'uncaughtException', ExitHandler.bind( null, { withoutSpace: false } ) ); //on uncaught exceptions
 }

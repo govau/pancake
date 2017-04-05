@@ -47,7 +47,7 @@ export const GetFolders = thisPath => {
 	}
 	catch( error ) {
 		Log.verbose(`${ Style.yellow( thisPath ) } not found`);
-		Log.error( error );
+		// Log.error( error );
 
 		return [];
 	}
