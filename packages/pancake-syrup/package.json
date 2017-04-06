@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/syrup",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"description": "Syrup helps you select the right pancake modules.",
 	"keywords": [
 		"npm",
@@ -17,9 +17,9 @@
 	"engines": {
 		"npm": ">=3.0.0"
 	},
-	"main": "./dist/pancake.js",
+	"main": "./dist/syrup.js",
 	"bin": {
-		"pancake": "./bin/syrup"
+		"syrup": "./bin/syrup"
 	},
 	"scripts": {
 		"prepublish": "npm run build && npm run test",
@@ -29,7 +29,7 @@
 		"build": "npm run build:js",
 		"build:watch": "npm run build:js && jest --coverage",
 		"build:js": "babel src --out-dir dist --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
-		"watch": "npm run build:watch && onchange 'src/*.js' 'tests/*.js' -- npm run build:watch"
+		"watch": "npm run build:watch && onchange 'src/*.js' '__tests__/*.js' -- npm run build:watch"
 	},
 	"jest": {
 		"testEnvironment": "node",
@@ -48,7 +48,8 @@
 	},
 	"files": [
 		"bin/*",
-		"dist/*"
+		"dist/*",
+		"settings.json"
 	],
 	"dependencies": {
 		"babel-runtime": "6.23.0",

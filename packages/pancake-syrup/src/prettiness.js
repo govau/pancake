@@ -54,6 +54,8 @@ export const HighlightDiff = ( oldVersion, newVersion ) => {
 	if( Semver.patch( oldVersion ) !== Semver.patch( newVersion ) ) {
 		return `${ Semver.major( newVersion ) }.${ Semver.minor( newVersion ) }.${ Style.magenta(`${ Semver.patch( newVersion ) }`)}`;
 	}
+
+	return newVersion;
 };
 
 

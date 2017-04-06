@@ -26,7 +26,7 @@
 		"build": "npm run build:js",
 		"build:watch": "npm run build:js && jest --coverage",
 		"build:js": "babel src --out-dir lib --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
-		"watch": "npm run build:watch && onchange 'src/*.js' 'tests/*.js' -- npm run build:watch"
+		"watch": "npm run build:watch && onchange 'src/*.js' '__tests__/*.js' -- npm run build:watch"
 	},
 	"jest": {
 		"testEnvironment": "node",

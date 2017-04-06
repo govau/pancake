@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.0.14 - Tweaked to facilitate syrup](v1013)
 * [v1.0.13 - Loading animation](v1013)
 * [v1.0.12 - Enabled plugin install console logging](v1012)
 * [v1.0.11 - Fixed lag in plugin install](v1011)
@@ -18,6 +19,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.14
+
+- Tweaked a couple functions so syrup can reuse them ([#17](https://github.com/govau/pancake/issues/17))
 
 
 ## v1.0.13
