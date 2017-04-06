@@ -41,8 +41,7 @@ import { Log, Style, Loading, CopyFile, ReadFile, WriteFile } from '@gov.au/panc
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
-	Log.info(`ADDING SYRUP/SVG TO YOUR PANCAKE`);
-
+	Loading.start('pancake-svg');
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Settings
@@ -116,7 +115,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 
 
 		if( modules.length < 1 ) {
-			Loading.stop(); //stop loading animation
+			Loading.stop('pancake-svg'); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
@@ -184,12 +183,12 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-svg'); //stop loading animation
 
 					Log.error(`SVG plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
-					Loading.stop(); //stop loading animation
+					Loading.stop('pancake-svg'); //stop loading animation
 
 					Log.ok('SVG PLUGIN FINISHED');
 					resolve( SETTINGS );

@@ -1,7 +1,7 @@
 {
-	"name": "@gov.au/pancake-sass",
-	"version": "1.0.9",
-	"description": "A Pancake plugin to compile sass files.",
+	"name": "@gov.au/syrup",
+	"version": "1.0.2",
+	"description": "Syrup helps you select the right pancake modules.",
 	"keywords": [
 		"npm",
 		"flat",
@@ -17,7 +17,10 @@
 	"engines": {
 		"npm": ">=3.0.0"
 	},
-	"main": "./lib/pancake.js",
+	"main": "./dist/syrup.js",
+	"bin": {
+		"syrup": "./bin/syrup"
+	},
 	"scripts": {
 		"prepublish": "npm run build && npm run test",
 
@@ -25,7 +28,7 @@
 
 		"build": "npm run build:js",
 		"build:watch": "npm run build:js && jest --coverage",
-		"build:js": "babel src --out-dir lib --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
+		"build:js": "babel src --out-dir dist --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
 		"watch": "npm run build:watch && onchange 'src/*.js' '__tests__/*.js' -- npm run build:watch"
 	},
 	"jest": {
@@ -44,15 +47,16 @@
 		}
 	},
 	"files": [
-		"lib/*"
+		"bin/*",
+		"dist/*",
+		"settings.json"
 	],
 	"dependencies": {
-		"@gov.au/pancake": "~1",
-
-		"autoprefixer": "6.7.6",
 		"babel-runtime": "6.23.0",
-		"node-sass": "4.5.0",
-		"postcss": "5.2.15"
+		"inquirer": "3.0.6",
+		"@gov.au/pancake": "~1",
+		"request": "2.81.0",
+		"strip-ansi": "3.0.1"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.22.2",

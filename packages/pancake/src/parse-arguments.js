@@ -64,6 +64,11 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 			short: '-o',
 			options: 1,
 		},
+		'--json': {
+			name: 'json',
+			short: '-j',
+			options: 1,
+		},
 		'--noplugins': {
 			name: 'plugins',
 			short: '-p',
@@ -88,6 +93,7 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 		nosave: false,
 		set: [],
 		org: SETTINGS.npmOrg,
+		json: SETTINGS.json,
 		plugins: true,
 		ignorePlugins: [],
 		help: false,

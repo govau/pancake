@@ -1,7 +1,7 @@
 Pancake
 =======
 
-> Pancake is a tool to make working with npm on the front end easy and sweet.
+> Syrup is a tool to make working with [pancake](https://github.com/govau/pancake) and npm easy and sweet.
 
 
 ## Contentss
@@ -20,11 +20,11 @@ Pancake
 
 
 ```shell
-yarn add @gov.au/pancake
+yarn add @gov.au/syrup
 ```
 
 ```shell
-npm install @gov.au/pancake --save-dev
+npm install @gov.au/syrup --save-dev
 ```
 
 
@@ -58,16 +58,9 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
-* v1.0.14 - Tweaked to facilitate syrup
-* v1.0.13 - Loading animation
-* v1.0.12 - Enabled plugin install console logging
-* v1.0.11 - Fixed lag in plugin install
-* v1.0.10 - WIP, working on speed improvements
-* v1.0.9  - Improving plugin install
-* v1.0.8  - Pause and resume, plugins and tests
-* v1.0.7  - Loading fixes
-* v1.0.6  - Fixed some bugs
-* v1.0.5  - 💥 Initial version
+* v1.0.2  - Fix syrup command
+* v1.0.1  - Fixed Invalid URI bug
+* v1.0.0  - 💥 Initial version
 
 
 **[⬆ back to top](#contents)**

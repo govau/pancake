@@ -30,6 +30,7 @@ import { ParseArgs } from './parse-arguments';
 import { CheckModules } from './conflicts';
 import { GetModules } from './modules';
 import { Settings } from './settings';
+import Semver from './semver-5-3-0';
 
 
 export { //here, take a sword; for you may need it
@@ -49,7 +50,8 @@ export { //here, take a sword; for you may need it
 	CreateDir,
 	WriteFile,
 	ReadFile,
-	CopyFile
+	CopyFile,
+	Semver,
 };
 
 
