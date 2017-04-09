@@ -211,7 +211,6 @@ pancake --verbose
 ### 1. Pancake module object
 
 To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` object into your `pancake` object.
-Also don't forget to include pancake as a dependency.
 
 ```diff
 {
