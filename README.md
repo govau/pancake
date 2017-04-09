@@ -13,7 +13,6 @@ Pancake
 * [Creating your own Pancake modules](#creating-your-own-pancake-modules)
 * [Contributing](#contributing)
 * [Taste / Tests](#taste--tests)
-* [Release History](#release-history)
 * [License](#license)
 
 
@@ -184,7 +183,7 @@ pancake --ignore @gov.au/pancake-svg,@gov.au/pancake-js
 ```
 
 
-### verbose output
+### Verbose output
 `-v`, `--verbose`  
 Type: `<flag>`  
 
@@ -207,12 +206,11 @@ pancake --verbose
 
 1. add the Pancake module object to your `package.json` file
 2. add the Pancake `postinstall` script and dependency to your `package.json` file
-3. and publish your module to npm.
+3. and add your peer dependencies
 
 ### 1. Pancake module object
 
 To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` object into your `pancake` object.
-Also don't forget to include pancake as a dependency.
 
 ```diff
 {
@@ -234,9 +232,7 @@ Also don't forget to include pancake as a dependency.
 +			}
 +		}
 +	},
-	"dependencies": {
-+		"@gov.au/pancake": "~1",                 //pancake takes care of the rest
-	},
+	"dependencies": {},
 	"peerDependencies": {},
 	"devDependencies": {},
 	"scripts": {
@@ -256,12 +252,23 @@ The magic of Pancake lies within the `postinstall` script. To enable Pancake add
 	"name": "your-module-name",
 	"version": "1.0.0",
 	"description": "Your description",
-	"keywords": [
-		"pancake-module",
-		"pancake-sass-versioning"
-	],
+	"pancake": {
+		"pancake-module": {
+			"version": "1.0.0",
+			"plugins": [
+				"@gov.au/pancake-sass"
+			],
+			"sass": {
+				"path": "lib/sass/_module.scss",
+				"sass-versioning": true
+			},
+			"js": {
+				"path": "lib/js/module.js"
+			}
+		}
+	},
 	"dependencies": {
-+		"@gov.au/pancake": "latest",
++		"@gov.au/pancake": "~1"
 	},
 	"peerDependencies": {},
 	"devDependencies": {},
@@ -281,9 +288,49 @@ If you have to change settings (very likely) you don’t actually have to fork t
 "postinstall": "pancake --set npmOrg yourOrg && pancake"
 ```
 
-### 3. Publish
+### 3. Peer dependencies
 
-You’re ready to publish your modules and start using Pancake.
+Adding peer dependencies is simple as long as you remember to add it to the `dependencies` and `peerDependencies` the same time. That way npm will install the
+peer dependency and pancake can check if you have conflicts.
+
+```diff
+{
+	"name": "your-module-name",
+	"version": "1.0.0",
+	"description": "Your description",
+	"pancake": {
+		"pancake-module": {
+			"version": "1.0.0",
+			"plugins": [
+				"@gov.au/pancake-sass"
+			],
+			"sass": {
+				"path": "lib/sass/_module.scss",
+				"sass-versioning": true
+			},
+			"js": {
+				"path": "lib/js/module.js"
+			}
+		}
+	},
+	"dependencies": {
+		"@gov.au/pancake": "~1",
+
++		"@gov.au/core": "^0.1.0"
+	},
+	"peerDependencies": {
++		"@gov.au/core": "^0.1.0"
+	},
+	"devDependencies": {},
+	"scripts": {
+		"postinstall": "pancake"
+	},
+	"author": "",
+	"license": "ISC"
+}
+```
+
+Now you’re ready to publish your modules and start using Pancake.
 
 
 **[⬆ back to top](#contents)**
@@ -337,7 +384,9 @@ _Please look at the coding style and work with it, not against it. 🌴_
 
 ## Taste / Tests
 
-We have published three test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
+### Test modules
+
+We have published four test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
 - `v14.0.3`
@@ -355,27 +404,19 @@ We have published three test modules in our scoped npm org to test interdependen
 - `v1.0.0`  
 	- └── `@gov.au/testmodule1`: `^14.0.0`
 
-Pancake comes with automated end-to-end test that are run via the test command.
+
+### Software tests
+
+We have an [end-to-end test script](https://github.com/govau/pancake/blob/develop/tests/tester.js) that will take a number of scenarios and compare the output
+of pancake against fixtures.
+
+We also use unit tests with [jest](https://facebook.github.io/jest/).
+
+To run all tests use the below command:
 
 ```shell
 yarn test
 ```
-
-[The script](https://github.com/govau/pancake/blob/develop/tests/tester.js) will take a number of scenarios and compare the output of pancake against fixtures.
-
-_(We will be adding unit tests as we progress.)_
-
-
-**[⬆ back to top](#contents)**
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-## Release History
-
-* v1.0.0 - First Pancake
-* v0.0.X - Pre-releases of unstable, undercooked Pancakes
 
 
 **[⬆ back to top](#contents)**
