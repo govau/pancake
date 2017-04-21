@@ -6,16 +6,22 @@ Pancake SASS PLUGIN
 
 ## Versions
 
-* [v1.0.9 - Cleaned logs](v109)
-* [v1.0.8 - Dependencies and tests](v108)
-* [v1.0.7 - Sass custom path, global settings](v107)
-* [v1.0.6 - Loading fixes](v106)
-* [v1.0.5 - Made sass-versioning entirely optional](v105)
-* [v1.0.4 - Bug hunting](v104)
-* [v1.0.3 - 💥 Initial version](v103)
+* [v1.0.10 - Fixed mixed js and Sass module bug](v1010)
+* [v1.0.9  - Cleaned logs](v109)
+* [v1.0.8  - Dependencies and tests](v108)
+* [v1.0.7  - Sass custom path, global settings](v107)
+* [v1.0.6  - Loading fixes](v106)
+* [v1.0.5  - Made sass-versioning entirely optional](v105)
+* [v1.0.4  - Bug hunting](v104)
+* [v1.0.3  - 💥 Initial version](v103)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.10
+
+- Fixed a bug where pancake would fail when we mix modules that are only Sass and only Js.
 
 
 ## v1.0.9

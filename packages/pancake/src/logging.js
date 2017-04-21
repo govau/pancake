@@ -371,8 +371,8 @@ export const Loading = (() => {
 	return {
 		running: {},
 
-		start: ( plugin = 'pancake' ) => {
-			if( !Log.verboseMode ) {
+		start: ( plugin = 'pancake', verbose = Log.verboseMode ) => {
+			if( !verbose ) {
 				clearInterval( timer ); //stop any possible parallel loaders
 
 				Loading.running[ plugin ] = true;
@@ -389,8 +389,8 @@ export const Loading = (() => {
 			}
 		},
 
-		stop: ( plugin = 'pancake' ) => {
-			if( !Log.verboseMode ) {
+		stop: ( plugin = 'pancake', verbose = Log.verboseMode ) => {
+			if( !verbose ) {
 				delete Loading.running[ plugin ];
 
 				if( Object.keys( Loading.running ).length === 0 ) {
@@ -400,15 +400,15 @@ export const Loading = (() => {
 			}
 		},
 
-		pause: () => {
-			if( !Log.verboseMode ) {
+		pause: ( verbose = Log.verboseMode ) => {
+			if( !verbose ) {
 				clearInterval( timer );             //stop interval
 				process.stdout.write('\r\r\x1b[K'); //clear screen
 			}
 		},
 
-		resume: () => {
-			if( !Log.verboseMode ) {
+		resume: ( verbose = Log.verboseMode ) => {
+			if( !verbose ) {
 				if( Object.keys( Loading.running ).length > 0 ) {
 					clearInterval( timer ); //stop any possible parallel loaders
 

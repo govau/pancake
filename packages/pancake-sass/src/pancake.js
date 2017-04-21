@@ -45,7 +45,7 @@ Log.output = true; //this plugin assumes you run it through pancake
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
-	Loading.start('pancake-sass');
+	Loading.start( 'pancake-sass', Log.verboseMode );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,10 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			Log.verbose(`Sass: Bulding ${ Style.yellow( modulePackage.name ) }`);
 
 			//check if there are sass files
-			const sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].sass.path }`);
+			let sassModulePath;
+			if( modulePackage.pancake['pancake-module'].sass !== undefined ) {
+				sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].sass.path }`);
+			}
 
 			if( !Fs.existsSync( sassModulePath ) ) {
 				Log.verbose(`Sass: No Sass found in ${ Style.yellow( sassModulePath ) }`)
@@ -174,7 +177,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 
 
 		if( modules.length < 1 ) {
-			Loading.stop('pancake-sass'); //stop loading animation
+			Loading.stop( 'pancake-sass', Log.verboseMode ); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
@@ -224,14 +227,14 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
-					Loading.stop('pancake-sass'); //stop loading animation
+					Loading.stop( 'pancake-sass', Log.verboseMode ); //stop loading animation
 
 					Log.error(`Sass plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
 					Log.ok('SASS PLUGIN FINISHED');
 
-					Loading.stop('pancake-sass'); //stop loading animation
+					Loading.stop( 'pancake-sass', Log.verboseMode ); //stop loading animation
 					resolve( SETTINGS );
 			});
 		}
