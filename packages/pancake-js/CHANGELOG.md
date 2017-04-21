@@ -6,6 +6,7 @@ Pancake JS PLUGIN
 
 ## Versions
 
+* [v1.0.9 - Fixed mixed js and Sass module bug](v109)
 * [v1.0.8 - Cleaned log and updated uglify-js](v108)
 * [v1.0.7 - Dependencies and tests](v107)
 * [v1.0.6 - Receiving global settings from pancake now](v106)
@@ -15,6 +16,11 @@ Pancake JS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.9
+
+- Fixed a bug where pancake would fail when we mix modules that are only Sass and only Js.
 
 
 ## v1.0.8

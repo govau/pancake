@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.0.15 - Fixed mixed js and Sass module bug](v1015)
 * [v1.0.14 - Tweaked to facilitate syrup](v1013)
 * [v1.0.13 - Loading animation](v1013)
 * [v1.0.12 - Enabled plugin install console logging](v1012)
@@ -19,6 +20,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.15
+
+- Fixed a bug where pancake would fail when we mix modules that are only Sass and only Js.
 
 
 ## v1.0.14

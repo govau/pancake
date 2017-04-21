@@ -233,6 +233,8 @@ export const init = ( argv = process.argv ) => {
 				let installed = []; //an array to be filled with a promise from InstallPlugins
 
 				if( SETTINGSlocal.plugins === false || SETTINGS.plugins === false ) {
+					Loading.stop();
+
 					Log.verbose(`Skipping plugins`);
 				}
 				else {

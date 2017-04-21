@@ -44,7 +44,7 @@ Log.output = true; //this plugin assumes you run it through pancake
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
-	Loading.start('pancake-js');
+	Loading.start( 'pancake-js', Log.verboseMode );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -107,7 +107,10 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			Log.verbose(`JS: Bulding ${ Style.yellow( modulePackage.name ) }`);
 
 			//check if there are js files
-			const jsModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].js.path }`);
+			let jsModulePath;
+			if( modulePackage.pancake['pancake-module'].js !== undefined ) {
+				jsModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].js.path }`);
+			}
 
 			if( !Fs.existsSync( jsModulePath ) ) {
 				Log.verbose(`JS: No js found in ${ Style.yellow( jsModulePath ) }`)
@@ -129,7 +132,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 
 
 		if( modules.length < 1 ) {
-			Loading.stop('pancake-js'); //stop loading animation
+			Loading.stop( 'pancake-js', Log.verboseMode ); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
@@ -149,14 +152,14 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			//after all files have been compiled and written
 			Promise.all( compiledAll )
 				.catch( error => {
-					Loading.stop('pancake-js'); //stop loading animation
+					Loading.stop( 'pancake-js', Log.verboseMode ); //stop loading animation
 
 					Log.error(`Js plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
 					Log.ok('JS PLUGIN FINISHED');
 
-					Loading.stop('pancake-js'); //stop loading animation
+					Loading.stop( 'pancake-js', Log.verboseMode ); //stop loading animation
 					resolve( SETTINGS );
 			});
 
