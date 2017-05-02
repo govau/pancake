@@ -6,6 +6,7 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.0.11 - Added a comment into the generated Sass files](v1011)
 * [v1.0.10 - Fixed mixed js and Sass module bug](v1010)
 * [v1.0.9  - Cleaned logs](v109)
 * [v1.0.8  - Dependencies and tests](v108)
@@ -17,6 +18,11 @@ Pancake SASS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.11
+
+- Added a comment into the generated Sass files.
 
 
 ## v1.0.10

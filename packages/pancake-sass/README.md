@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.11 - Added a comment into the generated Sass files
 * v1.0.10 - Fixed mixed js and Sass module bug
 * v1.0.9  - Cleaned logs
 * v1.0.8  - Dependencies and tests
