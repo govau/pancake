@@ -126,7 +126,7 @@ export const GenerateSass = ( location, name, modules, npmOrg ) => {
 	const modulePath = GetPath( name, modules, baseLocation, npmOrg )
 	sass += `@import "${ modulePath }";\n`;
 
-	return sass;
+	return sass.replace(/\\/g, "\\\\"); // escape path for silly windows
 };
 
 
@@ -145,7 +145,7 @@ export const Sassify = ( location, settings, sass ) => {
 			data: sass,
 			indentType: 'tab', //this is how real developers indent!
 			outputStyle: settings.minified ? 'compressed' : 'expanded',
-		}, ( error, renered ) => {
+		}, ( error, generated ) => {
 			if( error ) {
 				Log.error(`Sass compile failed for ${ Style.yellow( location ) }`);
 
@@ -155,7 +155,7 @@ export const Sassify = ( location, settings, sass ) => {
 				Log.verbose(`Sass: Successfully compiled Sass for ${ Style.yellow( location ) }`);
 
 				Postcss([ Autoprefixer({ browsers: settings.browsers }) ])
-					.process( renered.css )
+					.process( generated.css )
 					.catch( error => reject( error ) )
 					.then( ( prefixed ) => {
 						if( prefixed ) {

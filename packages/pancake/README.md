@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.1.0  - Optimized pancake for windows
 * v1.0.15 - Fixed mixed js and Sass module bug
 * v1.0.14 - Tweaked to facilitate syrup
 * v1.0.13 - Loading animation

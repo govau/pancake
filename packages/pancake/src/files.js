@@ -72,15 +72,23 @@ export const CreateDir = ( dir ) => {
 	splitPath.reduce( ( path, subPath ) => {
 		let currentPath;
 
+		if( /^win/.test( process.platform ) && path === '' ) { // when using windows (post truth) at beginning of the path
+			path = './';                                         // we add the prefix to make sure it works on windows (yuck)
+		}
+
 		if( subPath != '.' ) {
 			currentPath = Path.normalize(`${ path }/${ subPath }`);
+
+			Log.verbose(`Checking if ${ Style.yellow( currentPath ) } exists`)
 
 			if( !Fs.existsSync( currentPath ) ){
 				try {
 					Fs.mkdirSync( currentPath );
+
+					Log.verbose(`Successfully ${ Style.yellow( currentPath ) } created`)
 				}
 				catch( error ) {
-					Log.error(`Pancake was unable to create the folder ${ Style.yellow( currentPath ) }`);
+					Log.error(`Pancake was unable to create the folder ${ Style.yellow( currentPath ) } for path ${ Style.yellow( dir ) }`);
 					Log.error( error );
 
 					process.exit( 1 );

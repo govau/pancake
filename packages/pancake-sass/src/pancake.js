@@ -142,7 +142,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 				if( modulePackage.pancake['pancake-module'].sass['sass-versioning'] === true ) {
 					sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
 
-					const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
+					const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\");
 
 					sass = `${ banner }` +
 						`/* ${ modulePackage.name } v${ modulePackage.version } */\n\n` +
@@ -195,7 +195,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			const locationCSS = Path.normalize(`${ cwd }/${ SETTINGS.css.location }/${ SETTINGS.css.name }`);
 
 			if( sassVersioning === true ) {
-				const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`);
+				const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\");
 
 				allSass = `${ banner }` +
 					`@import "${ sassVersioningPath }";\n\n` +
