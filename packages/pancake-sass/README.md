@@ -1,4 +1,4 @@
-Pancake SASS PLUGIN
+Pancake Sass plugin
 ===================
 
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle sass files.
@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.1.0  - Optimized pancake for windows
 * v1.0.11 - Added a comment into the generated Sass files
 * v1.0.10 - Fixed mixed js and Sass module bug
 * v1.0.9  - Cleaned logs

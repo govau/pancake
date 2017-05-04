@@ -1,4 +1,4 @@
-Pancake SASS PLUGIN
+Pancake Sass plugin
 ===================
 
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle sass files.
@@ -6,6 +6,7 @@ Pancake SASS PLUGIN
 
 ## Versions
 
+* [v1.1.0  - Optimized pancake for windows](v110)
 * [v1.0.11 - Added a comment into the generated Sass files](v1011)
 * [v1.0.10 - Fixed mixed js and Sass module bug](v1010)
 * [v1.0.9  - Cleaned logs](v109)
@@ -18,6 +19,12 @@ Pancake SASS PLUGIN
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.1.0
+
+- Pancake now works on windows after escaping every path separator. Other operating system, other way to break code.
+	([#14](https://github.com/govau/pancake/issues/14))
 
 
 ## v1.0.11

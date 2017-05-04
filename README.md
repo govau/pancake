@@ -37,10 +37,9 @@ will help you keep them flat and error out on conflicts.
 ## Requirements
 
 - npm >= 3
-- bash _(Windows is not supported at this time)_
 - a `package.json` file in your root (run `yarn init` or `npm init`)
 
-Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 all node version coming with npm 3 and higher:
+Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 and Windows 10 all node version coming with npm 3 and higher:
 
 - node `v5.0.0`
 - node `v5.12.0`
