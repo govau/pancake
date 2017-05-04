@@ -1,5 +1,5 @@
-Pancake
-=======
+Syrup
+=====
 
 > Syrup is a tool to make working with [pancake](https://github.com/govau/pancake) and npm easy and sweet.
 

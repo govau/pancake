@@ -1,4 +1,4 @@
-Pancake SVG PLUGIN
+Pancake SVG plugin
 ==================
 
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle svg files.

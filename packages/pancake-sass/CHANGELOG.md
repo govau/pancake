@@ -1,4 +1,4 @@
-Pancake SASS PLUGIN
+Pancake Sass plugin
 ===================
 
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle sass files.
