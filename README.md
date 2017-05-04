@@ -124,6 +124,7 @@ To change local settings all you have to do is include a `pancake` object into y
 }
 ```
 
+To remove `js` you can set the value of `"name": false` and remove the values `minified`, `modules` and `location`.
 
 **[⬆ back to top](#contents)**
 
