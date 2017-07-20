@@ -118,6 +118,9 @@ To change local settings all you have to do is include a `pancake` object into y
 			"modules": false,            //save one js file per module?
 			"location": "pancake/js/",   //the location to save the js files to
 			"name": "pancake.min.js"     //the name of the js file that includes all modules; set this to false to disable it
+		},
+		"react": {
+			"location": "pancake/react"	 //the location to move the react files to
 		}
 	}
 }
