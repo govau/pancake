@@ -6,6 +6,7 @@ Pancake Sass plugin
 
 ## Versions
 
+* [v1.1.1  - Bumped node-sass to 4.5.3](v111)
 * [v1.1.0  - Optimized pancake for windows](v110)
 * [v1.0.11 - Added a comment into the generated Sass files](v1011)
 * [v1.0.10 - Fixed mixed js and Sass module bug](v1010)
@@ -19,6 +20,12 @@ Pancake Sass plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.1.1
+
+- Bumped node-sass to 4.5.3
+	([sass/node-sass#1969](https://github.com/sass/node-sass/pull/1969))
 
 
 ## v1.1.0
