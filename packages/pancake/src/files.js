@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************************
  *
- * Handel files, read, write, check
+ * Handle files, read, write, check
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski

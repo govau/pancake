@@ -64,7 +64,7 @@ export const MinifyJS = ( js, file ) => {
  *
  * @return {promise object}  - The js code either minified or bare bone
  */
-export const HandelJS = ( from, settings, to, tag ) => {
+export const HandleJS = ( from, settings, to, tag ) => {
 	return new Promise( ( resolve, reject ) => {
 		ReadFile( from ) //read the module
 			.catch( error => {

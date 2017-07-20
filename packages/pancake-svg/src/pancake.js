@@ -63,28 +63,28 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 		//some housekeeping
 		if( typeof version !== 'string' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
 				`but should have been ${ Style.yellow(`string`) }`
 			);
 		}
 
 		if( typeof modules !== 'object' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
 				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
 		if( typeof settings !== 'object' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
 				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
 		if( typeof cwd !== 'string' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
 				`but should have been ${ Style.yellow(`string`) }`
 			);
 		}
@@ -100,7 +100,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		for( const modulePackage of modules ) {
-			Log.verbose(`SVG: Bulding ${ Style.yellow( modulePackage.name ) }`);
+			Log.verbose(`SVG: Building ${ Style.yellow( modulePackage.name ) }`);
 
 			//check if there are svg files
 			const sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].svg.path }`);
