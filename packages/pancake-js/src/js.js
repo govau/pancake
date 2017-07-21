@@ -86,7 +86,7 @@ export const HandleJS = ( from, settings, to, tag ) => {
 					code = `\n\n${ content }`;
 				}
 
-				code = `/*! ${ tag } */${ code }`
+				code = `/*! ${ tag } */${ code }`;
 
 				if( settings.modules ) { //are we saving modules?
 					WriteFile( to, code ) //write the generated content to file and return its promise
