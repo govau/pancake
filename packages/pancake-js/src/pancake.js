@@ -56,7 +56,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			modules: false,
 			location: 'pancake/js/',
 			name: 'pancake.min.js',
-		}
+		},
 	};
 
 	//merging settings with host settings
@@ -97,7 +97,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		let compiledAll = [];      //for collect all promises
+		let compiledAll = []; //for collect all promises
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 /***************************************************************************************************************************************************************
  *
- * pancake.js unit tests
+ * react.js unit tests
  *
- * @file - pancake-js/src/pancake.js
+ * @file - pancake-js/src/react.js
  *
  **************************************************************************************************************************************************************/
 
@@ -11,10 +11,9 @@ import Path from 'path';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// HandleJS function
+// HandleReact function
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-const from = Path.normalize(`${ __dirname }/../../../tests/test10/node_modules/@gov.au/testmodule1/lib/js/module.js`);
+const from = Path.normalize(`${ __dirname }/../../../tests/test10/node_modules/@gov.au/testmodule1/lib/js/react.js`);
 const to = Path.normalize(`${ __dirname }/../../../tests/test10/pancake/react/testmodule1.js`);
 const tag = '@gov.au/testmodule1 v11.0.1';
 const result = `/*! @gov.au/testmodule1 v11.0.1 */\n\nconfirm('testmodule1:v11.0.1');`;

@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************************
  *
- * Generate and compile Sass
+ * Move react files
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski and Alex Page
@@ -18,11 +18,10 @@ import { Log, Style, ReadFile, WriteFile } from '@gov.au/pancake';
 
 
 /**
- * Get js from module, minify depending on settings and write to disk
+ * Get react file from module and write to disk
  *
  * @param  {string} from     - Where is the module so we can read from there
- * @param  {object} settings - The SettingsJS object
- * @param  {string} to       - Where shall we write the module to if settings allow?
+ * @param  {string} to       - Where shall we write the module to
  * @param  {string} tag      - The tag to be added to the top of the file
  *
  * @return {promise object}  - The js code either minified or bare bone
@@ -36,24 +35,8 @@ export const HandleReact = ( from, to, tag ) => {
 
 				reject( error );
 			})
-			.then( ( content ) => {
-
-
-				let code = `\n\n${ content }`;
-
-				code = `/*! ${ tag } */${ code }`;
-
-				WriteFile( to, code ) //write the generated content to file and return its promise
-					.catch( error => {
-						Log.error( error );
-
-						reject( error );
-					})
-					.then( () => {
-						resolve( code );
-				});
-
-		});
+			.then( ( content ) => code = `/*! ${ tag } */\n\n${ content }` )
+			.then( ( code ) => WriteFile( to, code ) );
 	});
 };
 

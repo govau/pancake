@@ -5,7 +5,7 @@
  * Move react files from pancake modules into your pancake folder
  *
  * @repo    - https://github.com/govau/pancake
- * @author  - Dominik Wilkowski and Alex Page
+ * @author  - Alex Page (and Dominik Wilkowski)
  * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
@@ -28,6 +28,7 @@ import { HandleReact } from './react';
 
 Log.output = true; //this plugin assumes you run it through pancake
 
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Plugin export
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,13 +46,14 @@ Log.output = true; //this plugin assumes you run it through pancake
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Loading.start( 'pancake-react', Log.verboseMode );
 
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	let SETTINGS = {
 		react: {
-			location: 'pancake/react/'
-		}
+			location: 'pancake/react/',
+		},
 	};
 
 	//merging settings with host settings
@@ -92,8 +94,12 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		let reactModules = [];      // for collect all promises
+		let reactModules = []; // for collect all promises
 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Iterate over each module
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		for( const modulePackage of modules ) {
 			Log.verbose(`React: Building ${ Style.yellow( modulePackage.name ) }`);
 
@@ -111,19 +117,12 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 
 				const reactModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.react.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
 
-
-				console.log(`${reactModulePath}`);
-				console.log(`${reactModuleToPath}`);
-				console.log(HandleReact);
-
-				//compile js and write to file depending on settings
+				//move react file depending on settings
 				const reactPromise = HandleReact( reactModulePath, reactModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
 					.catch( error => {
-						console.log('uh oh spagettio');
 						Log.error( error );
 				});
 
-				console.log('we are here');
 				reactModules.push( reactPromise );
 			}
 		}

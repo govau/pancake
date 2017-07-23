@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************************
  *
- * Generate and compile Sass
+ * Generate and compile JS
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski
