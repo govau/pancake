@@ -28,7 +28,6 @@ import { Log, Style, ReadFile, WriteFile } from '@gov.au/pancake';
  * @return {promise object}  - The js code either minified or bare bone
  */
 export const HandleReact = ( from, to, tag ) => {
-	console.log('aaaaaaa');
 	return new Promise( ( resolve, reject ) => {
 		ReadFile( from ) //read the module
 			.catch( error => {
