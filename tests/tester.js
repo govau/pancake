@@ -140,6 +140,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
+			{
+				name: 'Test10: Compile test with react files',
+				folder: 'test10',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			}
 		],
 
 
@@ -273,6 +282,7 @@ const TESTER = (() => { //constructor factory
 					const version = require('../packages/pancake/package.json').version;
 					const sassVersion = require('../packages/pancake-sass/package.json').version;
 					const jsVersion = require('../packages/pancake-js/package.json').version;
+					const reactVersion = require('../packages/pancake-react/package.json').version;
 
 					Replace({
 							files: [
@@ -282,12 +292,14 @@ const TESTER = (() => { //constructor factory
 								/\[version\]/g,
 								/\[sass-version\]/g,
 								/\[js-version\]/g,
+								/\[react-version\]/g,
 								/\[path\]/g,
 							],
 							to: [
 								version,
 								sassVersion,
 								jsVersion,
+								reactVersion,
 								Path.normalize(`${ __dirname }/..`),
 							],
 							allowEmptyPaths: true,

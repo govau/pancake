@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************************
  *
- * Generate and compile Sass
+ * Generate and compile JS
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski
@@ -64,7 +64,7 @@ export const MinifyJS = ( js, file ) => {
  *
  * @return {promise object}  - The js code either minified or bare bone
  */
-export const HandelJS = ( from, settings, to, tag ) => {
+export const HandleJS = ( from, settings, to, tag ) => {
 	return new Promise( ( resolve, reject ) => {
 		ReadFile( from ) //read the module
 			.catch( error => {
@@ -86,7 +86,7 @@ export const HandelJS = ( from, settings, to, tag ) => {
 					code = `\n\n${ content }`;
 				}
 
-				code = `/*! ${ tag } */${ code }`
+				code = `/*! ${ tag } */${ code }`;
 
 				if( settings.modules ) { //are we saving modules?
 					WriteFile( to, code ) //write the generated content to file and return its promise

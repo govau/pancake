@@ -2,10 +2,10 @@
  *
  * Plug-in for Pancake
  *
- * Move SVGs and generate SVG sprites and fallback PNGs
+ * Move react files from pancake modules into your pancake folder
  *
  * @repo    - https://github.com/govau/pancake
- * @author  - Dominik Wilkowski
+ * @author  - Alex Page (and Dominik Wilkowski)
  * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
@@ -23,7 +23,10 @@ import Fs from 'fs';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, Loading, CopyFile, ReadFile, WriteFile } from '@gov.au/pancake';
+import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
+import { HandleReact } from './react';
+
+Log.output = true; //this plugin assumes you run it through pancake
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -41,158 +44,111 @@ import { Log, Style, Loading, CopyFile, ReadFile, WriteFile } from '@gov.au/panc
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
-	Loading.start('pancake-svg');
+	Loading.start( 'pancake-react', Log.verboseMode );
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	let SETTINGS = {
-		svg: {
-			modules: false,
-			pngs: 'pancake/svg/png/',
-			location: 'pancake/svg/',
-			name: 'pancake.sprite.svg',
+		react: {
+			location: 'pancake/react/',
 		},
 	};
 
 	//merging settings with host settings
-	Object.assign( SETTINGS.svg, settings.svg );
+	Object.assign( SETTINGS.react, settings.react );
 
 
 	return new Promise( ( resolve, reject ) => {
 		//some housekeeping
 		if( typeof version !== 'string' ) {
 			reject(
-				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
+				`Plugin pancake-react got a mismatch for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
 				`but should have been ${ Style.yellow(`string`) }`
 			);
 		}
 
 		if( typeof modules !== 'object' ) {
 			reject(
-				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
+				`Plugin pancake-react got a mismatch for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
 				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
 		if( typeof settings !== 'object' ) {
 			reject(
-				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
+				`Plugin pancake-react got a mismatch for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
 				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
 		if( typeof cwd !== 'string' ) {
 			reject(
-				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
+				`Plugin pancake-react got a mismatch for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
 				`but should have been ${ Style.yellow(`string`) }`
 			);
 		}
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Variables to be filled
+// Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		let compiledAll = [];      //for collect all promises
+		let reactModules = []; // for collect all promises
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		for( const modulePackage of modules ) {
-			Log.verbose(`SVG: Building ${ Style.yellow( modulePackage.name ) }`);
+			Log.verbose(`React: Building ${ Style.yellow( modulePackage.name ) }`);
 
-			//check if there are svg files
-			const sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].svg.path }`);
+			//check if there are react files
+			let reactModulePath;
+			if( modulePackage.pancake['pancake-module'].react !== undefined ) {
+				reactModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].react.path }`);
+			}
 
-			if( !Fs.existsSync( sassModulePath ) ) {
-				Log.verbose(`SVG: No SVG found in ${ Style.yellow( sassModulePath ) }`)
+			if( !Fs.existsSync( reactModulePath ) ) {
+				Log.verbose(`React: No React found in ${ Style.yellow( reactModulePath ) }`)
 			}
 			else {
-				Log.verbose(`SVG: ${ Style.green('⌘') } Found SVG files in ${ Style.yellow( sassModulePath ) }`);
+				Log.verbose(`React: ${ Style.green('⌘') } Found React files in ${ Style.yellow( reactModulePath ) }`);
+
+				const reactModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.react.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
+
+				//move react file depending on settings
+				const reactPromise = HandleReact( reactModulePath, reactModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
+					.catch( error => {
+						Log.error( error );
+				});
+
+				reactModules.push( reactPromise );
 			}
 		}
 
-
 		if( modules.length < 1 ) {
-			Loading.stop('pancake-svg'); //stop loading animation
+			Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
 
 			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
 		}
 		else {
 
-			//get all svgs
-			const svgs = Fs
-				.readdirSync( SVGModulePath )                                   //read all files in the svg folder
-				.filter( name => !name.startsWith('.') )                        //let’s hide hidden files
-				.map( name => Path.normalize(`${ SVGModulePath }/${ name }`) ); //making them absolute paths
-
-			//convert svg to png
-			if( SettingsSVG.pngs !== false ) {
-				Log.verbose(`Converting svgs to PNGs for ${ Style.yellow( modulePackage.name ) }`);
-
-				const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.pngs }/`);
-
-				CreateDir( location );  //create directory
-
-				console.log = text => {};        //temporarily display console
-
-				compiledAll.push( SvgToPng.convert( svgs, location ) );
-
-				console.log = function( text ) { //enable again
-					process.stdout.write(`${ Util.format.apply( null, arguments ) }\n`);
-				};
-			}
-
-			//create svg sprite
-			if( SettingsSVG.name !== false ) {
-				Log.verbose(`Converting svgs to sprite for ${ Style.yellow( modulePackage.name ) }`);
-
-				const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.location }/${ SettingsSVG.name }`);
-
-				// console.log(SvgGenerator);
-
-				SvgGenerator.spriteFromFiles([ SVGModulePath, location ])
-					.then(function (rs) {
-						console.log(rs);
-				});
-
-				// console.log(result);
-
-				// const spriter = new SVGSpriter({
-				// 	dest: location,
-				// });
-
-				// svgs.map( svg => {
-				// 	spriter.add( svg, null, Fs.readFileSync( svg, { encoding: 'utf-8' } ) );
-				// });
-
-				// spriter.compile( ( error, result ) => {
-				// 	console.log(result);
-				// 	// for (var mode in result) {
-				// 	// 	for (var resource in result[mode]) {
-				// 	// 		mkdirp.sync(path.dirname(result[mode][resource].path));
-				// 	// 		fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
-				// 	// 	}
-				// 	// }
-				// });
-			}
-
-
 			//after all files have been compiled and written
-			Promise.all( compiledAll )
+			Promise.all( reactModules )
 				.catch( error => {
-					Loading.stop('pancake-svg'); //stop loading animation
+					Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
 
-					Log.error(`SVG plugin ran into an error: ${ error }`);
+					Log.error(`React plugin ran into an error: ${ error }`);
 				})
 				.then( () => {
-					Loading.stop('pancake-svg'); //stop loading animation
+					Log.ok('REACT PLUGIN FINISHED');
 
-					Log.ok('SVG PLUGIN FINISHED');
+					Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
 					resolve( SETTINGS );
 			});
+
 		}
 
 	});

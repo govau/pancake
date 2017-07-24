@@ -7,7 +7,7 @@
  **************************************************************************************************************************************************************/
 
 
-import { MinifyJS, HandelJS, MinifyAllJS } from '../src/js.js';
+import { MinifyJS, HandleJS, MinifyAllJS } from '../src/js.js';
 import Path from 'path';
 
 
@@ -47,8 +47,8 @@ const to = Path.normalize(`${ __dirname }/../../../tests/test2/pancake/js/testmo
 const tag = '@gov.au/testmodule1 v11.0.1';
 const result = '/*! @gov.au/testmodule1 v11.0.1 */confirm(\"testmodule1:v11.0.1\");';
 
-test('HandelJS should return minified code from specified path', () => {
-	return HandelJS( from, settings, to, tag ).then( data => {
+test('HandleJS should return minified code from specified path', () => {
+	return HandleJS( from, settings, to, tag ).then( data => {
 		expect( data ).toBe( result );
 	});
 });
