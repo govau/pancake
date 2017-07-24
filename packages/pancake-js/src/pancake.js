@@ -24,7 +24,7 @@ import Fs from 'fs';
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
-import { HandelJS, MinifyAllJS } from './js';
+import { HandleJS, MinifyAllJS } from './js';
 
 Log.output = true; //this plugin assumes you run it through pancake
 
@@ -67,28 +67,28 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 		//some housekeeping
 		if( typeof version !== 'string' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`version`) } was ${ Style.yellow( typeof version ) } ` +
 				`but should have been ${ Style.yellow(`string`) }`
 			);
 		}
 
 		if( typeof modules !== 'object' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`modules`) } was ${ Style.yellow( typeof modules ) } ` +
 				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
 		if( typeof settings !== 'object' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`settings`) } was ${ Style.yellow( typeof settings ) } ` +
 				`but should have been ${ Style.yellow(`object`) }`
 			);
 		}
 
 		if( typeof cwd !== 'string' ) {
 			reject(
-				`Plugin pancake-js got a missmath for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
+				`Plugin pancake-js got a mismatch for the data that was passed to it! ${ Style.yellow(`cwd`) } was ${ Style.yellow( typeof cwd ) } ` +
 				`but should have been ${ Style.yellow(`string`) }`
 			);
 		}
@@ -97,14 +97,14 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Settings
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		let compiledAll = [];      //for collect all promises
+		let compiledAll = []; //for collect all promises
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		for( const modulePackage of modules ) {
-			Log.verbose(`JS: Bulding ${ Style.yellow( modulePackage.name ) }`);
+			Log.verbose(`JS: Building ${ Style.yellow( modulePackage.name ) }`);
 
 			//check if there are js files
 			let jsModulePath;
@@ -121,7 +121,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 				const jsModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.js.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
 
 				//compile js and write to file depending on settings
-				const jsPromise = HandelJS( jsModulePath, SETTINGS.js, jsModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
+				const jsPromise = HandleJS( jsModulePath, SETTINGS.js, jsModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
 					.catch( error => {
 						Log.error( error );
 				});
