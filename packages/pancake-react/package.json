@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-react",
-	"version": "1.0.9",
+	"version": "1.0.0",
 	"description": "A Pancake plugin to move react files.",
 	"keywords": [
 		"npm",
@@ -12,7 +12,8 @@
 		"design guide",
 		"design system",
 		"cli",
-		"pancake-plugin"
+		"pancake-plugin",
+		"react"
 	],
 	"engines": {
 		"npm": ">=3.0.0"
@@ -20,7 +21,9 @@
 	"main": "./lib/pancake.js",
 	"scripts": {
 		"prepublish": "npm run build && npm run test",
+
 		"test": "exit 0",
+
 		"build": "npm run build:js",
 		"build:watch": "npm run build:js && jest --coverage",
 		"build:js": "babel src --out-dir lib --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
@@ -46,8 +49,7 @@
 	],
 	"dependencies": {
 		"@gov.au/pancake": "~1",
-		"babel-runtime": "6.23.0",
-		"uglify-js": "2.8.18"
+		"babel-runtime": "6.23.0"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.22.2",
@@ -77,6 +79,11 @@
 			"name": "Dominik Wilkowski",
 			"email": "hi@dominik-wilkowski.com",
 			"url": "https://dominik-wilkowski.com/"
+		},
+		{
+			"name": "Alex Page",
+			"email": "alex@alexpage.com.au",
+			"url": "http://alexpage.com.au/"
 		}
 	],
 	"license": "MIT"

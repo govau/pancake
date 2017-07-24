@@ -90,39 +90,39 @@ To change local settings all you have to do is include a `pancake` object into y
 
 ```js
 {
-	"name": "your-name",
-	"version": "0.1.0",
-	"pancake": {                         //the pancake config object
-		"auto-save": true,               //enable/disable auto saving the settings into your package.json after each run
-		"plugins": true,                 //enable/disable plugins
-		"ignore": [],                    //ignore specific plugins
-		"css": {                         //settings for the @gov.au/pancake-sass.sass plugin
-			"minified": true,            //minify the css?
-			"modules": false,            //save one css file per module?
-			"browsers": [                //autoprefixer browser matrix
-				"last 2 versions",
-				"ie 8",
-				"ie 9",
-				"ie 10"
-			],
-			"location": "pancake/css/",  //the location to save the css files to
-			"name": "pancake.min.css"    //the name of the css file that includes all modules; set this to false to disable it
-		},
-		"sass": {                        //settings for the @gov.au/pancake.sass plugin
-			"modules": false,            //save one Sass file per module?
-			"location": "pancake/sass/", //the location to save the Sass files to
-			"name": "pancake.scss"       //the name of the Sass file that includes all modules; set this to false to disable it
-		},
-		"js": {                          //settings for the @gov.au/pancake-js.sass plugin
-			"minified": true,            //minify the js?
-			"modules": false,            //save one js file per module?
-			"location": "pancake/js/",   //the location to save the js files to
-			"name": "pancake.min.js"     //the name of the js file that includes all modules; set this to false to disable it
-		},
-		"react": {
-			"location": "pancake/react"	 //the location to move the react files to
-		}
-	}
+  "name": "your-name",
+  "version": "0.1.0",
+  "pancake": {                       //the pancake config object
+    "auto-save": true,               //enable/disable auto saving the settings into your package.json after each run
+    "plugins": true,                 //enable/disable plugins
+    "ignore": [],                    //ignore specific plugins
+    "css": {                         //settings for the @gov.au/pancake-sass plugin
+      "minified": true,              //minify the css?
+      "modules": false,              //save one css file per module?
+      "browsers": [                  //autoprefixer browser matrix
+        "last 2 versions",
+        "ie 8",
+        "ie 9",
+        "ie 10"
+      ],
+      "location": "pancake/css/",    //the location to save the css files to
+      "name": "pancake.min.css"      //the name of the css file that includes all modules; set this to false to disable it
+    },
+    "sass": {                        //settings for the @gov.au/pancake-sass plugin
+      "modules": false,              //save one Sass file per module?
+      "location": "pancake/sass/",   //the location to save the Sass files to
+      "name": "pancake.scss"         //the name of the Sass file that includes all modules; set this to false to disable it
+    },
+    "js": {                          //settings for the @gov.au/pancake-js plugin
+      "minified": true,              //minify the js?
+      "modules": false,              //save one js file per module?
+      "location": "pancake/js/",     //the location to save the js files to
+      "name": "pancake.min.js"       //the name of the js file that includes all modules; set this to false to disable it
+    },
+    "react": {                       //settings for the @gov.au/pancake-react plugin
+      "location": "pancake/react/",  //the location to save the react files to
+    }
+  }
 }
 ```
 
@@ -218,32 +218,35 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 
 ```diff
 {
-	"name": "your-module-name",
-	"version": "1.0.0",
-	"description": "Your description",
-+	"pancake": {
-+		"pancake-module": {                      //pancake is looking for this object to id your module as a pancake module
-+			"version": "1.0.0",                  //the major version of pancake
-+			"plugins": [                         //only state the plugins you need here
-+				"@gov.au/pancake-sass"
-+			],
-+			"sass": {                            //sass plugin specific settings
-+				"path": "lib/sass/_module.scss", //where is your sass
-+				"sass-versioning": true          //enable sass-versioning. Read more here: https://github.com/dominikwilkowski/sass-versioning
-+			},
-+			"js": {                              //js plugin specific settings
-+				"path": "lib/js/module.js"       //where is your js
-+			}
-+		}
-+	},
-	"dependencies": {},
-	"peerDependencies": {},
-	"devDependencies": {},
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "",
-	"license": "ISC"
+  "name": "your-module-name",
+  "version": "1.0.0",
+  "description": "Your description",
++  "pancake": {
++    "pancake-module": {                   //pancake is looking for this object to id your module as a pancake module
++      "version": "1.0.0",                 //the major version of pancake
++      "plugins": [                        //only state the plugins you need here
++        "@gov.au/pancake-sass"
++      ],
++      "sass": {                           //sass plugin specific settings
++        "path": "lib/sass/_module.scss",  //where is your sass
++        "sass-versioning": true           //enable sass-versioning. Read more here: https://github.com/dominikwilkowski/sass-versioning
++      },
++      "js": {                             //js plugin specific settings
++        "path": "lib/js/module.js"        //where is your js
++      },
++      "react": {
++        "location": "lib/js/react.js"       //the location to move the react files to
++      }
++    }
++  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
 ```
 
@@ -253,34 +256,37 @@ The magic of Pancake lies within the `postinstall` script. To enable Pancake add
 
 ```diff
 {
-	"name": "your-module-name",
-	"version": "1.0.0",
-	"description": "Your description",
-	"pancake": {
-		"pancake-module": {
-			"version": "1.0.0",
-			"plugins": [
-				"@gov.au/pancake-sass"
-			],
-			"sass": {
-				"path": "lib/sass/_module.scss",
-				"sass-versioning": true
-			},
-			"js": {
-				"path": "lib/js/module.js"
-			}
-		}
-	},
-	"dependencies": {
-+		"@gov.au/pancake": "~1"
-	},
-	"peerDependencies": {},
-	"devDependencies": {},
-	"scripts": {
-+		"postinstall": "pancake"
-	},
-	"author": "",
-	"license": "ISC"
+  "name": "your-module-name",
+  "version": "1.0.0",
+  "description": "Your description",
+  "pancake": {
+    "pancake-module": {
+      "version": "1.0.0",
+      "plugins": [
+        "@gov.au/pancake-sass"
+      ],
+      "sass": {
+        "path": "lib/sass/_module.scss",
+        "sass-versioning": true
+      },
+      "js": {
+        "path": "lib/js/module.js"
+      },
+      "react": {
+        "location": "lib/js/react.js"
+      }
+    }
+  },
+  "dependencies": {
++    "@gov.au/pancake": "~1"
+  },
+  "peerDependencies": {},
+  "devDependencies": {},
+  "scripts": {
++    "postinstall": "pancake"
+  },
+  "author": "",
+  "license": "ISC"
 }
 ```
 
@@ -299,38 +305,41 @@ peer dependency and pancake can check if you have conflicts.
 
 ```diff
 {
-	"name": "your-module-name",
-	"version": "1.0.0",
-	"description": "Your description",
-	"pancake": {
-		"pancake-module": {
-			"version": "1.0.0",
-			"plugins": [
-				"@gov.au/pancake-sass"
-			],
-			"sass": {
-				"path": "lib/sass/_module.scss",
-				"sass-versioning": true
-			},
-			"js": {
-				"path": "lib/js/module.js"
-			}
-		}
-	},
-	"dependencies": {
-		"@gov.au/pancake": "~1",
+  "name": "your-module-name",
+  "version": "1.0.0",
+  "description": "Your description",
+  "pancake": {
+    "pancake-module": {
+      "version": "1.0.0",
+      "plugins": [
+        "@gov.au/pancake-sass"
+      ],
+      "sass": {
+        "path": "lib/sass/_module.scss",
+        "sass-versioning": true
+      },
+      "js": {
+        "path": "lib/js/module.js"
+      },
+      "react": {
+        "location": "lib/js/react.js"
+      }
+    }
+  },
+  "dependencies": {
+    "@gov.au/pancake": "~1",
 
-+		"@gov.au/core": "^0.1.0"
-	},
-	"peerDependencies": {
-+		"@gov.au/core": "^0.1.0"
-	},
-	"devDependencies": {},
-	"scripts": {
-		"postinstall": "pancake"
-	},
-	"author": "",
-	"license": "ISC"
++    "@gov.au/core": "^0.1.0"
+  },
+  "peerDependencies": {
++    "@gov.au/core": "^0.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "pancake"
+  },
+  "author": "",
+  "license": "ISC"
 }
 ```
 

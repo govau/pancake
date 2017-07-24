@@ -141,7 +141,7 @@ const TESTER = (() => { //constructor factory
 				empty: false,
 			},
 			{
-				name: 'Test10: Move files test for react',
+				name: 'Test10: Compile test with react files',
 				folder: 'test10',
 				script: {
 					options: [],

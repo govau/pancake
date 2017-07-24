@@ -1,7 +1,7 @@
 Pancake React plugin
 =================
 
-> This is a [Pancake](https://github.com/govau/pancake) plugin to handle js files.
+> This is a [Pancake](https://github.com/govau/pancake) plugin to handle react files.
 
 
 ## Versions
