@@ -235,7 +235,7 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 +        "path": "lib/js/module.js"        //where is your js
 +      },
 +      "react": {
-+        "location": "lib/js/react.js"       //the location to move the react files to
++        "location": "lib/js/react.js"     //the location to move the react files to
 +      }
 +    }
 +  },
