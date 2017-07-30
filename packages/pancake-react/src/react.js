@@ -35,8 +35,6 @@ export const HandleReact = ( from, to, tag ) => {
 
 				reject( error );
 			})
-			.then( ( content ) => `/*! ${ tag } */\n\n${ content }` )
-
 			.then( ( code ) => WriteFile( to, code ) //write the generated content to file and return its promise
 					.catch( error => {
 						Log.error( error );
