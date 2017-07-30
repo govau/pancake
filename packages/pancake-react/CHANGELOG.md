@@ -6,10 +6,16 @@ Pancake React plugin
 
 ## Versions
 
+* [v1.0.1 - Fixed double version comments in react files](v101)
 * [v1.0.0 - 💥 Initial version](v100)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.0.1
+
+- Fixed double version comments in react files
+
 
 ## v1.0.0
 

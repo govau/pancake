@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-react",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A Pancake plugin to move react files.",
 	"keywords": [
 		"npm",
