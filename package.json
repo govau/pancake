@@ -7,6 +7,9 @@
 
 		"build": "lerna bootstrap && lerna run build"
 	},
+	"engines": {
+		"node": "8.8.0"
+	},
 	"dependencies": {},
 	"devDependencies": {
 		"babel-cli": "^6.24.0",
