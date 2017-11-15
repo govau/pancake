@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/testmodule3",
-	"version": "14.0.0",
+	"version": "14.0.1",
 	"description": "Testing module for uikit",
 	"pancake": {
 		"pancake-module": {

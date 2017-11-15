@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/testmodule2",
-	"version": "18.0.1",
+	"version": "18.0.2",
 	"description": "Basic body styles for body HTML elements",
 	"keywords": [
 		"uikit",
@@ -18,7 +18,7 @@
 		"paragraphs"
 	],
 	"scripts": {
-		"postinstall": "pancake",
+		"postinstall": "pancake -v",
 
 		"test": "node ../../scripts/a11y.js",
 

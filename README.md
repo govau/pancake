@@ -399,22 +399,23 @@ _Please look at the coding style and work with it, not against it. 🌴_
 
 ### Test modules
 
-We have published four test modules in our scoped npm org to test interdependencies. Find below a list of what is inside each version:
+We have published four test modules in our scoped npm org to test interdependencies and to debug with verbose mode switched on.
+Find below a list of what is inside each version:
 
 **@gov.au/testmodule1**
-- `v14.0.3`
+- ![Testmodule1 version](https://img.shields.io/npm/v/@gov.au/testmodule1.svg?label=version&colorA=313131&colorB=1B7991)  
 
 **@gov.au/testmodule2**
-- `v18.0.1`  
+- ![Testmodule2 version](https://img.shields.io/npm/v/@gov.au/testmodule2.svg?label=version&colorA=313131&colorB=1B7991)  
 	- └── `@gov.au/testmodule1`: `^14.0.0`
 
 **@gov.au/testmodule3**
-- `v14.0.0`  
+- ![Testmodule3 version](https://img.shields.io/npm/v/@gov.au/testmodule3.svg?label=version&colorA=313131&colorB=1B7991)  
 	- ├── `@gov.au/testmodule1`: `^14.0.0`
 	- └── `@gov.au/testmodule2`: `^18.0.0`
 
 **@gov.au/testmodule4**
-- `v1.0.0`  
+- ![Testmodule4 version](https://img.shields.io/npm/v/@gov.au/testmodule4.svg?label=version&colorA=313131&colorB=1B7991)  
 	- └── `@gov.au/testmodule1`: `^14.0.0`
 
 
