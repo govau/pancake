@@ -49,6 +49,9 @@ const headline1 = [
 ];
 
 test('Headline - Should output the correct array with the correct ansi codes', () => {
+	const Util = require('util');
+	console.log(Util.inspect( Headline( 'Headline', 'Subline', 20  ) ));
+	console.log(Util.inspect( headline1 ));
 	expect( Headline( 'Headline', 'Subline', 20 ) ).toMatchObject( headline1 );
 });
 
