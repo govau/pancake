@@ -37,7 +37,7 @@ will help you keep them flat and error out on conflicts.
 ## Requirements
 
 - npm >= 3
-- a `package.json` file in your root (run `yarn init` or `npm init`)
+- a `package.json` file in your root (run `npm init --yes`)
 
 Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 and Windows 10 all node version coming with npm 3 and higher:
 
@@ -50,7 +50,7 @@ Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 and Windows 10 a
 - node `v7.6.0`
 
 _Pancake alone does not come with any dependencies while all plugins have fixed dependencies to specific versions to keep the security impact as low as
-possible. We also ship a `yarn.lock` file._
+possible. We also ship a `package-lock.json` file._
 
 
 **[⬆ back to top](#contents)**
@@ -362,13 +362,13 @@ project. To make your contribution count, have a read through the code first and
 To run the project install dependencies and devDependencies:
 
 ```shell
-yarn
+npm install
 ```
 
 Let [lerna](https://lernajs.io/) handle the dependencies between plugins with:
 
 ```shell
-yarn run build
+npm run build
 ```
 
 To run the transpiler on all modules run:
@@ -381,7 +381,7 @@ To develop in one of the modules run the watch inside of it:
 
 ```shell
 cd packages/pancake/
-yarn watch
+npm run watch
 ```
 
 ❗️ Make sure you only edit file inside the `src/` folder. Files inside the `bin/` folder are overwritten by the transpiler.
@@ -429,7 +429,7 @@ We also use unit tests with [jest](https://facebook.github.io/jest/).
 To run all tests use the below command:
 
 ```shell
-yarn test
+npm test
 ```
 
 

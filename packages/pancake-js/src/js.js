@@ -37,12 +37,17 @@ import { Log, Style, ReadFile, WriteFile } from '@gov.au/pancake';
 export const MinifyJS = ( js, file ) => {
 
 	try {
-		const jsCode = UglifyJS.minify( js, {
-			fromString: true,
-			comments: /^\/*!/,
-		});
+		const jsCode = UglifyJS.minify( js );
 
-		return jsCode.code;
+		if( jsCode.error ) {
+			Log.error(`Unable to uglify js code for ${ Style.yellow( file ) }`);
+			Log.error( jsCode.error );
+
+			return js;
+		}
+		else {
+			return jsCode.code;
+		}
 	}
 	catch( error ) {
 		Log.error(`Unable to uglify js code for ${ Style.yellow( file ) }`);
