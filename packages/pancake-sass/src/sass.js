@@ -45,7 +45,12 @@ export const GetPath = ( module, modules, baseLocation, npmOrg ) => {
 		if( item.name === module ) {
 			const moduleName = module.replace(`${ npmOrg }/`, '');
 
-			modulePath = Path.normalize(`${ baseLocation }/${ moduleName }/${ item.pancake['pancake-module'].sass.path }`);
+			if( item.pancake['pancake-module'].sass.path ) {
+				modulePath = Path.normalize(`${ baseLocation }/${ moduleName }/${ item.pancake['pancake-module'].sass.path }`);
+			}
+			else {
+				modulePath = false;
+			}
 
 			break;
 		}
@@ -119,7 +124,9 @@ export const GenerateSass = ( location, name, modules, npmOrg ) => {
 		for( const dependency of Object.keys( dependencies ) ) {
 			const modulePath = GetPath( dependency, modules, baseLocation, npmOrg )
 
-			sass += `@import "${ modulePath }";\n`;
+			if( modulePath ) {
+				sass += `@import "${ modulePath }";\n`;
+			}
 		}
 	}
 

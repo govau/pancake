@@ -4,7 +4,7 @@ Pancake JS plugin
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle js files.
 
 
-## Contentss
+## Contents
 
 * [Install](#install)
 * [Build](#build)

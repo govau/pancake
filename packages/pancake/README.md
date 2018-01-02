@@ -4,7 +4,7 @@ Pancake
 > Pancake is a tool to make working with npm on the front end easy and sweet.
 
 
-## Contentss
+## Contents
 
 * [Install](#install)
 * [Build](#build)
