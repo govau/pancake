@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/testmodule4",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Testing module for uikit",
 	"pancake": {
 		"pancake-module": {
@@ -18,7 +18,7 @@
 		}
 	},
 	"scripts": {
-		"postinstall": "pancake"
+		"postinstall": "pancake -v"
 	},
 	"dependencies": {
 		"@gov.au/pancake": "~1",

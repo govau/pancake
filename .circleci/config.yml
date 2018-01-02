@@ -1,0 +1,27 @@
+# Node CircleCI 2.0 configuration file to DTA cloud 2.0
+
+version: 2
+jobs:
+
+  # DEPLOY-STAGING JOB
+  # installing dependencies, building assets and test
+  test:
+    docker:
+      - image: circleci/node:8.9.1
+
+    steps:
+      - checkout                 # get the files from the repo (why would you ever not want the files????)
+      - run: rm -rf node_modules # delete node_modules folder because we need to bust the cache
+      - run: npm install         # duh
+      - run: npm run build       # build all packages
+      - run: npm test            # run all tests
+
+
+
+# OUR WORKFLOW
+# this is where we orchestrate our jobs
+workflows:
+  version: 2
+  testing:
+    jobs:
+      - test  # run test

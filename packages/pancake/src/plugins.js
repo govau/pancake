@@ -68,7 +68,7 @@ export const InstallPlugins = ( plugins, cwd ) => {
 			const cacheLockStale = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-stale' ] ).stdout.toString().trim();
 			const cacheLockWait = Spawning.sync( 'npm', [ 'config', 'get', 'cache-lock-wait' ] ).stdout.toString().trim();
 
-			Log.verbose(`Npm config was cache-lock-stale: ${ Style.yellow( cacheLockStale ) } cache-lock-wait: ${ Style.yellow( cacheLockWait ) }`);
+			Log.verbose(`npm config was cache-lock-stale: ${ Style.yellow( cacheLockStale ) } cache-lock-wait: ${ Style.yellow( cacheLockWait ) }`);
 
 			//setting new config for just this install to not wait too long for the lockfiles
 			Spawning.sync( 'npm', [ 'config', 'set', 'cache-lock-stale', '10' ] );
