@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/testmodule3",
-	"version": "14.0.1",
+	"version": "15.0.0-next.1",
 	"description": "Testing module for uikit",
 	"pancake": {
 		"pancake-module": {
@@ -23,12 +23,12 @@
 	"dependencies": {
 		"@gov.au/pancake": "~1",
 
-		"@gov.au/testmodule1": "^14.0.0",
-		"@gov.au/testmodule2": "^18.0.0"
+		"@gov.au/testmodule1": "^15.0.0-next.1",
+		"@gov.au/testmodule2": "^19.0.0-next.1"
 	},
 	"peerDependencies": {
-		"@gov.au/testmodule1": "^14.0.0",
-		"@gov.au/testmodule2": "^18.0.0"
+		"@gov.au/testmodule1": "^15.0.0-next.1",
+		"@gov.au/testmodule2": "^19.0.0-next.1"
 	},
 	"author": "TODO",
 	"license": "MIT"
