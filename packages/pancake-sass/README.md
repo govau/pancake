@@ -4,7 +4,7 @@ Pancake Sass plugin
 > This is a [Pancake](https://github.com/govau/pancake) plugin to handle sass files.
 
 
-## Contentss
+## Contents
 
 * [Install](#install)
 * [Build](#build)
@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.2.0  - Added support for modules without Sass files
 * v1.1.1  - Bumped node-sass to 4.5.3
 * v1.1.0  - Optimized pancake for windows
 * v1.0.11 - Added a comment into the generated Sass files

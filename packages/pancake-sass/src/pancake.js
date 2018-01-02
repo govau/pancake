@@ -124,7 +124,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 
 			//check if there are sass files
 			let sassModulePath;
-			if( modulePackage.pancake['pancake-module'].sass !== undefined ) {
+			if( modulePackage.pancake['pancake-module'].sass !== undefined && modulePackage.pancake['pancake-module'].sass.path !== false ) {
 				sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].sass.path }`);
 			}
 
@@ -138,7 +138,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 				let sass = GenerateSass( modulePackage.path, modulePackage.name, modules, GlobalSettings.npmOrg );
 				allSass += sass; //for SETTINGS.css.name file
 
-				// //adding banner and conditional sass-versioning
+				// adding banner and conditional sass-versioning
 				if( modulePackage.pancake['pancake-module'].sass['sass-versioning'] === true ) {
 					sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
 
