@@ -1,0 +1,30 @@
+{
+	"pancake": {
+		"auto-save": false,
+		"css": {
+			"modules": false,
+			"location": false,
+			"name": false
+		},
+		"sass": {
+			"name": false
+		},
+		"js": {
+			"modules": false,
+			"location": false,
+			"name": false
+		},
+		"json": {
+			"enable": true,
+			"location": "pancake/",
+			"name": "pancake",
+			"content": {
+				"name": true,
+				"version": false,
+				"dependencies": false,
+				"path": false,
+				"settings": false
+			}
+		}
+	}
+}

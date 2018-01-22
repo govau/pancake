@@ -148,7 +148,25 @@ const TESTER = (() => { //constructor factory
 				},
 				compare: 'pancake/',
 				empty: false,
-			}
+			},
+			{
+				name: 'Test11: Compile test with two modules and pancake-json enabled',
+				folder: 'test11',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
+			{
+				name: 'Test12: Compile test with pancake-json enabled and cherry-picked json',
+				folder: 'test12',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
 		],
 
 

@@ -121,6 +121,18 @@ To change local settings all you have to do is include a `pancake` object into y
     },
     "react": {                       //settings for the @gov.au/pancake-react plugin
       "location": "pancake/react/",  //the location to save the react files to
+    },
+    "json": {                        //settings for the @gov.au/pancake-json plugin
+      "enable": false,               //the pancake-json plugin is off by default
+      "location": "pancake/js/",     //the location to save the json files to
+      "name": "pancake.min.js",      //the name of the json file
+      "content": {                   //you can curate what the json file will contain
+        "name": true,                //include the name key
+        "version": true,             //include the version key
+        "dependencies": true,        //include the dependencies key
+        "path": true,                //include the path key
+        "settings": true             //include the settings key
+      }
     }
   }
 }
@@ -407,16 +419,16 @@ Find below a list of what is inside each version:
 
 **@gov.au/testmodule2**
 - ![Testmodule2 version](https://img.shields.io/npm/v/@gov.au/testmodule2.svg?label=version&colorA=313131&colorB=1B7991)  
-	- └── `@gov.au/testmodule1`: `^14.0.0`
+	- └── `@gov.au/testmodule1`: `^15.0.0`
 
 **@gov.au/testmodule3**
 - ![Testmodule3 version](https://img.shields.io/npm/v/@gov.au/testmodule3.svg?label=version&colorA=313131&colorB=1B7991)  
-	- ├── `@gov.au/testmodule1`: `^14.0.0`
-	- └── `@gov.au/testmodule2`: `^18.0.0`
+	- ├── `@gov.au/testmodule1`: `^15.0.0`
+	- └── `@gov.au/testmodule2`: `^19.0.0`
 
 **@gov.au/testmodule4**
 - ![Testmodule4 version](https://img.shields.io/npm/v/@gov.au/testmodule4.svg?label=version&colorA=313131&colorB=1B7991)  
-	- └── `@gov.au/testmodule1`: `^14.0.0`
+	- └── `@gov.au/testmodule1`: `^15.0.0`
 
 
 ### Software tests

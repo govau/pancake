@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/testmodule2",
-	"version": "19.0.0-next.1",
+	"version": "19.0.0",
 	"description": "Basic body styles for body HTML elements",
 	"keywords": [
 		"uikit",
@@ -31,7 +31,8 @@
 		"pancake-module": {
 			"version": "1.0.0",
 			"plugins": [
-				"@gov.au/pancake-sass"
+				"@gov.au/pancake-js",
+				"@gov.au/pancake-json"
 			],
 			"sass": {
 				"path": "lib/sass/_module.scss",
@@ -42,10 +43,10 @@
 	"dependencies": {
 		"@gov.au/pancake": "~1",
 
-		"@gov.au/testmodule1": "^15.0.0-next.1"
+		"@gov.au/testmodule1": "^15.0.0"
 	},
 	"peerDependencies": {
-		"@gov.au/testmodule1": "^15.0.0-next.1"
+		"@gov.au/testmodule1": "^15.0.0"
 	},
 	"devDependencies": {
 		"browser-sync": "^2.18.6",
