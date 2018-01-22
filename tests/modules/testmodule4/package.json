@@ -1,12 +1,13 @@
 {
 	"name": "@gov.au/testmodule4",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Testing module for uikit",
 	"pancake": {
 		"pancake-module": {
 			"version": "1.0.0",
 			"plugins": [
-				"@gov.au/pancake-sass"
+				"@gov.au/pancake-js",
+				"@gov.au/pancake-json"
 			],
 			"sass": {
 				"path": "lib/sass/_module.scss",
@@ -23,10 +24,10 @@
 	"dependencies": {
 		"@gov.au/pancake": "~1",
 
-		"@gov.au/testmodule1": "^14.0.0"
+		"@gov.au/testmodule1": "^15.0.0"
 	},
 	"peerDependencies": {
-		"@gov.au/testmodule1": "^14.0.0"
+		"@gov.au/testmodule1": "^15.0.0"
 	},
 	"author": "TODO",
 	"license": "MIT"
