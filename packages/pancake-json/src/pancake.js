@@ -130,7 +130,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 				}
 
 				if( SETTINGS.json.content.dependencies ) {
-					JSONOutput[ modulePackage.name ].dependencies = modulePackage.dependencies;
+					JSONOutput[ modulePackage.name ].dependencies = modulePackage.peerDependencies;
 				}
 
 				if( SETTINGS.json.content.path ) {
