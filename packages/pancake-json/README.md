@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.2 - Fixed dependency bug
 * v1.0.1 - 💥 Initial version
 
 
