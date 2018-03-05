@@ -120,12 +120,12 @@ To change local settings all you have to do is include a `pancake` object into y
       "name": "pancake.min.js"       //the name of the js file that includes all modules; set this to false to disable it
     },
     "react": {                       //settings for the @gov.au/pancake-react plugin
-      "location": "pancake/react/",  //the location to save the react files to
+      "location": "pancake/react/",  //the location to save the react files to; set this to false to disable it
     },
     "json": {                        //settings for the @gov.au/pancake-json plugin
       "enable": false,               //the pancake-json plugin is off by default
       "location": "pancake/js/",     //the location to save the json files to
-      "name": "pancake.min.js",      //the name of the json file
+      "name": "pancake",             //the name of the json file
       "content": {                   //you can curate what the json file will contain
         "name": true,                //include the name key
         "version": true,             //include the version key

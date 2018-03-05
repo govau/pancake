@@ -100,55 +100,63 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-		for( const modulePackage of modules ) {
-			Log.verbose(`React: Building ${ Style.yellow( modulePackage.name ) }`);
+		if( SETTINGS.react.location !== false ) {
+			for( const modulePackage of modules ) {
+				Log.verbose(`React: Building ${ Style.yellow( modulePackage.name ) }`);
 
-			//check if there are react files
-			let reactModulePath;
-			if( modulePackage.pancake['pancake-module'].react !== undefined ) {
-				reactModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].react.path }`);
+				//check if there are react files
+				let reactModulePath;
+				if( modulePackage.pancake['pancake-module'].react !== undefined ) {
+					reactModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].react.path }`);
+				}
+
+				if( !Fs.existsSync( reactModulePath ) ) {
+					Log.verbose(`React: No React found in ${ Style.yellow( reactModulePath ) }`)
+				}
+				else {
+					Log.verbose(`React: ${ Style.green('⌘') } Found React files in ${ Style.yellow( reactModulePath ) }`);
+
+					const reactModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.react.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
+
+					//move react file depending on settings
+					const reactPromise = HandleReact( reactModulePath, reactModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
+						.catch( error => {
+							Log.error( error );
+					});
+
+					reactModules.push( reactPromise );
+				}
 			}
 
-			if( !Fs.existsSync( reactModulePath ) ) {
-				Log.verbose(`React: No React found in ${ Style.yellow( reactModulePath ) }`)
+			if( modules.length < 1 ) {
+				Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
+
+				Log.info(`No pancake modules found 😬`);
+				resolve( SETTINGS );
 			}
 			else {
-				Log.verbose(`React: ${ Style.green('⌘') } Found React files in ${ Style.yellow( reactModulePath ) }`);
 
-				const reactModuleToPath = Path.normalize(`${ cwd }/${ SETTINGS.react.location }/${ modulePackage.name.split('/')[ 1 ] }.js`);
-
-				//move react file depending on settings
-				const reactPromise = HandleReact( reactModulePath, reactModuleToPath, `${ modulePackage.name } v${ modulePackage.version }` )
+				//after all files have been compiled and written
+				Promise.all( reactModules )
 					.catch( error => {
-						Log.error( error );
+						Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
+
+						Log.error(`React plugin ran into an error: ${ error }`);
+					})
+					.then( () => {
+						Log.ok('REACT PLUGIN FINISHED');
+
+						Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
+						resolve( SETTINGS );
 				});
 
-				reactModules.push( reactPromise );
 			}
 		}
-
-		if( modules.length < 1 ) {
+		else {
+			Log.ok('REACT PLUGIN DISABLED');
 			Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
 
-			Log.info(`No pancake modules found 😬`);
 			resolve( SETTINGS );
-		}
-		else {
-
-			//after all files have been compiled and written
-			Promise.all( reactModules )
-				.catch( error => {
-					Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
-
-					Log.error(`React plugin ran into an error: ${ error }`);
-				})
-				.then( () => {
-					Log.ok('REACT PLUGIN FINISHED');
-
-					Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
-					resolve( SETTINGS );
-			});
-
 		}
 
 	});
