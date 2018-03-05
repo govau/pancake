@@ -155,7 +155,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 						Log.ok('JSON PLUGIN FINISHED');
 						Loading.stop( 'pancake-json', Log.verboseMode ); //stop loading animation
 
-						resolve( JSONOutput );
+						resolve( SETTINGS );
 				});
 			}
 			else {
@@ -166,10 +166,10 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			}
 		}
 		else {
-			Log.ok('JSON PLUGIN FINISHED');
+			Log.ok('JSON PLUGIN DISABLED');
 			Loading.stop( 'pancake-json', Log.verboseMode ); //stop loading animation
 
-			resolve({});
+			resolve( SETTINGS );
 		}
 	});
 }

@@ -156,7 +156,7 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			Log.ok('REACT PLUGIN DISABLED');
 			Loading.stop( 'pancake-react', Log.verboseMode ); //stop loading animation
 
-			resolve({});
+			resolve( SETTINGS );
 		}
 
 	});
