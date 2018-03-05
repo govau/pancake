@@ -167,6 +167,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
+			{
+				name: 'Test13: Compile test with react files disabled',
+				folder: 'test13',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
 		],
 
 
