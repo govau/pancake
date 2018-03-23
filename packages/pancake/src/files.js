@@ -81,7 +81,7 @@ export const CreateDir = ( dir ) => {
 
 			Log.verbose(`Checking if ${ Style.yellow( currentPath ) } exists`)
 
-			if( !Fs.existsSync( currentPath ) ){
+			if( !Fs.existsSync( currentPath ) ) {
 				try {
 					Fs.mkdirSync( currentPath );
 
