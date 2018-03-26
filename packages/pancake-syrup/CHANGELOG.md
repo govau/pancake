@@ -6,12 +6,18 @@ Syrup
 
 ## Versions
 
+* [v1.0.3  - Added npm init support](v103)
 * [v1.0.2  - Fix syrup command](v102)
 * [v1.0.1  - Fixed Invalid URI bug](v101)
 * [v1.0.0  - 💥 Initial version](v100)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## v1.0.3
+
+- Added `npm init` support if the folder you run syrup ion does not have a `package.json` file.
 
 
 ## v1.0.2
