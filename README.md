@@ -25,7 +25,7 @@ Pancake
 
 [Npm wrote about](http://blog.npmjs.org/post/101775448305/npm-and-front-end-packaging) the challenges frontend developers face when trying to use npm. Pancake
 is addressing those by embracing the idea of small individually versioned independent modules. Interdependencies is what npm does really well and Pancake
-will help you keep them flat and error out on conflicts.
+will help you keep them flat and error out on conflicts. [Read more about our solution](https://medium.com/dailyjs/npm-and-the-front-end-950c79fc22ce)
 
 
 **[⬆ back to top](#contents)**
