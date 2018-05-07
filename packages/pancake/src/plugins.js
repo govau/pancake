@@ -51,7 +51,7 @@ export const InstallPlugins = ( plugins, cwd ) => {
 
 			try {
 				if ( Fs.existsSync( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) ) ) {
-					require( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) )
+					require( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) );
 				}
 				else {
 					require( Path.normalize( `${ cwd }/node_modules/${ plugin }` ) );
@@ -181,9 +181,10 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SE
 		const allPlugins = plugins.map( plugin => {
 			Log.info(`ADDING TOPPINGS TO YOUR PANCAKE VIA ${ plugin }`);
 
-			if (Fs.existsSync( Path.normalize(`${ cwd }/../node_modules/${ plugin }`))) {
-				plugin = require(Path.normalize(`${ cwd }/../node_modules/${ plugin }`))
-			} else {
+			if ( Fs.existsSync( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) ) ) {
+				plugin = require( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) );
+			} 
+			else {
 				plugin = require(Path.normalize(`${ cwd }/node_modules/${ plugin }`));
 			}
 
