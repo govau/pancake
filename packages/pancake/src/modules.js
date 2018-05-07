@@ -122,8 +122,7 @@ export const GetModules = ( pkgPath, npmOrg = '' ) => {
 
 
 /**
- * Generate an object from the allModules object to filter out all plugins
- * requested by all modules
+ * Generate an object from the allModules object to filter out all plugins requested by all modules
  *
  * @param  {object} allModules - The object off all modules from GetModules()
  *
