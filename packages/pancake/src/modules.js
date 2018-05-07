@@ -4,8 +4,7 @@
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE
- *     (MIT)
+ * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
 
