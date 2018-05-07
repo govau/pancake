@@ -50,10 +50,11 @@ export const InstallPlugins = ( plugins, cwd ) => {
 		plugins.map( plugin => {
 
 			try {
-				if (Fs.existsSync( Path.normalize(`${ cwd }/../node_modules/${ plugin }`))) {
-					require(Path.normalize(`${ cwd }/../node_modules/${ plugin }`))
-				} else {
-					require(Path.normalize(`${ cwd }/node_modules/${ plugin }`));
+				if ( Fs.existsSync( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) ) ) {
+					require( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) )
+				}
+				else {
+					require( Path.normalize( `${ cwd }/node_modules/${ plugin }` ) );
 				}
 
 				result.found.push( plugin );
