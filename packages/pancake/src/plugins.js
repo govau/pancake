@@ -15,7 +15,7 @@
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import Path from 'path';
-// import Fs from 'fs';
+import Fs from 'fs';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,7 +50,12 @@ export const InstallPlugins = ( plugins, cwd ) => {
 		plugins.map( plugin => {
 
 			try {
-				require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
+				if ( Fs.existsSync( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) ) ) {
+					require( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) );
+				}
+				else {
+					require( Path.normalize( `${ cwd }/node_modules/${ plugin }` ) );
+				}
 
 				result.found.push( plugin );
 			}
@@ -176,7 +181,12 @@ export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SE
 		const allPlugins = plugins.map( plugin => {
 			Log.info(`ADDING TOPPINGS TO YOUR PANCAKE VIA ${ plugin }`);
 
-			plugin = require( Path.normalize(`${ cwd }/node_modules/${ plugin }`) );
+			if ( Fs.existsSync( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) ) ) {
+				plugin = require( Path.normalize( `${ cwd }/../node_modules/${ plugin }` ) );
+			} 
+			else {
+				plugin = require(Path.normalize(`${ cwd }/node_modules/${ plugin }`));
+			}
 
 			return plugin.pancake( version, allModules, SETTINGSlocal, SETTINGS, cwd ) //run ’em
 				.catch( error => {

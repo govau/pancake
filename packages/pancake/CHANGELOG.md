@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.2.0  - Optimized pancake for yarn monorepos](v120)
 * [v1.1.0  - Optimized pancake for windows](v110)
 * [v1.0.15 - Fixed mixed js and Sass module bug](v1015)
 * [v1.0.14 - Tweaked to facilitate syrup](v1013)
@@ -21,6 +22,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.2.0
+
+- Pancake now searches the folder above the current/package.json folder to better support monorepos via yarn
+	([#15](https://github.com/govau/pancake/issues/15))
 
 
 ## v1.1.0
