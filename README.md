@@ -48,6 +48,7 @@ Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 and Windows 10 a
 - node `v7.4.0`
 - node `v7.5.0`
 - node `v7.6.0`
+- node `v10.0.0`
 
 _Pancake alone does not come with any dependencies while all plugins have fixed dependencies to specific versions to keep the security impact as low as
 possible. We also ship a `package-lock.json` file._

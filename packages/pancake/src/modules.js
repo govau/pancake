@@ -4,7 +4,8 @@
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE
+ *     (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -31,9 +32,11 @@ import { GetFolders } from './files';
 /**
  * Reading and parsing a package.json file of a module
  *
- * @param  {string}  pkgPath - The path to the folder the package.json is in (omitting package.json)
+ * @param  {string}  pkgPath - The path to the folder the package.json is in
+ *     (omitting package.json)
  *
- * @return {promise object}  - Returns a promise and some of the data of the package.json
+ * @return {promise object}  - Returns a promise and some of the data of the
+ *     package.json
  */
 export const ReadModule = pkgPath => {
 	const thisPath = Path.normalize(`${ pkgPath }/package.json`);
@@ -80,18 +83,25 @@ export const ReadModule = pkgPath => {
  * @param  {string}  pkgPath - The path that includes your node_module folder
  * @param  {string}  npmOrg  - The npmOrg scope
  *
- * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
+ * @return {promise object}  - A promise.all that resolves when all
+ *     package.jsons have been read
  */
 export const GetModules = ( pkgPath, npmOrg = '' ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Style.yellow( typeof pkgPath ) }] "${ Style.yellow( pkgPath ) }"`);
 	}
 
-	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
+	const modulesPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
 
 	Log.verbose(`Looking for pancake modules in: ${ Style.yellow( pkgPath ) }`);
 
-	const allModules = GetFolders( pkgPath ); //all folders inside the selected path
+	var allModules = GetFolders(modulesPath); //all folders inside the selected path
+
+	const altModulesPath = Path.normalize(`${ pkgPath }/../node_modules/${ npmOrg }/`);
+	if (Fs.existsSync(altModulesPath)) {
+		Log.verbose(`Also looking for pancake modules in: ${ Style.yellow(altModulesPath) }`);
+		allModules = allModules.concat(GetFolders(altModulesPath)); //all folders inside the selected path
+	}
 
 	if( allModules !== undefined && allModules.length > 0 ) {
 		Log.verbose(`Found the following module folders:\n${ Style.yellow( allModules.join('\n') ) }`);
@@ -116,7 +126,8 @@ export const GetModules = ( pkgPath, npmOrg = '' ) => {
 
 
 /**
- * Generate an object from the allModules object to filter out all plugins requested by all modules
+ * Generate an object from the allModules object to filter out all plugins
+ * requested by all modules
  *
  * @param  {object} allModules - The object off all modules from GetModules()
  *

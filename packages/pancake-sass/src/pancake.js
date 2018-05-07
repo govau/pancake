@@ -6,7 +6,8 @@
  *
  * @repo    - https://github.com/govau/pancake
  * @author  - Dominik Wilkowski
- * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
+ * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE
+ *     (MIT)
  *
  **************************************************************************************************************************************************************/
 
@@ -38,11 +39,14 @@ Log.output = true; //this plugin assumes you run it through pancake
  *
  * @param  {array}  version        - The version of mother pancake
  * @param  {array}  modules        - An array of all module objects
- * @param  {object} settings       - An object of the host package.json file and it’s path
+ * @param  {object} settings       - An object of the host package.json file
+ *     and it’s path
  * @param  {object} GlobalSettings - An object of the global settings
- * @param  {object} cwd            - The path to the working directory of our host package.json file
+ * @param  {object} cwd            - The path to the working directory of our
+ *     host package.json file
  *
- * @return {Promise object}  - Returns an object of the settings we want to save
+ * @return {Promise object}  - Returns an object of the settings we want to
+ *     save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Loading.start( 'pancake-sass', Log.verboseMode );
@@ -108,6 +112,10 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 		let compiledAll = [];      //for collect all promises
 		let allSass = '';          //all modules to be collected for SETTINGS.css.name file
 		let sassVersioning = true; //let’s assume the pancake module was build with sass-versioning
+		const sassVersioningPath = (Fs.existsSync(Path.normalize(`${ cwd }/../node_modules/sass-versioning`)) ?
+						Path.normalize(`${ cwd }/../node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\")
+						: Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\")
+		);
 
 		const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
 		const banner = `/*! PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n` +
@@ -141,8 +149,6 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 				// adding banner and conditional sass-versioning
 				if( modulePackage.pancake['pancake-module'].sass['sass-versioning'] === true ) {
 					sassVersioning = true; //setting this if we encounter at least one module with sass-versioning enabled
-
-					const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\");
 
 					sass = `${ banner }` +
 						`/* ${ modulePackage.name } v${ modulePackage.version } */\n\n` +
@@ -195,8 +201,6 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			const locationCSS = Path.normalize(`${ cwd }/${ SETTINGS.css.location }/${ SETTINGS.css.name }`);
 
 			if( sassVersioning === true ) {
-				const sassVersioningPath = Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\");
-
 				allSass = `${ banner }` +
 					`@import "${ sassVersioningPath }";\n\n` +
 					`${ StripDuplicateLines( allSass ) }\n\n` +
