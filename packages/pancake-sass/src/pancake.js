@@ -38,14 +38,11 @@ Log.output = true; //this plugin assumes you run it through pancake
  *
  * @param  {array}  version        - The version of mother pancake
  * @param  {array}  modules        - An array of all module objects
- * @param  {object} settings       - An object of the host package.json file
- *     and it’s path
+ * @param  {object} settings       - An object of the host package.json file and it’s path
  * @param  {object} GlobalSettings - An object of the global settings
- * @param  {object} cwd            - The path to the working directory of our
- *     host package.json file
+ * @param  {object} cwd            - The path to the working directory of our host package.json file
  *
- * @return {Promise object}  - Returns an object of the settings we want to
- *     save
+ * @return {Promise object}  - Returns an object of the settings we want to save
  */
 export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Loading.start( 'pancake-sass', Log.verboseMode );
