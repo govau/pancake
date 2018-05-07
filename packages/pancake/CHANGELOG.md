@@ -28,6 +28,7 @@ Pancake
 - Pancake now searches the folder above the current/package.json folder to better support monorepos via yarn
 	([#15](https://github.com/govau/pancake/issues/15))
 
+
 ## v1.1.0
 
 - Pancake now works on windows after escaping every path separator. Other operating system, other way to break code.
