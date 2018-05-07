@@ -87,11 +87,17 @@ export const GetModules = ( pkgPath, npmOrg = '' ) => {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Style.yellow( typeof pkgPath ) }] "${ Style.yellow( pkgPath ) }"`);
 	}
 
-	pkgPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
+	const modulesPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
 
 	Log.verbose(`Looking for pancake modules in: ${ Style.yellow( pkgPath ) }`);
 
-	const allModules = GetFolders( pkgPath ); //all folders inside the selected path
+	var allModules = GetFolders(modulesPath); //all folders inside the selected path
+
+	const altModulesPath = Path.normalize(`${ pkgPath }/../node_modules/${ npmOrg }/`);
+	if (Fs.existsSync(altModulesPath)) {
+		Log.verbose(`Also looking for pancake modules in: ${ Style.yellow(altModulesPath) }`);
+		allModules = allModules.concat(GetFolders(altModulesPath)); //all folders inside the selected path
+	}
 
 	if( allModules !== undefined && allModules.length > 0 ) {
 		Log.verbose(`Found the following module folders:\n${ Style.yellow( allModules.join('\n') ) }`);
