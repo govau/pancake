@@ -6,7 +6,7 @@ Pancake Sass plugin
 
 ## Versions
 
-* [v1.2.1  - Optimized pancake for yarn monorepos](v121)
+* [v1.3.0  - Optimized pancake for yarn monorepos](v130)
 * [v1.2.0  - Added support for modules without Sass files](v120)
 * [v1.1.1  - Bumped node-sass to 4.5.3](v111)
 * [v1.1.0  - Optimized pancake for windows](v110)
@@ -24,7 +24,7 @@ Pancake Sass plugin
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## v1.2.1
+## v1.3.0
 
 - Pancake now searches the folder above the current/package.json folder to better support monorepos via yarn
 	([#15](https://github.com/govau/pancake/issues/15))
