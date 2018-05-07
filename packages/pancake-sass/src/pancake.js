@@ -108,10 +108,9 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 		let compiledAll = [];      //for collect all promises
 		let allSass = '';          //all modules to be collected for SETTINGS.css.name file
 		let sassVersioning = true; //let’s assume the pancake module was build with sass-versioning
-		const sassVersioningPath = (Fs.existsSync(Path.normalize(`${ cwd }/../node_modules/sass-versioning`)) ?
-						Path.normalize(`${ cwd }/../node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\")
-						: Path.normalize(`${ cwd }/node_modules/sass-versioning/dist/_index.scss`).replace(/\\/g, "\\\\")
-		);
+		const sassVersioningPath = ( Fs.existsSync( Path.normalize( `${ cwd }/../node_modules/sass-versioning` ) ) )
+			? Path.normalize( `${ cwd }/../node_modules/sass-versioning/dist/_index.scss` ).replace(/\\/g, "\\\\")
+			: Path.normalize( `${ cwd }/node_modules/sass-versioning/dist/_index.scss` ).replace(/\\/g, "\\\\");
 
 		const Package = require( Path.normalize(`${ __dirname }/../package.json`) );
 		const banner = `/*! PANCAKE v${ version } PANCAKE-SASS v${ Package.version } */\n\n` +
