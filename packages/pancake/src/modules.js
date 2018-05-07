@@ -31,11 +31,9 @@ import { GetFolders } from './files';
 /**
  * Reading and parsing a package.json file of a module
  *
- * @param  {string}  pkgPath - The path to the folder the package.json is in
- *     (omitting package.json)
+ * @param  {string}  pkgPath - The path to the folder the package.json is in (omitting package.json)
  *
- * @return {promise object}  - Returns a promise and some of the data of the
- *     package.json
+ * @return {promise object}  - Returns a promise and some of the data of the package.json
  */
 export const ReadModule = pkgPath => {
 	const thisPath = Path.normalize(`${ pkgPath }/package.json`);
