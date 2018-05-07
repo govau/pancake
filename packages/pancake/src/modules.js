@@ -80,8 +80,7 @@ export const ReadModule = pkgPath => {
  * @param  {string}  pkgPath - The path that includes your node_module folder
  * @param  {string}  npmOrg  - The npmOrg scope
  *
- * @return {promise object}  - A promise.all that resolves when all
- *     package.jsons have been read
+ * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
  */
 export const GetModules = ( pkgPath, npmOrg = '' ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
