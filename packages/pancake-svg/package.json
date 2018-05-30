@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-svg",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "A Pancake plugin to generate svg sprites and png fallbacks.",
 	"keywords": [
 		"npm",
@@ -58,7 +58,7 @@
 		"babel-preset-es2015": "^6.24.1",
 		"del": "^3.0.0",
 		"dirsum": "^0.1.1",
-		"jest-cli": "^21.2.1",
+		"jest-cli": "^23.0.1",
 		"onchange": "^3.2.1"
 	},
 	"repository": {

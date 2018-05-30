@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-json",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "A Pancake plugin to generate a json file from all pancake modules.",
 	"keywords": [
 		"npm",
@@ -58,7 +58,7 @@
 		"babel-preset-es2015": "^6.24.1",
 		"del": "^3.0.0",
 		"dirsum": "^0.1.1",
-		"jest-cli": "^21.2.1",
+		"jest-cli": "^23.0.1",
 		"onchange": "^3.2.1"
 	},
 	"repository": {
