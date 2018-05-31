@@ -58,6 +58,8 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.2.2  - Update forgotten changelog
+* v1.2.1  - Update node modules
 * v1.2.0  - Optimized pancake for yarn monorepos
 * v1.1.0  - Optimized pancake for windows
 * v1.0.15 - Fixed mixed js and Sass module bug
