@@ -6,12 +6,24 @@ Pancake React plugin
 
 ## Versions
 
+* [v1.1.2 - Update forgotten changelog](v112)
+* [v1.1.1 - Update node modules](v111)
 * [v1.1.0 - Added ability to disable react output](v110)
 * [v1.0.1 - Fixed double version comments in react files](v101)
 * [v1.0.0 - 💥 Initial version](v100)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.1.2
+
+- Add changelogs
+
+
+## v1.1.1
+
+- Update dependencies
+
 
 ## v1.1.0
 
