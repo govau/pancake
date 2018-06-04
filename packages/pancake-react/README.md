@@ -58,6 +58,8 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.1.2 - Update forgotten changelog
+* v1.1.1 - Update node modules
 * v1.1.0 - Added ability to disable react output
 * v1.0.1 - Fixed double version comments in react files
 * v1.0.0 - 💥 Initial version

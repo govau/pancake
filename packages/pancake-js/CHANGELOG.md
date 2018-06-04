@@ -6,6 +6,8 @@ Pancake JS plugin
 
 ## Versions
 
+* [v1.0.11 - Update forgotten changelog](v1011)
+* [v1.0.10 - Update node modules](v1010)
 * [v1.0.9 - Fixed mixed js and Sass module bug](v109)
 * [v1.0.8 - Cleaned log and updated uglify-js](v108)
 * [v1.0.7 - Dependencies and tests](v107)
@@ -16,6 +18,15 @@ Pancake JS plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.0.11
+
+- Add changelogs
+
+
+## v1.0.10
+
+- Update dependencies
 
 
 ## v1.0.9

@@ -6,6 +6,8 @@ Pancake Sass plugin
 
 ## Versions
 
+* [v1.3.2  - Update forgotten changelog](v132)
+* [v1.3.1  - Update node modules](v131)
 * [v1.3.0  - Optimized pancake for yarn monorepos](v130)
 * [v1.2.0  - Added support for modules without Sass files](v120)
 * [v1.1.1  - Bumped node-sass to 4.5.3](v111)
@@ -22,6 +24,15 @@ Pancake Sass plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.3.2
+
+- Add changelogs
+
+
+## v1.3.1
+
+- Update dependencies
 
 
 ## v1.3.0

@@ -6,12 +6,23 @@ Pancake JS plugin
 
 ## Versions
 
+* [v1.0.5 - Update forgotten changelog](v105)
+* [v1.0.4 - Update node modules](v104)
 * [v1.0.3 - Fixed auto-save and package.json bug](v103)
 * [v1.0.2 - Fixed dependency bug](v102)
 * [v1.0.1 - 💥 Initial version](v101)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.0.5
+
+- Add changelogs
+
+
+## v1.0.4
+
+- Update dependencies
 
 
 ## v1.0.3

@@ -58,6 +58,8 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.11 - Update forgotten changelog
+* v1.0.10 - Update node modules
 * v1.0.9 - Fixed mixed js and Sass module bug
 * v1.0.8 - Cleaned log and updated uglify-js
 * v1.0.7 - Dependencies and tests
