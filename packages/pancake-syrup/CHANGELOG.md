@@ -6,6 +6,7 @@ Syrup
 
 ## Versions
 
+* [v1.0.6  - Update node modules](v106)
 * [v1.0.5  - Update forgotten changelog](v105)
 * [v1.0.4  - Update node modules](v104)
 * [v1.0.3  - Added npm init support](v103)
@@ -15,6 +16,11 @@ Syrup
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.0.6
+
+- Update dependencies
+
 
 ## v1.0.5
 
