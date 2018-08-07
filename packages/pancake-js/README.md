@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.13 - Add ie8 support for minified js files
 * v1.0.12 - Update node modules
 * v1.0.11 - Update forgotten changelog
 * v1.0.10 - Update node modules

@@ -4,7 +4,6 @@
 		"test:unit-test": "jest",
 		"test:end-to-end": "node tests/tester.js",
 		"test": "npm run test:end-to-end && npm run test:unit-test",
-
 		"build": "lerna bootstrap && lerna run build"
 	},
 	"engines": {
