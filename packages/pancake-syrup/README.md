@@ -73,14 +73,14 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
-* v1.0.7 - Update dependencies
-* v1.0.6 - Update node modules
-* v1.0.5 - Update forgotten changelog
-* v1.0.4 - Update node modules
-* v1.0.3 - Added npm init support
-* v1.0.2 - Fix syrup command
-* v1.0.1 - Fixed Invalid URI bug
-* v1.0.0 - 💥 Initial version
+* v1.0.7  - Update dependencies
+* v1.0.6  - Update node modules
+* v1.0.5  - Update forgotten changelog
+* v1.0.4  - Update node modules
+* v1.0.3  - Added npm init support
+* v1.0.2  - Fix syrup command
+* v1.0.1  - Fixed Invalid URI bug
+* v1.0.0  - 💥 Initial version
 
 
 **[⬆ back to top](#contents)**
