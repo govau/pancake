@@ -6,6 +6,7 @@ Pancake React plugin
 
 ## Versions
 
+* [v1.1.4 - Update dependencies](v114)
 * [v1.1.3 - Update node modules](v113)
 * [v1.1.2 - Update forgotten changelog](v112)
 * [v1.1.1 - Update node modules](v111)
@@ -15,6 +16,10 @@ Pancake React plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.1.4
+
+- Update dependencies
 
 ## v1.1.3
 
