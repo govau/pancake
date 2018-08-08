@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-js",
-	"version": "1.0.12",
+	"version": "1.0.13",
 	"description": "A Pancake plugin to minify js files.",
 	"keywords": [
 		"npm",
@@ -80,6 +80,11 @@
 			"name": "Dominik Wilkowski",
 			"email": "hi@dominik-wilkowski.com",
 			"url": "https://dominik-wilkowski.com/"
+		},
+		{
+			"name": "Sukhraj Ghuman",
+			"email": "sukhrajghuman@live.com",
+			"url": "https://github.com/sukhrajghuman"
 		}
 	],
 	"license": "MIT"
