@@ -6,6 +6,7 @@ Pancake SVG plugin
 
 ## Versions
 
+* [v1.0.1 - Update dependencies](v101)
 * [v1.0.0 - 💥 Initial version](v100)
 
 

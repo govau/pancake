@@ -58,6 +58,8 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.0.7 - Update dependencies
+* v1.0.6 - Update node modules
 * v1.0.5 - Update forgotten changelog
 * v1.0.4 - Update node modules
 * v1.0.3 - Fixed auto-save and package.json bug

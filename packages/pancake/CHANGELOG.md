@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.2.4 - Update dependencies](v124)
 * [v1.2.3  - Update node modules](v123)
 * [v1.2.2  - Update forgotten changelog](v122)
 * [v1.2.1  - Update node modules](v121)
@@ -25,6 +26,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.2.4
+
+- Update dependencies
+
 
 ## v1.2.3
 
