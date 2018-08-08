@@ -6,7 +6,7 @@ Pancake JS plugin
 
 ## Versions
 
-* [v1.0.13 - Add ie8 support for minified js files](v1013)
+* [v1.0.13 - Add ie8 support for mangled js files and updated dependencies](v1013)
 * [v1.0.12 - Update node modules](v1012)
 * [v1.0.11 - Update forgotten changelog](v1011)
 * [v1.0.10 - Update node modules](v1010)
@@ -23,7 +23,8 @@ Pancake JS plugin
 
 ## v1.0.13
 
-- Add ie8 support for minified js files
+- Add ie8 support for mangled js files
+- Updated dependencies
 
 
 ## v1.0.12
