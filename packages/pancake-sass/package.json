@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-sass",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "A Pancake plugin to compile sass files.",
 	"keywords": [
 		"npm",
@@ -52,7 +52,7 @@
 		"autoprefixer": "7.1.6",
 		"babel-runtime": "6.26.0",
 		"postcss": "6.0.14",
-		"sass": "^1.6.0"
+		"node-sass": "^4.9.3"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.26.0",

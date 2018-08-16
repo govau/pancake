@@ -14,10 +14,10 @@
  */
 /*! @other.org/testmodule1 v11.0.1 */
 .test {
-		content: "testmodule1:v11.0.1";
+		content: 'testmodule1:v11.0.1';
 }
 
 /*! @other.org/testmodule2 v13.0.0 */
 .test {
-		content: "testmodule2:v13.0.0";
+		content: 'testmodule2:v13.0.0';
 }
