@@ -9,6 +9,8 @@ Pancake
 is addressing those by embracing the idea of small individually versioned independent modules. Interdependencies is what npm does really well and Pancake
 will help you keep them flat and error out on conflicts. [Read more about our solution](https://medium.com/dailyjs/npm-and-the-front-end-950c79fc22ce)
 
+Pancake will check your peerDependencies for conflicts and comes with plugins to compile the contents of your modules for you and lists all available modules for you to select and install.
+
 
 
 ## Contents
@@ -28,7 +30,7 @@ will help you keep them flat and error out on conflicts. [Read more about our so
 
 ## Getting started
 
-If your project is already using Pancake and you want to make changes to the outputted files you will want to change the [Pancake settings](#settings) in the `package.json` file.
+If your project is already using Pancake and you want to make changes to the output you will want to change the [Pancake settings](#settings) in the `package.json` file.
 
 If you are creating a new project using Pancake you will want to look into creating your own [Pancake modules](#creating-your-own-pancake-modules).
 
@@ -56,6 +58,7 @@ _Pancake alone does not come with any dependencies while all plugins have fixed 
 ## Settings
 
 Pancake comes with two different level of settings. Global settings can persist across projects and local settings that are project specific.
+
 
 ### Global settings
 
@@ -214,12 +217,22 @@ pancake --verbose
 
 💡 You can use Pancake with your own modules. All you have to do in your modules is:
 
-1. Install Pancake with `npm i @gov.au/pancake`.
+1. Install Pancake
 2. Add the Pancake module object to your `package.json` file
 3. Add the Pancake `postinstall` script and dependency to your `package.json` file
 4. Add your peer dependencies
 
-### 1. Pancake module object
+
+### 1. Install Pancake
+
+To install pancake use node package manager.
+
+```
+npm i @gov.au/pancake
+```
+
+
+### 2. Pancake module object
 
 To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` object into your `pancake` object.
 
@@ -257,7 +270,7 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 }
 ```
 
-### 2. The script
+### 3. The script
 
 The magic of Pancake lies within the `postinstall` script. To enable Pancake add it as a dependency and add the script:
 
@@ -305,7 +318,7 @@ If you have to change settings (very likely) you don’t actually have to fork t
 "postinstall": "pancake --set npmOrg yourOrg && pancake"
 ```
 
-### 3. Peer dependencies
+### 4. Peer dependencies
 
 Adding peer dependencies is simple as long as you remember to add it to the `dependencies` and `peerDependencies` the same time. That way npm will install the
 peer dependency and pancake can check if you have conflicts.
