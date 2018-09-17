@@ -30,9 +30,9 @@ Pancake will check your peerDependencies for conflicts and comes with plugins to
 
 ## Getting started
 
-If your project is already using Pancake and you want to make changes to the output you will want to change the [Pancake settings](#settings) in the `package.json` file.
-
 If you are creating a new project using Pancake you will want to look into creating your own [Pancake modules](#creating-your-own-pancake-modules).
+
+Pancake comes installed with Australian Government Design System components. To know if you have `pancake` installed, check your `package.json` file for a `"pancake": { ... }` object. If you have this and you want to change the output look at the [Pancake settings](#settings) section.
 
 
 **[⬆ back to top](#contents)**
