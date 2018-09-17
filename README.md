@@ -3,10 +3,19 @@ Pancake
 
 > Pancake is a tool to make working with npm on the front end easy and sweet.
 
+![The Pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.png)
+
+[Npm wrote about](http://blog.npmjs.org/post/101775448305/npm-and-front-end-packaging) the challenges frontend developers face when trying to use npm. Pancake
+is addressing those by embracing the idea of small individually versioned independent modules. Interdependencies is what npm does really well and Pancake
+will help you keep them flat and error out on conflicts. [Read more about our solution](https://medium.com/dailyjs/npm-and-the-front-end-950c79fc22ce)
+
+Pancake will check your peerDependencies for conflicts and comes with plugins to compile the contents of your modules for you and lists all available modules for you to select and install.
+
+
 
 ## Contents
 
-* [What’s inside?](#whats-inside)
+* [Getting started](#getting-started)
 * [Requirements](#requirements)
 * [Settings](#settings)
 * [Command line interface](#cli)
@@ -19,13 +28,11 @@ Pancake
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## What’s inside?
+## Getting started
 
-![The Pancake tool](https://raw.githubusercontent.com/govau/pancake/master/assets/pancake.png)
+If you are creating a new project using Pancake you will want to look into creating your own [Pancake modules](#creating-your-own-pancake-modules).
 
-[Npm wrote about](http://blog.npmjs.org/post/101775448305/npm-and-front-end-packaging) the challenges frontend developers face when trying to use npm. Pancake
-is addressing those by embracing the idea of small individually versioned independent modules. Interdependencies is what npm does really well and Pancake
-will help you keep them flat and error out on conflicts. [Read more about our solution](https://medium.com/dailyjs/npm-and-the-front-end-950c79fc22ce)
+Pancake comes installed with Australian Government Design System components. To know if you have `pancake` installed, check your `package.json` file for a `"pancake": { ... }` object. If you have this and you want to change the output look at the [Pancake settings](#settings) section.
 
 
 **[⬆ back to top](#contents)**
@@ -36,22 +43,10 @@ will help you keep them flat and error out on conflicts. [Read more about our so
 
 ## Requirements
 
-- npm >= 3
-- a `package.json` file in your root (run `npm init --yes`)
+- npm version >= `~3.0.0`
+- A `package.json` file in your root (run `npm init --yes`)
 
-Pancake has been testing with Ubuntu 16.04, Mac OS 10.11, 10.12 and Windows 10 all node version coming with npm 3 and higher:
-
-- node `v5.0.0`
-- node `v5.12.0`
-- node `v6.9.5`
-- node `v7.0.0`
-- node `v7.4.0`
-- node `v7.5.0`
-- node `v7.6.0`
-- node `v10.0.0`
-
-_Pancake alone does not come with any dependencies while all plugins have fixed dependencies to specific versions to keep the security impact as low as
-possible. We also ship a `package-lock.json` file._
+_Pancake alone does not come with any dependencies while all plugins have fixed dependencies to specific versions to keep the security impact as low as possible. We also ship a `package-lock.json` file._
 
 
 **[⬆ back to top](#contents)**
@@ -64,9 +59,10 @@ possible. We also ship a `package-lock.json` file._
 
 Pancake comes with two different level of settings. Global settings can persist across projects and local settings that are project specific.
 
+
 ### Global settings
 
-To change global settings run pancake with the `--set` flag.
+To change global settings run Pancake with the `--set` flag.
 
 ```shell
 pancake --set [settingName] [value]
@@ -148,7 +144,7 @@ To remove `js` you can set the value of `"name": false` and remove the values `m
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-### CLI
+## CLI
 
 You can display the help with `pancake --help`.
 
@@ -221,11 +217,22 @@ pancake --verbose
 
 💡 You can use Pancake with your own modules. All you have to do in your modules is:
 
-1. add the Pancake module object to your `package.json` file
-2. add the Pancake `postinstall` script and dependency to your `package.json` file
-3. and add your peer dependencies
+1. Install Pancake
+2. Add the Pancake module object to your `package.json` file
+3. Add the Pancake `postinstall` script and dependency to your `package.json` file
+4. Add your peer dependencies
 
-### 1. Pancake module object
+
+### 1. Install Pancake
+
+To install pancake use node package manager.
+
+```
+npm i @gov.au/pancake
+```
+
+
+### 2. Pancake module object
 
 To make sure Pancake can detect your module amongst the other hundred npm packages you have to add the `pancake-module` object into your `pancake` object.
 
@@ -263,7 +270,7 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 }
 ```
 
-### 2. The script
+### 3. The script
 
 The magic of Pancake lies within the `postinstall` script. To enable Pancake add it as a dependency and add the script:
 
@@ -311,7 +318,7 @@ If you have to change settings (very likely) you don’t actually have to fork t
 "postinstall": "pancake --set npmOrg yourOrg && pancake"
 ```
 
-### 3. Peer dependencies
+### 4. Peer dependencies
 
 Adding peer dependencies is simple as long as you remember to add it to the `dependencies` and `peerDependencies` the same time. That way npm will install the
 peer dependency and pancake can check if you have conflicts.
@@ -444,6 +451,19 @@ To run all tests use the below command:
 ```shell
 npm test
 ```
+
+### Node support
+
+Pancake has been tested with Ubuntu 16.04, Mac OS 10.11, 10.12 and Windows 10 all node version coming with npm 3 and higher:
+
+- node `v5.0.0`
+- node `v5.12.0`
+- node `v6.9.5`
+- node `v7.0.0`
+- node `v7.4.0`
+- node `v7.5.0`
+- node `v7.6.0`
+- node `v10.0.0`
 
 
 **[⬆ back to top](#contents)**
