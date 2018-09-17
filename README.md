@@ -144,7 +144,7 @@ To remove `js` you can set the value of `"name": false` and remove the values `m
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-### CLI
+## CLI
 
 You can display the help with `pancake --help`.
 
