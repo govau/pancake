@@ -6,6 +6,7 @@ Pancake Sass plugin
 
 ## Versions
 
+* [v2.1.1  - Update dependencies](v211)
 * [v2.1.0  - Replace sass with node-sass](v210)
 * [v2.0.1  - Update dependencies](v201)
 * [v2.0.0  - Replace node-sass with sass](v200)
