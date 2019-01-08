@@ -67,6 +67,7 @@ const moduleResultObject = [
 		'version': '13.0.0',
 	},
 	{
+		'name': '@nsw.gov.au/testmodule3',
 		'pancake': {
 			'pancake-module': {
 				'js': {
