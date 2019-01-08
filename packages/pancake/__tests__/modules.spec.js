@@ -66,10 +66,33 @@ const moduleResultObject = [
 		},
 		'version': '13.0.0',
 	},
+	{
+		'pancake': {
+			'pancake-module': {
+				'js': {
+					'path': 'lib/js/module.js',
+				},
+				'plugins': [
+					'@gov.au/pancake-sass',
+					'@gov.au/pancake-js',
+				],
+				'sass': {
+					'path': 'lib/sass/_module.scss',
+					'sass-versioning': true,
+				},
+				'version': '1.0.0',
+			},
+		},
+		'path': `${ modulePath }/node_modules/@nsw.gov.au/testmodule3`,
+		'peerDependencies': {
+			'@gov.au/testmodule1': '^11.0.1',
+		},
+		'version': '13.0.0',
+	},
 ];
 
 test('GetModules should return correct object', () => {
-	return GetModules( modulePath, '@gov.au' ).then( data => {
+	return GetModules( modulePath, [ '@gov.au', '@nsw.gov.au' ] ).then( data => {
 		expect( data ).toMatchObject( moduleResultObject );
 	});
 });
@@ -82,7 +105,7 @@ test('GetModules should return nothing if no modules are found', () => {
 	console.log = jest.fn();
 	console.error = jest.fn();
 
-	return GetModules( modulePath, 'broken' ).then( data => {
+	return GetModules( modulePath, [ 'broken' ] ).then( data => {
 		expect( data.length ).toBe( 0 );
 	});
 });

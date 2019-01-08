@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.3.0  - Multiple organisations can now be used](v130)
 * [v1.2.5  - Update dependencies](v125)
 * [v1.2.4  - Update dependencies](v124)
 * [v1.2.3  - Update node modules](v123)
@@ -27,6 +28,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.3.0
+
+- Multiple organisations can be used, for example `@gov.au` and `@nsw.gov.au`
+
 
 ## v1.2.5
 

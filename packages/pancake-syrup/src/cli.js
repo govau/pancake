@@ -107,7 +107,7 @@ export const init = ( argv = process.argv ) => {
 			`  ${ Style.bold(`PATH`) }            - Run pancake in a specific path and look for pancake modules there.\n` +
 			`    $ ${ Style.yellow(`pancake /Users/you/project/folder`) }\n\n` +
 			`  ${ Style.bold(`SETTINGS`) }        - Set global settings. Available settings are: ${ Style.yellow( Object.keys( SETTINGS ).join(', ') ) }.\n` +
-			`    $ ${ Style.yellow(`pancake --set npmOrg "@yourOrg"`) }\n` +
+			`    $ ${ Style.yellow(`pancake --set npmOrg "@yourOrg" "@anotherOrg"`) }\n` +
 			`    $ ${ Style.yellow(`pancake --set ignorePlugins @gov.au/pancake-sass,@gov.au/pancake-svg`) }\n\n` +
 			`  ${ Style.bold(`ORG`) }             - Change the org scope of the pancake modules you like to use.\n` +
 			`    $ ${ Style.yellow(`pancake --org "@your.org"`) }\n\n` +

@@ -60,7 +60,7 @@ const TESTER = (() => { //constructor factory
 		PASS: true,
 		UNITS: [
 			{
-				name: 'Test1: Compile test with two modules',
+				name: 'Test1: Compile test with three modules from two organisations',
 				folder: 'test1',
 				script: {
 					options: [],

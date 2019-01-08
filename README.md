@@ -245,6 +245,10 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 +      "plugins": [                        //only state the plugins you need here
 +        "@gov.au/pancake-sass"
 +      ],
++      "org": [                           //the organisations with pancake modules
++        "@gov.au",
++        "@nsw.gov.au"
++      ],
 +      "sass": {                           //sass plugin specific settings
 +        "path": "lib/sass/_module.scss",  //where is your sass
 +        "sass-versioning": true           //enable sass-versioning. Read more here: https://github.com/dominikwilkowski/sass-versioning

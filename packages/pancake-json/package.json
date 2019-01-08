@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-json",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"description": "A Pancake plugin to generate a json file from all pancake modules.",
 	"keywords": [
 		"npm",

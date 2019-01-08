@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-svg",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A Pancake plugin to generate svg sprites and png fallbacks.",
 	"keywords": [
 		"npm",
