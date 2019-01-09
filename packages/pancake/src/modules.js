@@ -82,12 +82,13 @@ export const ReadModule = pkgPath => {
  *
  * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
  */
-export const GetModules = ( pkgPath, npmOrgs = [ '' ] ) => {
+export const GetModules = ( pkgPath, npmOrgs = '' ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Style.yellow( typeof pkgPath ) }] "${ Style.yellow( pkgPath ) }"`);
 	}
 
-	const npmOrgModules = npmOrgs.map( npmOrg => {
+	// Split the string of orgs into an array and map each value
+	const npmOrgModules = npmOrgs.split( ' ' ).map( npmOrg => {
 		const modulesPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
 
 		Log.verbose(`Looking for pancake modules in: ${ Style.yellow( pkgPath ) }`);

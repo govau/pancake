@@ -63,7 +63,7 @@ const TESTER = (() => { //constructor factory
 				name: 'Test1: Compile test with three modules from two organisations',
 				folder: 'test1',
 				script: {
-					options: [],
+					options: [ '--org', '@nsw.gov.au @gov.au' ],
 				},
 				compare: 'pancake/',
 				empty: false,
@@ -359,9 +359,9 @@ const TESTER = (() => { //constructor factory
 
 				Spawn
 					.spawn( 'node', [ Path.normalize(`${ path }/../../packages/pancake/bin/pancake`), /*settings.script.command,*/ path, ...settings.script.options ] )
-					// .stdout.on('data', ( data ) => {
-					// 	console.log( data.toString() );
-					// })
+					.stdout.on('data', ( data ) => {
+						console.log( data.toString() );
+					})
 					.on( 'close', ( code ) => {
 						if( code === 0 ) {
 							// TESTER.log.pass(`Ran test in ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } folder`);

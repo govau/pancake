@@ -93,7 +93,7 @@ const moduleResultObject = [
 ];
 
 test('GetModules should return correct object', () => {
-	return GetModules( modulePath, [ '@gov.au', '@nsw.gov.au' ] ).then( data => {
+	return GetModules( modulePath, '@gov.au @nsw.gov.au' ).then( data => {
 		expect( data ).toMatchObject( moduleResultObject );
 	});
 });
@@ -106,7 +106,7 @@ test('GetModules should return nothing if no modules are found', () => {
 	console.log = jest.fn();
 	console.error = jest.fn();
 
-	return GetModules( modulePath, [ 'broken' ] ).then( data => {
+	return GetModules( modulePath, 'broken' ).then( data => {
 		expect( data.length ).toBe( 0 );
 	});
 });

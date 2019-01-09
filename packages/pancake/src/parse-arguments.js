@@ -62,7 +62,7 @@ export const ParseArgs = ( SETTINGS, args = process.argv ) => {
 		'--org': {
 			name: 'org',
 			short: '-o',
-			options: 2,
+			options: 1,
 		},
 		'--json': {
 			name: 'json',
