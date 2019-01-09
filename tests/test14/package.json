@@ -1,0 +1,21 @@
+{
+	"pancake": {
+		"auto-save": false,
+		"org": "@gov.au @nsw.gov.au",
+		"css": {
+			"minified": true,
+			"modules": false,
+			"location": "pancake/css/",
+			"name": "pancake.min.css"
+		},
+		"sass": {
+			"name": false
+		},
+		"js": {
+			"minified": true,
+			"modules": false,
+			"location": "pancake/js/",
+			"name": "pancake.min.js"
+		}
+	}
+}
