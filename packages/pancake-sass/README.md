@@ -57,7 +57,8 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 
 ## Release History
-=
+
+* v2.2.0 - Multiple organisations
 * v2.1.1 - Update dependencies
 * v2.1.0 - Replace sass with node-sass
 * v2.0.1 - Update dependencies

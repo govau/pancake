@@ -6,6 +6,7 @@ Pancake JS plugin
 
 ## Versions
 
+* [v1.1.0 - Multiple organisations](v110)
 * [v1.0.8 - Update dependencies](v108)
 * [v1.0.7 - Update dependencies](v107)
 * [v1.0.6 - Update node modules](v106)
@@ -17,6 +18,11 @@ Pancake JS plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.1.0
+
+- Multiple organisations
+
 
 ## v1.0.8
 
