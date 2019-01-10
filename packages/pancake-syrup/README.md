@@ -39,7 +39,7 @@ npm install @gov.au/syrup --save-dev
 ## What is this
 
 
-Syrup let’s you install [UI-Kit](https://github.com/govau/uikit) components more easily. It makes it easy to understand how to upgrade to newer versions and
+Syrup let’s you install [Design System Components](https://github.com/govau/design-system-components) easily. It makes it easy to understand how to upgrade to newer versions and
 gives you suggestions as to what you can do when hitting a versions conflict.
 
 

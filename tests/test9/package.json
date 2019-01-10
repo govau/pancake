@@ -5,7 +5,7 @@
 			"minified": true,
 			"modules": true,
 			"location": "pancake/css/",
-			"name": "uikit.min.css"
+			"name": "auds.min.css"
 		},
 		"sass": {
 			"name": false
