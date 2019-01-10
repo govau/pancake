@@ -1,13 +1,13 @@
 {
 	"name": "@gov.au/pancake-sass",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "A Pancake plugin to compile sass files.",
 	"keywords": [
 		"npm",
 		"flat",
 		"peerDependencies",
 		"gov.au",
-		"uikit",
+		"auds",
 		"Commonwealth of Australia",
 		"design guide",
 		"design system",

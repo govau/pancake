@@ -18,6 +18,7 @@ import Path from 'path';
  * Test that correct object is returned when package.json is parsed
  */
 const modulePath = Path.normalize(`${ __dirname }/../../../tests/test1`);
+const multipleOrgsPath = Path.normalize(`${ __dirname }/../../../tests/test14`);
 
 const moduleResultObject = [
 	{
@@ -68,9 +69,95 @@ const moduleResultObject = [
 	},
 ];
 
+
+const multipleOrgsResultObject = [
+	{
+		'name': '@gov.au/testmodule1',
+		'pancake': {
+			'pancake-module': {
+				'js': {
+					'path': 'lib/js/module.js',
+				},
+				'plugins': [
+					'@gov.au/pancake-sass',
+					'@gov.au/pancake-js',
+				],
+				'sass': {
+					'path': 'lib/sass/_module.scss',
+					'sass-versioning': true,
+				},
+				'version': '1.0.0',
+			},
+		},
+		'path': `${ multipleOrgsPath }/node_modules/@gov.au/testmodule1`,
+		'peerDependencies': {},
+		'version': '11.0.1',
+	},
+	{
+		'name': '@gov.au/testmodule2',
+		'pancake': {
+			'pancake-module': {
+				'js': {
+					'path': 'lib/js/module.js',
+				},
+				'plugins': [
+					'@gov.au/pancake-sass',
+					'@gov.au/pancake-js',
+				],
+				'sass': {
+					'path': 'lib/sass/_module.scss',
+					'sass-versioning': true,
+				},
+				'version': '1.0.0',
+			},
+		},
+		'path': `${ multipleOrgsPath }/node_modules/@gov.au/testmodule2`,
+		'peerDependencies': {
+			'@gov.au/testmodule1': '^11.0.1',
+		},
+		'version': '13.0.0',
+	},
+	{
+		'name': '@nsw.gov.au/testmodule3',
+		'pancake': {
+			'pancake-module': {
+				'js': {
+					'path': 'lib/js/module.js',
+				},
+				'plugins': [
+					'@gov.au/pancake-sass',
+					'@gov.au/pancake-js',
+				],
+				'sass': {
+					'path': 'lib/sass/_module.scss',
+					'sass-versioning': true,
+				},
+				'version': '1.0.0',
+			},
+		},
+		'path': `${ multipleOrgsPath }/node_modules/@nsw.gov.au/testmodule3`,
+		'peerDependencies': {
+			'@gov.au/testmodule1': '^11.0.1',
+		},
+		'version': '13.0.0',
+	},
+];
+
 test('GetModules should return correct object', () => {
 	return GetModules( modulePath, '@gov.au' ).then( data => {
 		expect( data ).toMatchObject( moduleResultObject );
+	});
+});
+
+test('GetModules should return correct object for one orgs with multiple provided', () => {
+	return GetModules( modulePath, '@gov.au @nsw.gov.au' ).then( data => {
+		expect( data ).toMatchObject( moduleResultObject );
+	});
+});
+
+test('GetModules should return correct object for multiple orgs', () => {
+	return GetModules( multipleOrgsPath, '@gov.au @nsw.gov.au' ).then( data => {
+		expect( data ).toMatchObject( multipleOrgsResultObject );
 	});
 });
 

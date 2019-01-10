@@ -1,13 +1,13 @@
 {
 	"name": "@gov.au/syrup",
-	"version": "1.0.8",
+	"version": "1.1.0",
 	"description": "Syrup helps you select the right pancake modules.",
 	"keywords": [
 		"npm",
 		"flat",
 		"peerDependencies",
 		"gov.au",
-		"uikit",
+		"auds",
 		"Commonwealth of Australia",
 		"design guide",
 		"design system",
