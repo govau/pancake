@@ -1,7 +1,6 @@
 {
 	"pancake": {
 		"auto-save": false,
-		"org": "@gov.au @nsw.gov.au",
 		"css": {
 			"minified": true,
 			"modules": false,
