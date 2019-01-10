@@ -6,21 +6,27 @@ Pancake JS plugin
 
 ## Versions
 
+* [v1.1.0  - Multiple organisations](v110)
 * [v1.0.14 - Update dependencies](v1014)
 * [v1.0.13 - Add ie8 support for mangled js files and updated dependencies](v1013)
 * [v1.0.12 - Update node modules](v1012)
 * [v1.0.11 - Update forgotten changelog](v1011)
 * [v1.0.10 - Update node modules](v1010)
-* [v1.0.9 - Fixed mixed js and Sass module bug](v109)
-* [v1.0.8 - Cleaned log and updated uglify-js](v108)
-* [v1.0.7 - Dependencies and tests](v107)
-* [v1.0.6 - Receiving global settings from pancake now](v106)
-* [v1.0.5 - Loading fixes](v105)
-* [v1.0.4 - Bug hunting](v104)
-* [v1.0.3 - 💥 Initial version](v103)
+* [v1.0.9  - Fixed mixed js and Sass module bug](v109)
+* [v1.0.8  - Cleaned log and updated uglify-js](v108)
+* [v1.0.7  - Dependencies and tests](v107)
+* [v1.0.6  - Receiving global settings from pancake now](v106)
+* [v1.0.5  - Loading fixes](v105)
+* [v1.0.4  - Bug hunting](v104)
+* [v1.0.3  - 💥 Initial version](v103)
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.1.0
+
+- Multiple organisations
+
 
 ## v1.0.14
 

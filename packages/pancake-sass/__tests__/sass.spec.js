@@ -73,6 +73,11 @@ test('GetPath should return path for sass partial', () => {
 });
 
 
+test('GetPath should return path for sass partial with multiple orgs', () => {
+	expect( GetPath( module, modules, baseLocation, '@gov.au @nsw.gov.au' ) ).toBe( resultPath );
+});
+
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // GetDependencies function
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

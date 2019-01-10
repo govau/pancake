@@ -153,7 +153,7 @@ Type: `<flag>`
 
 The command will stop Pancake from merging your local settings, complete them with the defaults and save them into your `package.json`.
 This will sort-of shrink-wrap all settings in so you are completely reproducible.
-You can also opt-out of this behavior by adding `"uikit": { "auto-save": false }` into your package.json.
+You can also opt-out of this behavior by adding `"auds": { "auto-save": false }` into your package.json.
 
 ```shell
 pancake --nosave
@@ -245,6 +245,7 @@ To make sure Pancake can detect your module amongst the other hundred npm packag
 +      "plugins": [                        //only state the plugins you need here
 +        "@gov.au/pancake-sass"
 +      ],
++      "org": "@gov.au @nsw.gov.au",       //the npm organisations that will be searched for pancake modules
 +      "sass": {                           //sass plugin specific settings
 +        "path": "lib/sass/_module.scss",  //where is your sass
 +        "sass-versioning": true           //enable sass-versioning. Read more here: https://github.com/dominikwilkowski/sass-versioning

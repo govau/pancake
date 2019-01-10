@@ -78,26 +78,33 @@ export const ReadModule = pkgPath => {
  * Get an object of all pancake modules inside a specified folder
  *
  * @param  {string}  pkgPath - The path that includes your node_module folder
- * @param  {string}  npmOrg  - The npmOrg scope
+ * @param  {string}  npmOrgs - The npmOrg scope
  *
  * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
  */
-export const GetModules = ( pkgPath, npmOrg = '' ) => {
+export const GetModules = ( pkgPath, npmOrgs = '' ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Style.yellow( typeof pkgPath ) }] "${ Style.yellow( pkgPath ) }"`);
 	}
 
-	const modulesPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
+	// Split the string of orgs into an array and map each value
+	const npmOrgModules = npmOrgs.split( ' ' ).map( npmOrg => {
+		const modulesPath = Path.normalize(`${ pkgPath }/node_modules/${ npmOrg }/`); //we add our npm org scope to the path to make this more effective
 
-	Log.verbose(`Looking for pancake modules in: ${ Style.yellow( pkgPath ) }`);
+		Log.verbose(`Looking for pancake modules in: ${ Style.yellow( pkgPath ) }`);
 
-	var allModules = GetFolders(modulesPath); //all folders inside the selected path
+		let modules = GetFolders(modulesPath); //all folders inside the selected path
 
-	const altModulesPath = Path.normalize(`${ pkgPath }/../node_modules/${ npmOrg }/`);
-	if (Fs.existsSync(altModulesPath)) {
-		Log.verbose(`Also looking for pancake modules in: ${ Style.yellow(altModulesPath) }`);
-		allModules = allModules.concat(GetFolders(altModulesPath)); //all folders inside the selected path
-	}
+		const altModulesPath = Path.normalize(`${ pkgPath }/../node_modules/${ npmOrg }/`);
+		if (Fs.existsSync(altModulesPath)) {
+			Log.verbose(`Also looking for pancake modules in: ${ Style.yellow(altModulesPath) }`);
+			modules = folders.concat(GetFolders(altModulesPath)); //all folders inside the selected path
+		}
+
+		return modules;
+	});
+
+	const allModules = [].concat.apply( ...npmOrgModules );
 
 	if( allModules !== undefined && allModules.length > 0 ) {
 		Log.verbose(`Found the following module folders:\n${ Style.yellow( allModules.join('\n') ) }`);

@@ -17,7 +17,7 @@ import { ParseArgs } from '../src/parse-arguments';
  * Test for running a single command
  */
 const settings = {
-	'npmOrg': '@gov.au',
+	'npmOrg': '@gov.au @nsw.gov.au',
 	'plugins': true,
 	'ignorePlugins': [],
 };
