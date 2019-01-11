@@ -98,7 +98,7 @@ export const GetModules = ( pkgPath, npmOrgs = '' ) => {
 		const altModulesPath = Path.normalize(`${ pkgPath }/../node_modules/${ npmOrg }/`);
 		if (Fs.existsSync(altModulesPath)) {
 			Log.verbose(`Also looking for pancake modules in: ${ Style.yellow(altModulesPath) }`);
-			modules = folders.concat(GetFolders(altModulesPath)); //all folders inside the selected path
+			modules = modules.concat(GetFolders(altModulesPath)); //all folders inside the selected path
 		}
 
 		return modules;
