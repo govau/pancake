@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.3.1  - Fix incorrect alternate modules](v131)
 * [v1.3.0  - Multiple organisations can now be used](v130)
 * [v1.2.5  - Update dependencies](v125)
 * [v1.2.4  - Update dependencies](v124)
@@ -28,6 +29,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.3.1
+
+- Fix incorrect alternative modules location
+
 
 ## v1.3.0
 
