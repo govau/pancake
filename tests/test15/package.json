@@ -1,0 +1,11 @@
+{
+	"pancake": {
+		"auto-save": false,
+		"sass": {
+			"name": false
+		},
+		"js": {
+			"name": "pancake.min.js"
+		}
+	}
+}
