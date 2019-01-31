@@ -185,6 +185,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
+			{
+				name: 'Test15: Compile test with sass files disabled',
+				folder: 'test15',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
 		],
 
 

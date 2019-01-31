@@ -130,6 +130,11 @@ export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 			if( modulePackage.pancake['pancake-module'].sass !== undefined && modulePackage.pancake['pancake-module'].sass.path !== false ) {
 				sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].sass.path }`);
 			}
+			else {
+				// Sass pass is false, move on.
+				Log.verbose( `Sass: No Sass to be found`);
+				return;
+			}
 
 			if( !Fs.existsSync( sassModulePath ) ) {
 				Log.verbose(`Sass: No Sass found in ${ Style.yellow( sassModulePath ) }`)
