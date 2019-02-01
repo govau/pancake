@@ -23,7 +23,7 @@ import Fs from 'fs';
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
+import { Log, Style, Loading, WriteFile } from '@gov.au/pancake';
 import { StripDuplicateLines } from './helpers';
 import { GenerateSass, Sassify } from './sass';
 
