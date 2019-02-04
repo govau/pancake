@@ -59,132 +59,132 @@ const TESTER = (() => { //constructor factory
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		PASS: true,
 		UNITS: [
-			{
-				name: 'Test1: Compile test with two modules',
-				folder: 'test1',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test2: Compile test with five modules and modules enabled',
-				folder: 'test2',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test3: Compile test with orgName overwrite and minification off',
-				folder: 'test3',
-				script: {
-					options: [ '--org', '@other.org' ],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test4: Compile test with folder overwrite',
-				folder: 'test4',
-				script: {
-					options: [],
-				},
-				compare: 'testfolder/',
-				empty: false,
-			},
-			{
-				name: 'Test5: Compile test with conflict',
-				folder: 'test5',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: true,
-			},
-			{
-				name: 'Test6: Compile test for css only',
-				folder: 'test6',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test7: Compile test js only minified',
-				folder: 'test7',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test8: Compile test with deep dependencies',
-				folder: 'test8',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test9: Compile test with different asset path',
-				folder: 'test9',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test10: Compile test with react files',
-				folder: 'test10',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test11: Compile test with two modules and pancake-json enabled',
-				folder: 'test11',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test12: Compile test with pancake-json enabled and cherry-picked json',
-				folder: 'test12',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test13: Compile test with react files disabled',
-				folder: 'test13',
-				script: {
-					options: [],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
-			{
-				name: 'Test14: Compile test with three modules from two organisations',
-				folder: 'test14',
-				script: {
-					options: [ '--org', '@nsw.gov.au @gov.au' ],
-				},
-				compare: 'pancake/',
-				empty: false,
-			},
+			// {
+			// 	name: 'Test1: Compile test with two modules',
+			// 	folder: 'test1',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test2: Compile test with five modules and modules enabled',
+			// 	folder: 'test2',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test3: Compile test with orgName overwrite and minification off',
+			// 	folder: 'test3',
+			// 	script: {
+			// 		options: [ '--org', '@other.org' ],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test4: Compile test with folder overwrite',
+			// 	folder: 'test4',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'testfolder/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test5: Compile test with conflict',
+			// 	folder: 'test5',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: true,
+			// },
+			// {
+			// 	name: 'Test6: Compile test for css only',
+			// 	folder: 'test6',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test7: Compile test js only minified',
+			// 	folder: 'test7',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test8: Compile test with deep dependencies',
+			// 	folder: 'test8',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test9: Compile test with different asset path',
+			// 	folder: 'test9',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test10: Compile test with react files',
+			// 	folder: 'test10',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test11: Compile test with two modules and pancake-json enabled',
+			// 	folder: 'test11',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test12: Compile test with pancake-json enabled and cherry-picked json',
+			// 	folder: 'test12',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test13: Compile test with react files disabled',
+			// 	folder: 'test13',
+			// 	script: {
+			// 		options: [],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
+			// {
+			// 	name: 'Test14: Compile test with three modules from two organisations',
+			// 	folder: 'test14',
+			// 	script: {
+			// 		options: [ '--org', '@nsw.gov.au @gov.au' ],
+			// 	},
+			// 	compare: 'pancake/',
+			// 	empty: false,
+			// },
 			{
 				name: 'Test15: Compile test with sass files disabled',
 				folder: 'test15',
@@ -377,9 +377,9 @@ const TESTER = (() => { //constructor factory
 
 				Spawn
 					.spawn( 'node', [ Path.normalize(`${ path }/../../packages/pancake/bin/pancake`), /*settings.script.command,*/ path, ...settings.script.options ] )
-					// .stdout.on('data', ( data ) => {
-					// 	console.log( data.toString() );
-					// })
+					.stdout.on('data', ( data ) => {
+						console.log( data.toString() );
+					})
 					.on( 'close', ( code ) => {
 						if( code === 0 ) {
 							// TESTER.log.pass(`Ran test in ${ Chalk.bgWhite.black(` ${ Path.basename( path ) } `) } folder`);
