@@ -44,7 +44,10 @@ export const GetPath = ( module, modules, baseLocation, npmOrg ) => {
 	const npmOrgs = npmOrg.split( ' ' );
 	let location;
 	npmOrgs.forEach( org => {
-		if( baseLocation.includes( org ) ){
+		if( baseLocation.includes( org ) && process.platform == `win32` ){
+			location = baseLocation.replace( `${ org }\\`, '' );
+		}
+		else {
 			location = baseLocation.replace( `${ org }/`, '' );
 		}
 	});
@@ -96,7 +99,7 @@ export const GetDependencies = ( module, modules, parent = module, iteration = 1
 					}
 				}
 
-				allDependencies = Object.assign( allDependencies, item.peerDependencies );
+				// allDependencies = Object.assign( allDependencies, item.peerDependencies );
 
 				break;
 			}
