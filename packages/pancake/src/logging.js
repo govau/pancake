@@ -151,7 +151,7 @@ export const Style = {
  * @type {Object}
  */
 export const Log = {
-	verboseMode: false, //verbose flag
+	verboseMode: true, //verbose flag
 	output: false,      //have we outputted something yet?
 	hasError: false,    //let’s assume the best
 
