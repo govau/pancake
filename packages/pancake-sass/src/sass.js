@@ -44,11 +44,8 @@ export const GetPath = ( module, modules, baseLocation, npmOrg ) => {
 	const npmOrgs = npmOrg.split( ' ' );
 	let location;
 	npmOrgs.forEach( org => {
-		if( baseLocation.includes( org ) && process.platform === 'win32' ){
-			location = baseLocation.replace( `${ org }\\`, '' );
-		}
-		else if( baseLocation.includes( org ) ){
-			location = baseLocation.replace( `${ org }/`, '' );
+		if( baseLocation.includes( org ) ){
+			location = Path.posix.resolve( baseLocation.replace( `${ org }/`, '' ) ) + `/`;
 		}
 	});
 
