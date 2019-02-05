@@ -1,0 +1,12 @@
+{
+	"pancake": {
+		"auto-save": false,
+		"js": {
+			"name": "pancake.min.js"
+		}
+	},
+	"dependencies": {
+		"@gov.au/pancake-js": "^1.1.0",
+		"@gov.au/pancake-sass": "^2.1.2"
+	}
+}

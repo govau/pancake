@@ -185,6 +185,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
+			{
+				name: 'Test15: ',
+				folder: 'test15',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
 		],
 
 
