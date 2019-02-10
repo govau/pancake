@@ -45,10 +45,7 @@ export const GetPath = ( module, modules, baseLocation, npmOrg ) => {
 	let location;
 	npmOrgs.forEach( org => {
 		if( baseLocation.includes( org ) ){
-			location = baseLocation.replace( `${ org }`, '' );
-
-			// Hack to remove trailing / or \
-			location = location.replace( /[\\/]+$/, '' );
+			location = baseLocation.replace( `${ org }${ Path.sep }`, '' );
 		}
 	});
 
