@@ -5,7 +5,7 @@
 		"test:end-to-end": "node tests/tester.js",
 		"test": "npm run test:end-to-end && npm run test:unit-test",
 
-		"purge": "rimraf packages/*/node_modules | rimraf packages/*/dist | rimraf node_modules | rimraf packages/*/lib",
+		"purge": "rimraf packages/*/node_modules | rimraf packages/*/dist | rimraf packages/*/lib | rimraf node_modules",
 
 		"build": "lerna bootstrap && lerna run build"
 	},
