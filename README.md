@@ -378,6 +378,11 @@ Hi there 👀,
 ❤️ We LOVE that you’re looking into this section. We welcome any feedback or pull requests and are super psyched about you putting your own time into this
 project. To make your contribution count, have a read through the code first and see what our thinking was. We will do the same with yours.
 
+> **NOTE**: If you are looking to build this project on Windows, you'll need to clone this repository with symlinks enabled using an administrator shell.
+```bash
+git clone -c core.symlinks=true https://github.com/govau/pancake
+```
+
 To run the project install dependencies and devDependencies:
 
 ```shell
