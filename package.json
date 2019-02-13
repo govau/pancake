@@ -6,6 +6,7 @@
 		"test": "npm run test:end-to-end && npm run test:unit-test",
 
 		"watch": "onchange packages/*/src/ -- lerna run build",
+
 		"build": "lerna bootstrap && lerna run build"
 	},
 	"engines": {
