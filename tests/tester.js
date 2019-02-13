@@ -185,6 +185,15 @@ const TESTER = (() => { //constructor factory
 				compare: 'pancake/',
 				empty: false,
 			},
+			{
+				name: 'Test15: Compile test with one sass module that requires another non-sass module.',
+				folder: 'test15',
+				script: {
+					options: [],
+				},
+				compare: 'pancake/',
+				empty: false,
+			},
 		],
 
 
