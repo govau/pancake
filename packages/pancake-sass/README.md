@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v2.1.4 - Reverted pathing issue with pancake-sass, corrected changelog
 * v2.1.3 - Added cross-platform path seperator for org replace function
 * v2.1.2 - Multiple organisations
 * v2.1.1 - Update dependencies
