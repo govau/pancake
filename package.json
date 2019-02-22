@@ -12,7 +12,9 @@
 		"build": "lerna bootstrap && lerna run build"
 	},
 	"engines": {
-		"node": "8.8.0"
+		"node": "~10",
+		"npm": "~6",
+		"yarn": "~1"
 	},
 	"dependencies": {},
 	"devDependencies": {
@@ -67,6 +69,11 @@
 			"name": "Simon Schwartz",
 			"email": "simon.schwartz0@gmail.com",
 			"url": "https://simonschwartz.github.io/"
+		},
+		{
+			"name": "Adam Zerella",
+			"email": "adam@commandshiftr.co",
+			"url": "https://adamzerella.com/"
 		}
 	],
 	"license": "MIT"
