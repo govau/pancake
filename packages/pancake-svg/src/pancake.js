@@ -153,30 +153,54 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 
 				// console.log(SvgGenerator);
 
-				SvgGenerator.spriteFromFiles([ SVGModulePath, location ])
-					.then(function (rs) {
-						console.log(rs);
-				});
+				// SvgGenerator.spriteFromFiles([ SVGModulePath, location ])
+				// 	.then(function (rs) {
+				// 		console.log(rs);
+				// });
 
 				// console.log(result);
 
-				// const spriter = new SVGSpriter({
-				// 	dest: location,
-				// });
+				const spriter = new SVGSpriter({
+					dest: location,
+					log: null, // Logging verbosity (default: no logging)
+					shape: { // SVG shape related options
+						id: { // SVG shape ID related options
+							separator: '--', // Separator for directory name traversal
+							generator: function (name) { return name.split('.')[0]; }, // SVG shape ID generator callback
+							pseudo: '~' // File name separator for shape states (e.g. ':hover')
+						},
+						transform: ['svgo'], // List of transformations / optimizations
+						meta: null, // Path to YAML file with meta / accessibility data
+						align: null, // Path to YAML file with extended alignment data
+						dest: 'opt' // Output directory for optimized intermediate SVG shapes
+					},
+					svg: { // General options for created SVG files
+						xmlDeclaration: true, // Add XML declaration to SVG sprite
+						doctypeDeclaration: true, // Add DOCTYPE declaration to SVG sprite
+						namespaceIDs: true, // Add namespace token to all IDs in SVG shapes
+						namespaceClassnames: true, // Add namespace token to all CSS class names in SVG shapes
+						dimensionAttributes: true // Width and height attributes on the sprite
+					},
+					variables: {}, // Custom Mustache templating variables and functions
+					mode: {
+						symbol: true,
+						shapes: false
+					}
+				});
 
-				// svgs.map( svg => {
-				// 	spriter.add( svg, null, Fs.readFileSync( svg, { encoding: 'utf-8' } ) );
-				// });
+				svgs.map( svg => {
+					spriter.add( svg, null, Fs.readFileSync( svg, { encoding: 'utf-8' } ) );
+				});
 
-				// spriter.compile( ( error, result ) => {
-				// 	console.log(result);
-				// 	// for (var mode in result) {
-				// 	// 	for (var resource in result[mode]) {
-				// 	// 		mkdirp.sync(path.dirname(result[mode][resource].path));
-				// 	// 		fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
-				// 	// 	}
-				// 	// }
-				// });
+				spriter.compile( ( error, result ) => {
+					console.log(result);
+					for (var mode in result) {
+						for (var resource in result[mode]) {
+							mkdirp.sync(path.dirname(result[mode][resource].path));
+							fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
+						}
+					}
+				});
 			}
 
 
