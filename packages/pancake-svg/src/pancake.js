@@ -23,7 +23,9 @@ const Fs = require( 'fs' );
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const { Log, Style, Loading, CopyFile, ReadFile, WriteFile } = require( '@gov.au/pancake' );
+
+import { Log, Style, Loading, CopyFile, ReadFile, WriteFile } from '@gov.au/pancake';
+import { CompileAllSvgs } from './svg';
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,7 +97,6 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 		let compiledAll = [];      //for collect all promises
 
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Iterate over each module
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -103,13 +104,17 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 			Log.verbose(`SVG: Building ${ Style.yellow( modulePackage.name ) }`);
 
 			//check if there are svg files
-			const sassModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].svg.path }`);
-
-			if( !Fs.existsSync( sassModulePath ) ) {
-				Log.verbose(`SVG: No SVG found in ${ Style.yellow( sassModulePath ) }`)
+			let svgModulePath;
+			if( modulePackage.pancake['pancake-module'].svg !== undefined ) {
+				svgModulePath = Path.normalize(`${ modulePackage.path }/${ modulePackage.pancake['pancake-module'].svg.path }`);
+			}
+			if( !Fs.existsSync( svgModulePath ) ) {
+				Log.verbose(`SVG: No SVG found in ${ Style.yellow( modulePackage.name ) }`);
 			}
 			else {
-				Log.verbose(`SVG: ${ Style.green('⌘') } Found SVG files in ${ Style.yellow( sassModulePath ) }`);
+				Log.verbose(`SVG: ${ Style.green('⌘') } Found SVG files in ${ Style.yellow( svgModulePath ) }`);
+
+				compiledAll.push(Promise.resolve(svgModulePath));
 			}
 		}
 
@@ -122,90 +127,8 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 		}
 		else {
 
-			//get all svgs
-			const svgs = Fs
-				.readdirSync( SVGModulePath )                                   //read all files in the svg folder
-				.filter( name => !name.startsWith('.') )                        //let’s hide hidden files
-				.map( name => Path.normalize(`${ SVGModulePath }/${ name }`) ); //making them absolute paths
-
-			//convert svg to png
-			if( SettingsSVG.pngs !== false ) {
-				Log.verbose(`Converting svgs to PNGs for ${ Style.yellow( modulePackage.name ) }`);
-
-				const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.pngs }/`);
-
-				CreateDir( location );  //create directory
-
-				console.log = text => {};        //temporarily display console
-
-				compiledAll.push( SvgToPng.convert( svgs, location ) );
-
-				console.log = function( text ) { //enable again
-					process.stdout.write(`${ Util.format.apply( null, arguments ) }\n`);
-				};
-			}
-
-			//create svg sprite
-			if( SettingsSVG.name !== false ) {
-				Log.verbose(`Converting svgs to sprite for ${ Style.yellow( modulePackage.name ) }`);
-
-				const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.location }/${ SettingsSVG.name }`);
-
-				// console.log(SvgGenerator);
-
-				// SvgGenerator.spriteFromFiles([ SVGModulePath, location ])
-				// 	.then(function (rs) {
-				// 		console.log(rs);
-				// });
-
-				// console.log(result);
-
-				const spriter = new SVGSpriter({
-					dest: location,
-					log: null, // Logging verbosity (default: no logging)
-					shape: { // SVG shape related options
-						id: { // SVG shape ID related options
-							separator: '--', // Separator for directory name traversal
-							generator: function (name) { return name.split('.')[0]; }, // SVG shape ID generator callback
-							pseudo: '~' // File name separator for shape states (e.g. ':hover')
-						},
-						transform: ['svgo'], // List of transformations / optimizations
-						meta: null, // Path to YAML file with meta / accessibility data
-						align: null, // Path to YAML file with extended alignment data
-						dest: 'opt' // Output directory for optimized intermediate SVG shapes
-					},
-					svg: { // General options for created SVG files
-						xmlDeclaration: true, // Add XML declaration to SVG sprite
-						doctypeDeclaration: true, // Add DOCTYPE declaration to SVG sprite
-						namespaceIDs: true, // Add namespace token to all IDs in SVG shapes
-						namespaceClassnames: true, // Add namespace token to all CSS class names in SVG shapes
-						dimensionAttributes: true // Width and height attributes on the sprite
-					},
-					variables: {}, // Custom Mustache templating variables and functions
-					mode: {
-						symbol: true,
-						shapes: false
-					}
-				});
-
-				svgs.map( svg => {
-					spriter.add( svg, null, Fs.readFileSync( svg, { encoding: 'utf-8' } ) );
-				});
-
-				spriter.compile( ( error, result ) => {
-					console.log(result);
-					for (var mode in result) {
-						for (var resource in result[mode]) {
-							mkdirp.sync(path.dirname(result[mode][resource].path));
-							fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
-						}
-					}
-				});
-			}
-
-
 			//after all files have been compiled and written
-			Promise.all( compiledAll )
+			CompileAllSvgs(compiledAll, SETTINGS.svg, cwd)
 				.catch( error => {
 					Loading.stop('pancake-svg'); //stop loading animation
 
