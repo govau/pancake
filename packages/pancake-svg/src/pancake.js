@@ -5,7 +5,7 @@
  * Move SVGs and generate SVG sprites and fallback PNGs
  *
  * @repo    - https://github.com/govau/pancake
- * @author  - Dominik Wilkowski
+ * @author  - Michael Arthur
  * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/

@@ -3,8 +3,7 @@
  * Generate and compile SVG's
  *
  * @repo    - https://github.com/govau/pancake
- * @author  - Dominik Wilkowski
- * @contributor - Michael Arthur
+ * @author  -  Michael Arthur
  * @license - https://raw.githubusercontent.com/govau/pancake/master/LICENSE (MIT)
  *
  **************************************************************************************************************************************************************/
@@ -14,40 +13,42 @@
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 import Path from 'path';
-import Fs from 'fs';
+import fs from 'fs';
 import SVGSpriter from 'svg-sprite';
-const svgToImg = require('svg-to-img');
+import { from as svgToImgFrom } from 'svg-to-img';
+import {promisify} from 'util';
+const readdir = promisify(fs.readdir);
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, ReadFile, WriteFile, CreateDir } from '@gov.au/pancake';
+import { Log, ReadFile, WriteFile, CreateDir } from '@gov.au/pancake';
 
 
-export const SvgToPng = (svgs, location, compiledAll) => {
-	CreateDir(location);
+export const SvgToPng = async (svgs, location) => {
+	await CreateDir(location);
 
-	svgs.map( svg => {
-		compiledAll.push(svgToImg.from(Fs.readFileSync( svg, { encoding: 'utf-8' } )).to({
+	svgs.map(async svg => {
+		const png = await ReadFile( svg, { encoding: 'utf-8' } );
+		svgToImgFrom(png).to({
 			type: 'png',
 			path: Path.join(location, Path.basename(svg, '.svg') + '.png')
-		}));
+		});
 	});
 };
 
 
-export const CompileAllSvgs = ( compiledAll, SettingsSVG, pkgPath, modulePackage ) => {
+export const CompileAllSvgs = ( compiledAll, SettingsSVG, pkgPath ) => {
 	return new Promise( ( resolve, reject ) => {
 		Promise.all( compiledAll )
 			.catch( error => {
 				Log.error(`SVG: Compiling SVG ran into an error: ${ error }`);
 			})
-			.then( ( svgModulePath ) => {
+			.then(async ( svgModulePath ) => {
 
 			//get all svgs
-			const svgs = Fs
-				.readdirSync( `${svgModulePath}` )                              //read all files in the svg folder
-				.filter( name => !name.startsWith('.') )                        //let’s hide hidden files
+			const svglist = await readdir( `${svgModulePath}` );                              //read all files in the svg folder
+			const svgs = svglist.filter( name => !name.startsWith('.') )                        //let’s hide hidden files
 				.map( name => Path.normalize(`${ svgModulePath }/${ name }`) ); //making them absolute paths
 
 			//convert svg to png
@@ -56,7 +57,7 @@ export const CompileAllSvgs = ( compiledAll, SettingsSVG, pkgPath, modulePackage
 
 				const location = Path.normalize(`${ pkgPath }/${ SettingsSVG.pngs }/`);
 
-				SvgToPng( svgs, location, compiledAll );
+				SvgToPng( svgs, location );
 
 			}
 
@@ -71,7 +72,7 @@ export const CompileAllSvgs = ( compiledAll, SettingsSVG, pkgPath, modulePackage
 					shape: { // SVG shape related options
 						id: { // SVG shape ID related options
 							separator: '--', // Separator for directory name traversal
-							generator: function (name) { return name.split('.')[0]; }, // SVG shape ID generator callback
+							generator: (name) => (name.split('.')[0]), // SVG shape ID generator callback
 							pseudo: '~' // File name separator for shape states (e.g. ':hover')
 						},
 						transform: ['svgo'], // List of transformations / optimizations
@@ -95,12 +96,12 @@ export const CompileAllSvgs = ( compiledAll, SettingsSVG, pkgPath, modulePackage
 					}
 				});
 				Log.verbose(`SVG: Adding sprites to the sprite machine`);
-				svgs.map( svg => {
-					spriter.add( svg, null, Fs.readFileSync( svg, { encoding: 'utf-8' } ) );
+				svgs.map(async svg => {
+					spriter.add( svg, null, await ReadFile( svg, { encoding: 'utf-8' } ) );
 				});
 
 				Log.verbose(`SVG: Compile sprites into spritesheet`);
-				spriter.compile( ( error, result ) => {
+				spriter.compile( async ( error, result ) => {
 					if( error ) {
 						Log.error( error );
 						return reject( error );
@@ -108,7 +109,7 @@ export const CompileAllSvgs = ( compiledAll, SettingsSVG, pkgPath, modulePackage
 
 					for (let mode in result) {
 						for (let resource in result[mode]) {
-							fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
+							await WriteFile(result[mode][resource].path, result[mode][resource].contents);
 						}
 					}
 
