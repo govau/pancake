@@ -148,8 +148,7 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 					sass = `${ banner }` +
 						`/* ${ modulePackage.name } v${ modulePackage.version } */\n\n` +
 						`@import "${ sassVersioningPath }";\n\n` +
-						`${ sass }\n` +
-						`@include versioning-check();\n`;
+						`${ sass }\n`
 				}
 				else {
 					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;
@@ -198,8 +197,7 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 			if( sassVersioning === true ) {
 				allSass = `${ banner }` +
 					`@import "${ sassVersioningPath }";\n\n` +
-					`${ StripDuplicateLines( allSass ) }\n\n` +
-					`@include versioning-check();\n`;
+					`${ StripDuplicateLines( allSass ) }\n\n`
 			}
 			else {
 				allSass = `${ banner }${ StripDuplicateLines( allSass ) }\n`;
