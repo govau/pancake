@@ -147,9 +147,7 @@ module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => 
 
 					sass = `${ banner }` +
 						`/* ${ modulePackage.name } v${ modulePackage.version } */\n\n` +
-						`@import "${ sassVersioningPath }";\n\n` +
-						`${ sass }\n` +
-						`@include versioning-check();\n`;
+						`${ sass }\n`
 				}
 				else {
 					sass = `/* ${ modulePackage.name } v${ modulePackage.version } */\n\n${ sass }\n`;

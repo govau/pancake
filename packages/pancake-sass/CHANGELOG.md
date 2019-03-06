@@ -37,7 +37,7 @@ Pancake Sass plugin
 
 ## v2.3.5
 
-- Remove sass-versioning
+- Remove sass-versioning import and version check
 
 
 ## v2.3.4
