@@ -7,12 +7,19 @@ jobs:
   # installing dependencies, building assets and test
   test:
     docker:
-      - image: circleci/node:8.9.1
+      - image: circleci/node:10.15.3
 
     steps:
       - checkout                 # get the files from the repo (why would you ever not want the files????)
+      - restore_cache:
+          keys:
+            - v1-node-cache-{{ checksum "yarn.lock" }}
       - run: rm -rf node_modules # delete node_modules folder because we need to bust the cache
       - run: npm install         # duh
+      - save_cache:
+          key: v1-node-cache-{{ checksum "yarn.lock" }}
+          paths:
+              - node_modules
       - run: npm run build       # build all packages
       - run: npm test            # run all tests
 

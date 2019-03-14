@@ -1,33 +1,29 @@
 {
+	"name": "pancake",
+	"private": true,
 	"scripts": {
 		"test:watch": "jest --watch --coverage",
 		"test:unit-test": "jest",
 		"test:end-to-end": "node tests/tester.js",
-		"test": "npm run test:end-to-end && npm run test:unit-test",
-
-		"watch": "onchange packages/*/src/ -- lerna run build",
-    
+		"test": "yarn test:end-to-end && yarn test:unit-test",
+		"watch": "onchange packages/*/src/ -- yarn build",
 		"purge": "rimraf packages/*/node_modules | rimraf packages/*/dist | rimraf packages/*/lib | rimraf node_modules",
-
-		"build": "lerna bootstrap && lerna run build"
+		"build": "yarn workspaces run build"
 	},
 	"engines": {
-		"node": "~10",
-		"npm": "~6",
-		"yarn": "~1"
+		"node": ">=10",
+		"npm": ">=6"
 	},
-	"dependencies": {},
 	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-preset-es2015": "^6.24.1",
-		"copy-dir": "^0.3.0",
-		"del": "^3.0.0",
+		"@babel/core": "^7.3.4",
+		"@babel/preset-env": "^7.3.4",
+		"copy-dir": "^0.4.0",
+		"del": "^4.0.0",
 		"dirsum": "^0.1.1",
-		"jest-cli": "^23.0.1",
-		"lerna": "^3.4.3",
-		"npm-run-all": "^4.1.2",
-		"onchange": "^3.2.1",
-		"replace-in-file": "^3.0.0",
+		"jest-cli": "^24.5.0",
+		"npm-run-all": "^4.1.5",
+		"onchange": "^5.2.0",
+		"replace-in-file": "^3.4.4",
 		"rimraf": "^2.6.3"
 	},
 	"jest": {
@@ -52,11 +48,11 @@
 	"homepage": "https://github.com/govau/pancake",
 	"bugs": {
 		"url": "https://github.com/govau/pancake/issues",
-		"email": "guides@digital.gov.au"
+		"email": "designsystem@digital.gov.au"
 	},
 	"author": {
 		"name": "Commonwealth of Australia, DTA",
-		"email": "guides@digital.gov.au",
+		"email": "designsystem@digital.gov.au",
 		"url": "https://www.dta.gov.au/"
 	},
 	"contributors": [
@@ -72,9 +68,12 @@
 		},
 		{
 			"name": "Adam Zerella",
-			"email": "adam@commandshiftr.co",
+			"email": "hello@adamzerella.com",
 			"url": "https://adamzerella.com/"
 		}
 	],
-	"license": "MIT"
+	"license": "MIT",
+	"workspaces": [
+		"packages/*"
+	]
 }
