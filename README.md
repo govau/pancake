@@ -383,29 +383,21 @@ project. To make your contribution count, have a read through the code first and
 git clone -c core.symlinks=true https://github.com/govau/pancake
 ```
 
-To run the project install dependencies and devDependencies:
+To run this project you'll need to have [Yarn](https://yarnpkg.com) installed.
 
 ```shell
-npm install
+yarn install
 ```
 
-Let [lerna](https://lernajs.io/) handle the dependencies between plugins with:
-
 ```shell
-npm run build
-```
-
-To run the transpiler on all modules run:
-
-```shell
-lerna run build
+yarn build
 ```
 
 To develop in one of the modules run the watch inside of it:
 
 ```shell
 cd packages/pancake/
-npm run watch
+yarn watch
 ```
 
 ❗️ Make sure you only edit file inside the `src/` folder. Files inside the `bin/` folder are overwritten by the transpiler.
