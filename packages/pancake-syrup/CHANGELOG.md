@@ -6,6 +6,7 @@ Syrup
 
 ## Versions
 
+* [v1.2.0  - Upgrade dependencies](v120)
 * [v1.1.0  - Multiple organisations](v110)
 * [v1.0.8  - Update dependencies](v108)
 * [v1.0.7  - Update dependencies](v107)
@@ -19,6 +20,16 @@ Syrup
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.2.0
+
+- Update dependencies
+
+
+## v1.1.0
+
+- Multiple organisations
+
 
 ## v1.0.8
 

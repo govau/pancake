@@ -6,6 +6,7 @@ Pancake
 
 ## Versions
 
+* [v1.4.1  - Upgrade dependencies](v141)
 * [v1.3.1  - Fix incorrect alternate modules](v131)
 * [v1.3.0  - Multiple organisations can now be used](v130)
 * [v1.2.5  - Update dependencies](v125)
@@ -29,6 +30,11 @@ Pancake
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.4.1
+
+- Upgrade dependencies
+
 
 ## v1.3.1
 

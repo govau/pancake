@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.3.0 - Update dependencies
 * v1.2.0 - Multiple organisations
 * v1.1.5 - Update dependencies
 * v1.1.4 - Update dependencies

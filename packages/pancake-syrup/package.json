@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/syrup",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "Syrup helps you select the right pancake modules.",
 	"keywords": [
 		"npm",
@@ -51,9 +51,9 @@
 	"dependencies": {
 		"@gov.au/pancake": "~1",
 		
-		"inquirer": "4.0.0",
-		"request": "^2.87.0",
-		"strip-ansi": "4.0.0"
+		"inquirer": "6.2.2",
+		"request": "^2.88.0",
+		"strip-ansi": "5.1.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.2.3",
