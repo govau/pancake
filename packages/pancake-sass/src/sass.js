@@ -45,7 +45,7 @@ const GetPath = ( module, modules, baseLocation, npmOrg ) => {
 	let location;
 	npmOrgs.forEach( org => {
 		if( baseLocation.includes( org ) ){
-			location = baseLocation.replace( `${ org }/`, '' );
+			location = baseLocation.replace( `${ org }${ Path.sep }`, '' );
 		}
 	});
 
