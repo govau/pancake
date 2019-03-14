@@ -15,7 +15,7 @@
 		"pancake-plugin"
 	],
 	"engines": {
-		"npm": ">=3.0.0"
+		"npm": ">=6.0.0"
 	},
 	"main": "./dist/syrup.js",
 	"bin": {
@@ -23,12 +23,9 @@
 	},
 	"scripts": {
 		"prepublish": "npm run build && npm run test",
-
-		"test": "exit 0",
-
 		"build": "npm run build:js",
 		"build:watch": "npm run build:js && jest --coverage",
-		"build:js": "babel src --out-dir dist --presets=es2015 --plugins=transform-runtime,transform-es2015-modules-commonjs",
+		"build:js": "babel src --out-dir dist",
 		"watch": "npm run build:watch && onchange 'src/*.js' '__tests__/*.js' -- npm run build:watch"
 	},
 	"jest": {
@@ -53,19 +50,19 @@
 	],
 	"dependencies": {
 		"@gov.au/pancake": "~1",
-		"babel-runtime": "6.26.0",
+		
 		"inquirer": "4.0.0",
 		"request": "^2.87.0",
 		"strip-ansi": "4.0.0"
 	},
 	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-plugin-transform-runtime": "^6.23.0",
-		"babel-preset-es2015": "^6.24.1",
-		"del": "^3.0.0",
+		"@babel/cli": "^7.2.3",
+		"@babel/core": "^7.3.4",
+		"@babel/preset-env": "^7.3.4",
+		"del": "^4.0.0",
 		"dirsum": "^0.1.1",
-		"jest-cli": "^23.0.1",
-		"onchange": "^3.2.1"
+		"jest-cli": "^24.5.0",
+		"onchange": "^5.2.0"
 	},
 	"repository": {
 		"type": "git",
@@ -74,11 +71,11 @@
 	"homepage": "https://github.com/govau/pancake",
 	"bugs": {
 		"url": "https://github.com/govau/pancake/issues",
-		"email": "guides@digital.gov.au"
+		"email": "designsystem@digital.gov.au"
 	},
 	"author": {
 		"name": "Commonwealth of Australia, DTA",
-		"email": "guides@digital.gov.au",
+		"email": "designsystem@digital.gov.au",
 		"url": "https://www.dta.gov.au/"
 	},
 	"contributors": [
