@@ -5,6 +5,8 @@ Pancake Sass plugin
 
 
 ## Versions
+
+* [v2.2.4  - Upgrade dependencies](v224)
 * [v2.1.4  - Reverted pathing issue with pancake-sass, corrected changelog](v214)
 * [v2.1.3  - Added cross-platform path seperator for org replace function](v213)
 * [v2.1.2  - Multiple organisations](v212)
@@ -30,6 +32,11 @@ Pancake Sass plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v2.2.4
+
+- Upgrade dependencies
+
 
 ## v2.1.4
 

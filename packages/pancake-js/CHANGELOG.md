@@ -6,6 +6,7 @@ Pancake JS plugin
 
 ## Versions
 
+* [v1.2.0  - Upgrade dependencies](v120)
 * [v1.1.0  - Multiple organisations](v110)
 * [v1.0.14 - Update dependencies](v1014)
 * [v1.0.13 - Add ie8 support for mangled js files and updated dependencies](v1013)
@@ -22,6 +23,11 @@ Pancake JS plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.2.0
+
+- Upgrade dependencies
+
 
 ## v1.1.0
 
