@@ -40,7 +40,7 @@ const { Log, Style, Loading, CopyFile, ReadFile, WriteFile } = require( '@gov.au
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-module.exports = ( version, modules, settings, GlobalSettings, cwd ) => {
+module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Loading.start('pancake-svg');
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

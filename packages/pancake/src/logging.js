@@ -27,7 +27,7 @@
  *
  * @type {Object}
  */
-module.exports.Style = {
+const Style = {
 
 	/**
 	 * Parse ansi code while making sure we can nest colors
@@ -150,7 +150,7 @@ module.exports.Style = {
  *
  * @type {Object}
  */
-module.exports.Log = {
+const Log = {
 	verboseMode: false, //verbose flag
 	output: false,      //have we outputted something yet?
 	hasError: false,    //let’s assume the best
@@ -311,9 +311,9 @@ module.exports.Log = {
  *
  * @return {object} - Object with methods
  */
-module.exports.Loading = (() => {
+const Loading = (() => {
 
-	const sequence = [ //the sequence of all animation frame
+	let sequence = [ //the sequence of all animation frame
 		//pancake loading animation
 		Style.gray(`            ( ^-^)${ Style.yellow(`旦`) }                 `),
 		Style.gray(`             ( ^-^)${ Style.yellow(`旦`) }                `),
@@ -423,3 +423,8 @@ module.exports.Loading = (() => {
 		},
 	};
 })();
+
+
+module.exports.Style = Style;
+module.exports.Loading = Loading;
+module.exports.Log = Log;

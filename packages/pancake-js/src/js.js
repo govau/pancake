@@ -34,7 +34,7 @@ const { Log, Style, ReadFile, WriteFile } = require( '@gov.au/pancake' );
  *
  * @return {string}      - The minified js code
  */
-module.exports.MinifyJS = ( js, file ) => {
+const MinifyJS = ( js, file ) => {
 
 	try {
 		const jsCode = UglifyJS.minify( js, { ie8: true } );
@@ -157,3 +157,5 @@ module.exports.MinifyAllJS = ( version, allJS, settings, pkgPath ) => {
 		});
 	});
 };
+
+module.exports.MinifyJS = MinifyJS;
