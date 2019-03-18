@@ -38,7 +38,7 @@ const { Log, Style, WriteFile } = require( '@gov.au/pancake' );
  *
  * @return {string}              - The path to the sass partial
  */
-module.exports.GetPath = ( module, modules, baseLocation, npmOrg ) => {
+const GetPath = ( module, modules, baseLocation, npmOrg ) => {
 	let modulePath = '';
 
 	const npmOrgs = npmOrg.split( ' ' );
@@ -76,7 +76,7 @@ module.exports.GetPath = ( module, modules, baseLocation, npmOrg ) => {
  *
  * @return {object}            - An object array of the dependencies that are needed for the module
  */
-module.exports.GetDependencies = ( module, modules, parent = module, iteration = 1 ) => {
+const GetDependencies = ( module, modules, parent = module, iteration = 1 ) => {
 	Log.verbose(`Sass: Looking up dependencies at level ${ Style.yellow( iteration ) }`);
 
 	let allDependencies = {};
@@ -193,3 +193,6 @@ module.exports.Sassify = ( location, settings, sass ) => {
 		});
 	});
 };
+
+module.exports.GetDependencies = GetDependencies;
+module.exports.GetPath = GetPath;

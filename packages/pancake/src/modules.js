@@ -35,7 +35,7 @@ const { GetFolders } = require( './files' );
  *
  * @return {promise object}  - Returns a promise and some of the data of the package.json
  */
-module.exports.ReadModule = pkgPath => {
+const ReadModule = pkgPath => {
 	const thisPath = Path.normalize(`${ pkgPath }/package.json`);
 
 	Log.verbose(`Reading ${ Style.yellow( thisPath ) }`);
@@ -158,3 +158,5 @@ module.exports.GetPlugins = allModules => {
 
 	return Object.keys( plugins );
 }
+
+module.exports.ReadModule = ReadModule;

@@ -63,18 +63,18 @@ const modules = [
 	},
 ];
 
-const module = '@gov.au/testmodule2';
+const moduleName = '@gov.au/testmodule2';
 const baseLocation = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/`);
 const npmOrg = '@gov.au';
 const resultPath = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/testmodule2/lib/sass/_module.scss`);
 
 test('GetPath should return path for sass partial', () => {
-	expect( GetPath( module, modules, baseLocation, npmOrg ) ).toBe( resultPath );
+	expect( GetPath( moduleName, modules, baseLocation, npmOrg ) ).toBe( resultPath );
 });
 
 
 test('GetPath should return path for sass partial with multiple orgs', () => {
-	expect( GetPath( module, modules, baseLocation, '@gov.au @nsw.gov.au' ) ).toBe( resultPath );
+	expect( GetPath( moduleName, modules, baseLocation, '@gov.au @nsw.gov.au' ) ).toBe( resultPath );
 });
 
 
@@ -86,7 +86,7 @@ const ResultDependencies = {
 };
 
 test('GetDependencies should return object of all dependencies', () => {
-	expect( GetDependencies( module, modules ) ).toMatchObject( ResultDependencies );
+	expect( GetDependencies( moduleName, modules ) ).toMatchObject( ResultDependencies );
 });
 
 
@@ -101,7 +101,7 @@ const ResultGenerateSass = `@import "${ sassPath }@gov.au/testmodule1/lib/sass/_
 const Location = Path.normalize(`${ __dirname }/../../../tests/test1/node_modules/@gov.au/testmodule2`);
 
 test('GenerateSass should return path to sass partial import', () => {
-	expect( GenerateSass( Location, module, modules, npmOrg ) ).toBe( ResultGenerateSass );
+	expect( GenerateSass( Location, moduleName, modules, npmOrg ) ).toBe( ResultGenerateSass );
 });
 
 

@@ -64,7 +64,7 @@ module.exports.GetFolders = thisPath => {
  *
  * @return {string}           - The path that was just worked at
  */
-module.exports.CreateDir = ( dir ) => {
+const CreateDir = ( dir ) => {
 	Log.verbose(`Creating path ${ Style.yellow( dir ) }`);
 
 	const splitPath = dir.split( Path.sep );
@@ -117,7 +117,7 @@ module.exports.CreateDir = ( dir ) => {
  *
  * @return {promise object}  - Boolean true for 👍 || string error for 👎
  */
-module.exports.WriteFile = ( location, content ) => {
+const WriteFile = ( location, content ) => {
 	CreateDir( Path.dirname( location ) );
 
 	return new Promise( ( resolve, reject ) => {
@@ -204,3 +204,6 @@ module.exports.CopyFile = ( fromFile, toFile ) => {
 		}
 	});
 };
+
+module.exports.CreateDir = CreateDir;
+module.exports.WriteFile = WriteFile;
