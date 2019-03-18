@@ -14,14 +14,14 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Path from 'path';
-import Fs from 'fs';
+const Path = require( 'path' );
+const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style } from './logging';
+const { Log, Style } = require( './logging' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ import { Log, Style } from './logging';
  *
  * @return {array}            - An array of paths to each folder
  */
-export const GetFolders = thisPath => {
+module.exports.GetFolders = thisPath => {
 	Log.verbose(`Looking for folders in ${ Style.yellow( thisPath ) }`);
 
 	try {
@@ -64,7 +64,7 @@ export const GetFolders = thisPath => {
  *
  * @return {string}           - The path that was just worked at
  */
-export const CreateDir = ( dir ) => {
+module.exports.CreateDir = ( dir ) => {
 	Log.verbose(`Creating path ${ Style.yellow( dir ) }`);
 
 	const splitPath = dir.split( Path.sep );
@@ -117,7 +117,7 @@ export const CreateDir = ( dir ) => {
  *
  * @return {promise object}  - Boolean true for 👍 || string error for 👎
  */
-export const WriteFile = ( location, content ) => {
+module.exports.WriteFile = ( location, content ) => {
 	CreateDir( Path.dirname( location ) );
 
 	return new Promise( ( resolve, reject ) => {
@@ -148,7 +148,7 @@ export const WriteFile = ( location, content ) => {
  *
  * @return {promise object}  - The content of the file
  */
-export const ReadFile = location => {
+module.exports.ReadFile = location => {
 	return new Promise( ( resolve, reject ) => {
 		Fs.readFile( location, `utf8`, ( error, content ) => {
 			if( error ) {
@@ -178,7 +178,7 @@ export const ReadFile = location => {
  *
  * @return {promise object}  - The content of the file
  */
-export const CopyFile = ( fromFile, toFile ) => {
+module.exports.CopyFile = ( fromFile, toFile ) => {
 	CreateDir( Path.dirname( location ) );
 
 	return new Promise( ( resolve, reject ) => {

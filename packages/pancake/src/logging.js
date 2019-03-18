@@ -14,8 +14,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// import Path from 'path';
-// import Fs from 'fs';
+// const Path = require( 'path' );
+// const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@
  *
  * @type {Object}
  */
-export const Style = {
+module.exports.Style = {
 
 	/**
 	 * Parse ansi code while making sure we can nest colors
@@ -150,7 +150,7 @@ export const Style = {
  *
  * @type {Object}
  */
-export const Log = {
+module.exports.Log = {
 	verboseMode: false, //verbose flag
 	output: false,      //have we outputted something yet?
 	hasError: false,    //let’s assume the best
@@ -311,7 +311,7 @@ export const Log = {
  *
  * @return {object} - Object with methods
  */
-export const Loading = (() => {
+module.exports.Loading = (() => {
 
 	const sequence = [ //the sequence of all animation frame
 		//pancake loading animation

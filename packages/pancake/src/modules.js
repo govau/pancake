@@ -14,15 +14,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Path from 'path';
-import Fs from 'fs';
+const Path = require( 'path' );
+const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style } from './logging';
-import { GetFolders } from './files';
+const { Log, Style } = require( './logging' );
+const { GetFolders } = require( './files' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ import { GetFolders } from './files';
  *
  * @return {promise object}  - Returns a promise and some of the data of the package.json
  */
-export const ReadModule = pkgPath => {
+module.exports.ReadModule = pkgPath => {
 	const thisPath = Path.normalize(`${ pkgPath }/package.json`);
 
 	Log.verbose(`Reading ${ Style.yellow( thisPath ) }`);
@@ -82,7 +82,7 @@ export const ReadModule = pkgPath => {
  *
  * @return {promise object}  - A promise.all that resolves when all package.jsons have been read
  */
-export const GetModules = ( pkgPath, npmOrgs = '' ) => {
+module.exports.GetModules = ( pkgPath, npmOrgs = '' ) => {
 	if( typeof pkgPath !== 'string' || pkgPath.length <= 0 ) {
 		Log.error(`GetPackages only takes a valid path. You passed [type: ${ Style.yellow( typeof pkgPath ) }] "${ Style.yellow( pkgPath ) }"`);
 	}
@@ -135,7 +135,7 @@ export const GetModules = ( pkgPath, npmOrgs = '' ) => {
  *
  * @return {array}             - An array of all plugins
  */
-export const GetPlugins = allModules => {
+module.exports.GetPlugins = allModules => {
 	let plugins = {};
 
 	allModules.map( module => {

@@ -14,15 +14,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import StripAnsi from 'strip-ansi';
-import Inquirer from 'inquirer';
-import Request from 'request';
+const StripAnsi = require( 'strip-ansi' );
+const Inquirer = require( 'inquirer' );
+const Request = require( 'request' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, Semver } from '@gov.au/pancake';
+const { Log, Style, Semver } = require( '@gov.au/pancake' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ import { Log, Style, Semver } from '@gov.au/pancake';
  *
  * @return {object}               - { breakage: [boolean], lines: [array], breaking: [array] }
  */
-export const AddDeps = ( dependencies, installed, longestName ) => {
+module.exports.AddDeps = ( dependencies, installed, longestName ) => {
 	Log.verbose(
 		`Checking dependencies: ${ Style.yellow( JSON.stringify( dependencies ) ) } against installed: ${ Style.yellow( JSON.stringify( [ ...installed ] ) ) }`
 	);
