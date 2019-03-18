@@ -17,23 +17,23 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Path from 'path';
+const Path = require( 'path' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Using this file to export the reusable items
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { GetFolders, CreateDir, WriteFile, ReadFile, CopyFile } from './files';
-import { ExitHandler, CheckNPM, Cwd, Size, Spawning } from './helpers';
-import { Log, Style, Loading } from './logging';
-import { ParseArgs } from './parse-arguments';
-import { CheckModules } from './conflicts';
-import { GetModules } from './modules';
-import { Settings } from './settings';
-import Semver from './semver-5-3-0';
+const { GetFolders, CreateDir, WriteFile, ReadFile, CopyFile } = require('./files' );
+const { ExitHandler, CheckNPM, Cwd, Size, Spawning } = require('./helpers' );
+const { Log, Style, Loading } = require('./logging' );
+const { ParseArgs } = require('./parse-arguments' );
+const { CheckModules } = require( './conflicts' );
+const { GetModules } = require( './modules' );
+const { Settings } = require( './settings' );
+const Semver = require( './semver-5-3-0' );
 
 
-export { //here, take a sword; for you may need it
+module.exports = { //here, take a sword; for you may need it
 	ExitHandler,
 	CheckNPM,
 	Cwd,
@@ -65,7 +65,7 @@ export { //here, take a sword; for you may need it
  *
  * @return {Promise object} - The data object of the pancake modules
  */
-export const Batter = ( argv = process.argv ) => {
+module.exports.Batter = ( argv = process.argv ) => {
 	const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 	// Check npm version

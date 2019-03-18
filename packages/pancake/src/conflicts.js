@@ -14,15 +14,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// import Path from 'path';
-// import Fs from 'fs';
+// const Path = require( 'path' );
+// const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style } from './logging';
-import Semver from './semver-5-3-0';
+const { Log, Style } = require( './logging' );
+const Semver = require( './semver-5-3-0' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ import Semver from './semver-5-3-0';
  *
  * @return {object}            - An object that can be used to generate an error message
  */
-export const CheckModules = allModules => {
+module.exports.CheckModules = allModules => {
 	const dependencies = new Map(); //a map we populate with the dependencies of our modules we found
 	const modules = new Map();      //a map for all installed modules and their versions
 

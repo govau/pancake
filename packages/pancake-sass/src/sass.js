@@ -14,15 +14,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Autoprefixer from 'autoprefixer';
-import Postcss from 'postcss';
-import Sass from 'node-sass';
-import Path from 'path';
+const Autoprefixer = require( 'autoprefixer' );
+const Postcss = require( 'postcss' );
+const Sass = require( 'node-sass' );
+const Path = require( 'path' );
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, WriteFile } from '@gov.au/pancake';
+const { Log, Style, WriteFile } = require( '@gov.au/pancake' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ import { Log, Style, WriteFile } from '@gov.au/pancake';
  *
  * @return {string}              - The path to the sass partial
  */
-export const GetPath = ( module, modules, baseLocation, npmOrg ) => {
+module.exports.GetPath = ( module, modules, baseLocation, npmOrg ) => {
 	let modulePath = '';
 
 	const npmOrgs = npmOrg.split( ' ' );
@@ -76,7 +76,7 @@ export const GetPath = ( module, modules, baseLocation, npmOrg ) => {
  *
  * @return {object}            - An object array of the dependencies that are needed for the module
  */
-export const GetDependencies = ( module, modules, parent = module, iteration = 1 ) => {
+module.exports.GetDependencies = ( module, modules, parent = module, iteration = 1 ) => {
 	Log.verbose(`Sass: Looking up dependencies at level ${ Style.yellow( iteration ) }`);
 
 	let allDependencies = {};
@@ -118,7 +118,7 @@ export const GetDependencies = ( module, modules, parent = module, iteration = 1
  *
  * @return {string}          - Sass code to tie dependencies and module together
  */
-export const GenerateSass = ( location, name, modules, npmOrg ) => {
+module.exports.GenerateSass = ( location, name, modules, npmOrg ) => {
 	let sass = ``; //the code goes here
 
 	const baseLocation = Path.normalize(`${ location }/../`);
@@ -152,7 +152,7 @@ export const GenerateSass = ( location, name, modules, npmOrg ) => {
  *
  * @return {promise object}  - Boolean true for 👍 || string error for 👎
  */
-export const Sassify = ( location, settings, sass ) => {
+module.exports.Sassify = ( location, settings, sass ) => {
 	return new Promise( ( resolve, reject ) => {
 		const compiled = Sass.render({
 			data: sass,

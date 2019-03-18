@@ -14,16 +14,16 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Spawn from 'child_process';
-import Path from 'path';
-import TTY from 'tty';
-import OS from 'os';
+const Spawn = require( 'child_process' );
+const Path = require( 'path' );
+const TTY = require( 'tty' );
+const OS = require( 'os' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style } from './logging';
+const { Log, Style } = require( './logging' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ import { Log, Style } from './logging';
  *
  * @return {boolean} - Whether npm version is satisfied
  */
-export const CheckNPM = () => {
+module.exports.CheckNPM = () => {
 	let npmVersion = Spawning.sync( 'npm', ['-v'] );
 
 	if( npmVersion.error ) {
@@ -71,7 +71,7 @@ export const CheckNPM = () => {
  *
  * @return {string} - The absolute path to the folder of your host package.json
  */
-export const Cwd = ( cwd = process.cwd() ) => {
+module.exports.Cwd = ( cwd = process.cwd() ) => {
 	Log.verbose(`Looking for cwd in ${ Style.yellow( cwd ) }`);
 
 	let rootPath;
@@ -137,7 +137,7 @@ export const Cwd = ( cwd = process.cwd() ) => {
  *
  * @return {object} - An object with width and height
  */
-export const Size = () => {
+module.exports.Size = () => {
 	let width;
 	let height;
 
@@ -188,7 +188,7 @@ export const Size = () => {
  *
  * @type {Object}
  */
-export const Spawning = {
+module.exports.Spawning = {
 	isWin: /^win/.test( process.platform ), //sniffing the os, Can’t use os.platform() as we want to support node 5
 
 	/**
@@ -265,7 +265,7 @@ export const Spawning = {
  * @param {null}   exiting - null for bind
  * @param {object} error   - Object to distinguish between closing events
  */
-export const ExitHandler = ( exiting, error ) => {
+module.exports.ExitHandler = ( exiting, error ) => {
 	if( error && error !== 1 ) {
 		try { //try using our pretty output
 			Log.error( error );

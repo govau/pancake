@@ -14,13 +14,13 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import UglifyJS from 'uglify-js';
-import Path from 'path';
+const UglifyJS  = require( 'uglify-js' );
+const Path = require( 'path' );
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, ReadFile, WriteFile } from '@gov.au/pancake';
+const { Log, Style, ReadFile, WriteFile } = require( '@gov.au/pancake' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ import { Log, Style, ReadFile, WriteFile } from '@gov.au/pancake';
  *
  * @return {string}      - The minified js code
  */
-export const MinifyJS = ( js, file ) => {
+module.exports.MinifyJS = ( js, file ) => {
 
 	try {
 		const jsCode = UglifyJS.minify( js, { ie8: true } );
@@ -69,7 +69,7 @@ export const MinifyJS = ( js, file ) => {
  *
  * @return {promise object}  - The js code either minified or bare bone
  */
-export const HandleJS = ( from, settings, to, tag ) => {
+module.exports.HandleJS = ( from, settings, to, tag ) => {
 	return new Promise( ( resolve, reject ) => {
 		ReadFile( from ) //read the module
 			.catch( error => {
@@ -122,7 +122,7 @@ export const HandleJS = ( from, settings, to, tag ) => {
  *
  * @return {promise object}  - Returns true once the promise is resolved
  */
-export const MinifyAllJS = ( version, allJS, settings, pkgPath ) => {
+module.exports.MinifyAllJS = ( version, allJS, settings, pkgPath ) => {
 	return new Promise( ( resolve, reject ) => {
 		Promise.all( allJS )
 			.catch( error => {

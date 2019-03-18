@@ -16,16 +16,16 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Path from 'path';
-import Fs from 'fs';
+const Path = require( 'path' );
+const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, Loading, ReadFile, WriteFile } from '@gov.au/pancake';
-import { StripDuplicateLines } from './helpers';
-import { GenerateSass, Sassify } from './sass';
+const { Log, Style, Loading, ReadFile, WriteFile } = require( '@gov.au/pancake' );
+const { StripDuplicateLines } = require( './helpers' );
+const { GenerateSass, Sassify } = require( './sass' );
 
 Log.output = true; //this plugin assumes you run it through pancake
 
@@ -44,7 +44,7 @@ Log.output = true; //this plugin assumes you run it through pancake
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-export const pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
+module.exports = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Loading.start( 'pancake-sass', Log.verboseMode );
 
 
