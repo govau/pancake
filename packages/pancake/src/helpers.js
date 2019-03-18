@@ -188,7 +188,7 @@ module.exports.Size = () => {
  *
  * @type {Object}
  */
-module.exports.Spawning = {
+const Spawning = {
 	isWin: /^win/.test( process.platform ), //sniffing the os, Can’t use os.platform() as we want to support node 5
 
 	/**
@@ -282,3 +282,5 @@ module.exports.ExitHandler = ( exiting, error ) => {
 	Log.space();     //adding some space
 	process.exit( 0 ); //now exit with a smile :)
 };
+
+module.exports.Spawning = Spawning;

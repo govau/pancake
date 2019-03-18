@@ -44,7 +44,7 @@ Log.output = true; //this plugin assumes you run it through pancake
  *
  * @return {Promise object}  - Returns an object of the settings we want to save
  */
-module.exports = ( version, modules, settings, GlobalSettings, cwd ) => {
+module.exports.pancake = ( version, modules, settings, GlobalSettings, cwd ) => {
 	Loading.start( 'pancake-sass', Log.verboseMode );
 
 
