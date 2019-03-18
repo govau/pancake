@@ -18,20 +18,20 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import StripAnsi from 'strip-ansi';
-import inquirer from 'inquirer';
-import Path from 'path';
+const StripAnsi = require( 'strip-ansi' );
+const inquirer = require( 'inquirer' );
+const Path = require( 'path' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Using this file to export the reusable items
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { HighlightDiff, Headline } from './prettiness.js';
-import { AddDeps } from './dependencies.js';
-import { GetRemoteJson } from './json.js';
+const { HighlightDiff, Headline } = require('./prettiness.js' );
+const { AddDeps } = require('./dependencies.js' );
+const { GetRemoteJson } = require( './json.js' );
 
 
-export { //here, take a sword; for you may need it
+module.exports = { //here, take a sword; for you may need it
 	HighlightDiff,
 	Headline,
 	AddDeps,

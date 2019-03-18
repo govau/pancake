@@ -14,15 +14,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Path from 'path';
-import Fs from 'fs';
+const Path = require( 'path' );
+const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Included modules
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, Loading } from './logging';
-import { Spawning } from './helpers';
+const { Log, Style, Loading } = require( './logging' );
+const { Spawning } = require( './helpers' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ import { Spawning } from './helpers';
  *
  * @return {promise object}  - Return an object listing plugins installed and plugins found
  */
-export const InstallPlugins = ( plugins, cwd ) => {
+module.exports.InstallPlugins = ( plugins, cwd ) => {
 	const result = {
 		found: [],
 		installing: [],
@@ -168,7 +168,7 @@ export const InstallPlugins = ( plugins, cwd ) => {
  *
  * @return {promise object}       - Pass on what the plugins returned
  */
-export const RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SETTINGS ) => {
+module.exports.RunPlugins = ( version, plugins, cwd, allModules, SETTINGSlocal, SETTINGS ) => {
 
 	Loading.stop();
 

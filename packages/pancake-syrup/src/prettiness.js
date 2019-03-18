@@ -14,13 +14,13 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Inquirer from 'inquirer';
+const Inquirer = require('inquirer' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Exports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { Log, Style, Semver } from '@gov.au/pancake';
+const { Log, Style, Semver } = require( '@gov.au/pancake' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ import { Log, Style, Semver } from '@gov.au/pancake';
  *
  * @return {string}            - Highlighted newVersion
  */
-export const HighlightDiff = ( oldVersion, newVersion ) => {
+module.exports.HighlightDiff = ( oldVersion, newVersion ) => {
 	if( !Semver.valid( oldVersion ) ) {
 		Log.error(`Version is not a valid semver version: ${ Style.yellow( oldVersion ) }`);
 	}
@@ -68,7 +68,7 @@ export const HighlightDiff = ( oldVersion, newVersion ) => {
  *
  * @return {object}          - The Inquirer.Separator object
  */
-export const Headline = ( headline, subline = '', longestName ) => {
+module.exports.Headline = ( headline, subline = '', longestName ) => {
 	let sideHeader = ( longestName - ( 4 * 2 ) - headline.length ) / 2; //calculate the sides for the headline for center alignment
 	let sideSubline = ( longestName + 2 - subline.length ) / 2;         //calculate the sides for the subline for center alignment
 

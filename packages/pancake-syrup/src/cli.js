@@ -14,19 +14,19 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import StripAnsi from 'strip-ansi';
-import Inquirer from 'inquirer';
-import Path from 'path';
-import Fs from 'fs';
+const StripAnsi = require( 'strip-ansi' );
+const Inquirer = require( 'inquirer' );
+const Path = require( 'path' );
+const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { ExitHandler, CheckNPM, Size, Log, Style, Loading, ParseArgs, Settings, Cwd, Semver, GetModules, Spawning } from '@gov.au/pancake';
-import { HighlightDiff, Headline } from './prettiness.js';
-import { AddDeps } from './dependencies.js';
-import { GetRemoteJson } from './json.js';
+const { ExitHandler, CheckNPM, Size, Log, Style, Loading, ParseArgs, Settings, Cwd, Semver, GetModules, Spawning } = require( '@gov.au/pancake' );
+const { HighlightDiff, Headline } = require( './prettiness.js' );
+const { AddDeps } = require('./dependencies.js' );
+const { GetRemoteJson } = require( './json.js' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ import { GetRemoteJson } from './json.js';
  *
  * @param  {array} argv - The arguments passed to node
  */
-export const init = ( argv = process.argv ) => {
+module.exports.init = ( argv = process.argv ) => {
 	const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -14,20 +14,20 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Path from 'path';
-// import Fs from 'fs';
+const Path = require( 'path' );
+// const Fs = require( 'fs' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Module imports
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import { ExitHandler, CheckNPM, Cwd, Size } from './helpers';
-import { InstallPlugins, RunPlugins } from './plugins';
-import { GetModules, GetPlugins } from './modules';
-import { Log, Style, Loading } from './logging';
-import { ParseArgs } from './parse-arguments';
-import { CheckModules } from './conflicts';
-import { Settings } from './settings';
+const { ExitHandler, CheckNPM, Cwd, Size } = require( './helpers' );
+const { InstallPlugins, RunPlugins } = require( './plugins' );
+const { GetModules, GetPlugins } = require( './modules' );
+const { Log, Style, Loading } = require( './logging' );
+const { ParseArgs } = require( './parse-arguments' );
+const { CheckModules } = require( './conflicts' );
+const { Settings } = require( './settings' );
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ import { Settings } from './settings';
  *
  * @param  {array} argv - The arguments passed to node
  */
-export const init = ( argv = process.argv ) => {
+module.exports.init = ( argv = process.argv ) => {
 	const pkg = require( Path.normalize(`${ __dirname }/../package.json`) );
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
