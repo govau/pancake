@@ -14,14 +14,13 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-cache-{{ checksum "yarn.lock" }}
-      - run: rm -rf node_modules # delete node_modules folder because we need to bust the cache
-      - run: npm install         # duh
+      - run: yarn install         # duh
       - save_cache:
           key: v1-node-cache-{{ checksum "yarn.lock" }}
           paths:
               - node_modules
-      - run: npm run build       # build all packages
-      - run: npm test            # run all tests
+      - run: yarn build       # build all packages
+      - run: yarn test            # run all tests
 
 
 
