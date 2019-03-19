@@ -1,6 +1,6 @@
 {
 	"name": "@gov.au/pancake-js",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "A Pancake plugin to minify js files.",
 	"keywords": [
 		"npm",
@@ -44,7 +44,8 @@
 		"lib/*"
 	],
 	"dependencies": {
-		"@gov.au/pancake": "~1"
+		"@gov.au/pancake": "~1",
+		"uglify-js": "3.4.9"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.2.3",
@@ -53,8 +54,7 @@
 		"del": "^4.0.0",
 		"dirsum": "^0.1.1",
 		"jest-cli": "^24.5.0",
-		"onchange": "^5.2.0",
-		"uglify-js": "3.4.9"
+		"onchange": "^5.2.0"
 	},
 	"repository": {
 		"type": "git",
