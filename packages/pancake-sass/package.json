@@ -45,7 +45,7 @@
 	],
 	"dependencies": {
 		"@gov.au/pancake": "~1",
-		"autoprefixer": "9.4.10",
+		"autoprefixer": "9.5.0",
 		"postcss": "7.0.14",
 		"node-sass": "^4.11.0"
 	},
