@@ -58,6 +58,7 @@ To run the tests make sure you go to the monorepo this package came from and clo
 
 ## Release History
 
+* v1.2.1  - Move `uglify-js` from devDependency -> dependency
 * v1.2.0  - Upgrade dependencies
 * v1.1.0  - Multiple organisations
 * v1.0.14 - Update dependencies

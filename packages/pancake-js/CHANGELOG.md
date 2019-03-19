@@ -6,6 +6,7 @@ Pancake JS plugin
 
 ## Versions
 
+* [v1.2.1  - Move `uglify-js` from devDependency -> dependency](v121)
 * [v1.2.0  - Upgrade dependencies](v120)
 * [v1.1.0  - Multiple organisations](v110)
 * [v1.0.14 - Update dependencies](v1014)
@@ -23,6 +24,11 @@ Pancake JS plugin
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## v1.2.1
+
+- Move `uglify-js` from devDependency -> dependency
+
 
 ## v1.2.0
 

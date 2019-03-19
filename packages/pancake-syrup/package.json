@@ -50,7 +50,6 @@
 	],
 	"dependencies": {
 		"@gov.au/pancake": "~1",
-		
 		"inquirer": "6.2.2",
 		"request": "^2.88.0",
 		"strip-ansi": "5.1.0"
