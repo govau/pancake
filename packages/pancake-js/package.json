@@ -45,7 +45,7 @@
 	],
 	"dependencies": {
 		"@gov.au/pancake": "~1",
-		"uglify-js": "3.4.9"
+		"uglify-js": "3.4.10"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.2.3",
