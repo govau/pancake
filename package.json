@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"copy-dir": "^0.4.0",
-		"del": "^4.0.0",
+		"del": "^4.1.0",
 		"dirsum": "^0.1.1",
 		"fs-readdir-recursive": "^1.1.0",
 		"jest-cli": "^24.5.0",
