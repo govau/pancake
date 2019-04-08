@@ -19,7 +19,7 @@
 		"del": "^4.1.0",
 		"dirsum": "^0.1.1",
 		"fs-readdir-recursive": "^1.1.0",
-		"jest-cli": "^24.5.0",
+		"jest-cli": "^24.7.1",
 		"onchange": "^5.2.0",
 		"replace-in-file": "^3.4.4",
 		"rimraf": "^2.6.3"
