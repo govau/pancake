@@ -48,7 +48,7 @@
 		"uglify-js": "3.5.3"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.2.3",
+		"@babel/cli": "^7.4.3",
 		"@babel/core": "^7.4.0",
 		"@babel/preset-env": "^7.4.3",
 		"del": "^4.1.0",
