@@ -45,13 +45,13 @@
 	],
 	"dependencies": {
 		"@gov.au/pancake": "~1",
-		"autoprefixer": "9.4.10",
+		"autoprefixer": "9.5.1",
 		"postcss": "7.0.14",
 		"node-sass": "^4.11.0"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.2.3",
 		"@babel/core": "^7.4.3",
+		"@babel/cli": "^7.4.3",
 		"@babel/preset-env": "^7.4.3",
 		"del": "^4.1.0",
 		"dirsum": "^0.1.1",
