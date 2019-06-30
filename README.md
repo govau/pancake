@@ -156,7 +156,7 @@ This will sort-of shrink-wrap all settings in so you are completely reproducible
 You can also opt-out of this behavior by adding `"auds": { "auto-save": false }` into your package.json.
 
 ```shell
-pancake --nosave
+npx pancake --nosave
 ```
 
 
@@ -168,7 +168,7 @@ You can temporarily overwrite the npm org scope by suppling this flag. This can 
 permanent change.
 
 ```shell
-pancake --org @otherOrg
+npx pancake --org @otherOrg
 ```
 
 
@@ -179,7 +179,7 @@ Type: `<flag>`
 You can temporarily disable all plugins. This is great for ci integration.
 
 ```shell
-pancake --noplugins
+npx pancake --noplugins
 ```
 
 
@@ -190,7 +190,7 @@ Type: `<flag> [comma separated list]`
 You can temporarily overwrite the list of plugins to be disabled.
 
 ```shell
-pancake --ignore @gov.au/pancake-svg,@gov.au/pancake-js
+npx pancake --ignore @gov.au/pancake-svg,@gov.au/pancake-js
 ```
 
 
@@ -201,7 +201,7 @@ Type: `<flag>`
 Run Pancake in verbose silly mode.
 
 ```shell
-pancake --verbose
+npx pancake --verbose
 ```
 
 
