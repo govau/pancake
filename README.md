@@ -63,7 +63,7 @@ Pancake comes with two different level of settings. Global settings can persist 
 To change global settings run Pancake with the `--set` flag.
 
 ```shell
-pancake --set [settingName] [value]
+npx pancake --set [settingName] [value]
 ```
 
 |     setting     |                 value                 |  default  |
@@ -75,7 +75,7 @@ pancake --set [settingName] [value]
 Example:
 
 ```shell
-pancake --set npmOrg yourOrg
+npx pancake --set npmOrg yourOrg
 ```
 
 
