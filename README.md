@@ -32,6 +32,7 @@ If you are creating a new project using Pancake you will want to look into creat
 
 Pancake comes installed with Australian Government Design System components. To know if you have `pancake` installed, check your `package.json` file for a `"pancake": { ... }` object. If you have this and you want to change the output look at the [Pancake settings](#settings) section.
 
+If you have issues with using SASS globals in a ReactJS project, please check out the [Design System React starter repo](https://github.com/govau/design-system-starter-react) for an example.
 
 **[⬆ back to top](#contents)**
 
