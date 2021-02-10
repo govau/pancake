@@ -50,12 +50,12 @@
 		"babel-runtime": "6.26.0"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.2.3",
-		"@babel/core": "^7.3.4",
-		"@babel/preset-env": "^7.3.4",
-		"del": "^4.0.0",
+		"@babel/core": "^7.4.3",
+		"@babel/cli": "^7.4.3",
+		"@babel/preset-env": "^7.4.3",
+		"del": "^4.1.0",
 		"dirsum": "^0.1.1",
-		"jest-cli": "^24.5.0",
+		"jest-cli": "^24.7.1",
 		"onchange": "^5.2.0"
 	},
 	"repository": {

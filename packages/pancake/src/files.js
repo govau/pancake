@@ -118,6 +118,12 @@ const CreateDir = ( dir ) => {
  * @return {promise object}  - Boolean true for 👍 || string error for 👎
  */
 const WriteFile = ( location, content ) => {
+	/**
+	 * To compare file data hashes across platforms, we
+	 * need to remove \n or \r\n newlines
+	 */
+	content = content.replace( /[\r\n]/gm, '' );
+
 	CreateDir( Path.dirname( location ) );
 
 	return new Promise( ( resolve, reject ) => {

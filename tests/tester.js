@@ -12,15 +12,16 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const Replace = require('replace-in-file');
-const Spawn = require('child_process');
-const Copydir = require('copy-dir');
-const Dirsum = require('dirsum');
-const Chalk = require('chalk');
-const Path = require('path');
-const Del = require('del');
-const Fs = require(`fs`);
+const Spawn = require( 'child_process' );
+const Path = require( 'path' );
+const Fs = require( 'fs' );
 
+const Readdir = require( 'fs-readdir-recursive' );
+const Replace = require( 'replace-in-file' );
+const Copydir = require( 'copy-dir' );
+const Dirsum = require( 'dirsum' );
+const Chalk = require( 'chalk' );
+const Del = require( 'del' );
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // GLOBALS
@@ -213,6 +214,7 @@ const TESTER = (() => { //constructor factory
 					TESTER
 						.delete( scriptFolder, unit )                                   //delete trash first
 						.then( () => TESTER.copyFixtures( scriptFolder, unit ) )        //copy fixtures
+						.then( () => TESTER.normalizeFixtures( scriptFolder, unit ) )   //correct platform pathing
 						.then( () => TESTER.replaceFixtures( scriptFolder, unit ) )     //compile fixtures
 						.then( () => TESTER.run( scriptFolder, unit ) )                 //now run script
 						.then( () => TESTER.fixture( scriptFolder, unit ) )             //get hash for fixture
@@ -311,6 +313,45 @@ const TESTER = (() => { //constructor factory
 
 
 		/**
+		 * Replace fixture [path] items with platform specific pathing
+		 * 
+		 * @param  {string} path     - The path to the folder that needs cleaning
+		 * @param  {object} settings - The settings object for this test
+		 *
+		 * @return {Promise object}
+		 */
+		normalizeFixtures: ( path, settings ) => {
+			return new Promise( ( resolve, reject ) => {
+				if( settings.empty ) {
+					resolve();
+				}
+				else {
+					let fixturePath = Path.normalize( `${ path }/_fixture/` );
+					let fixtures = Readdir( fixturePath )
+
+					fixtures.forEach( item => {
+						let filePath = Path.join( `${ path }/_fixture/`, item );
+						let fileData = Fs.readFileSync( filePath, `utf-8` );
+						let matches = fileData.match( /\[path\].+?"/gm );
+
+						if( matches !== null ){
+							matches.forEach( match => {
+								let normalizedFileData = fileData.replace( new RegExp( match, "gm" ), Path.normalize( match ) );
+
+								Fs.writeFile( filePath, normalizedFileData, `utf-8`, ( error ) => {
+									if( error ) reject( error );
+								});
+							});
+						}
+					});
+
+					resolve();
+				}
+			})
+		},
+
+
+		/**
 		 * Replace placeholders in temp fixtures
 		 *
 		 * @param  {string} path     - The path to the folder that needs cleaning
@@ -345,7 +386,7 @@ const TESTER = (() => { //constructor factory
 								sassVersion,
 								jsVersion,
 								reactVersion,
-								Path.normalize(`${ __dirname }/..`),
+								Path.normalize(`${ __dirname }`),
 							],
 							allowEmptyPaths: true,
 							encoding: 'utf8',

@@ -6,7 +6,11 @@ Pancake Sass plugin
 
 ## Versions
 
+<<<<<<< HEAD
 * [v2.3.7  - Remove sass-versioning](v237)
+=======
+* [v2.3.5  - Remove sass-versioning](v235)
+>>>>>>> dbf093d6ee39e738f83d3ae18e3fc91d03346dab
 * [v2.3.4  - Added cross-platform path seperator for org replace function](v234)
 * [v2.2.4  - Upgrade dependencies](v224)
 * [v2.1.4  - Reverted pathing issue with pancake-sass, corrected changelog](v214)
@@ -35,9 +39,15 @@ Pancake Sass plugin
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 ## v2.3.7
 
 - Remove sass-versioning
+=======
+## v2.3.5
+
+- Remove sass-versioning import and version check
+>>>>>>> dbf093d6ee39e738f83d3ae18e3fc91d03346dab
 
 
 ## v2.3.4
