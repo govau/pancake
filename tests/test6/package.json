@@ -10,5 +10,9 @@
 		"js": {
 			"name": false
 		}
+	},
+	"dependencies": {
+		"@gov.au/pancake-js": "npm:undefined@*",
+		"@gov.au/pancake-sass": "npm:undefined@*"
 	}
 }

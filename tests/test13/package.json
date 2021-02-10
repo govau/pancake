@@ -17,5 +17,10 @@
 			"minified": true,
 			"modules": true
 		}
+	},
+	"dependencies": {
+		"@gov.au/pancake-js": "npm:undefined@*",
+		"@gov.au/pancake-react": "npm:undefined@*",
+		"@gov.au/pancake-sass": "npm:undefined@*"
 	}
 }
