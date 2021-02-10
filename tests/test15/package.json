@@ -4,5 +4,9 @@
 		"js": {
 			"name": "pancake.min.js"
 		}
+	},
+	"dependencies": {
+		"@gov.au/pancake-js": "npm:undefined@*",
+		"@gov.au/pancake-sass": "npm:undefined@*"
 	}
 }

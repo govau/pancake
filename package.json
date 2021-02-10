@@ -5,7 +5,6 @@
 		"test:watch": "jest --watch --coverage",
 		"test:unit-test": "jest",
 		"test:end-to-end": "node tests/tester.js",
-		"test": "yarn test:end-to-end && yarn test:unit-test",
 		"watch": "onchange packages/*/src/ -- yarn build",
 		"purge": "rimraf packages/*/node_modules | rimraf packages/*/dist | rimraf packages/*/lib | rimraf node_modules",
 		"build": "yarn workspaces run build"
